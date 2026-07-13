@@ -1,0 +1,54 @@
+@use '../styles/vars' as v;
+
+.board {
+  display: grid;
+  gap: 6px;
+  width: 100%;
+  aspect-ratio: 1;
+}
+
+.cell {
+  padding: 4px;
+  border-radius: v.$radius-sm;
+  background: v.$surface;
+  border: 1px solid v.$border;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  overflow: hidden;
+  min-width: 0;
+  transition: background 0.12s, transform 0.08s;
+
+  &:active {
+    transform: scale(0.96);
+  }
+
+  .cell-text {
+    font-size: clamp(8px, 2.4vw, 13px);
+    line-height: 1.15;
+    max-height: 100%;
+    overflow: hidden;
+    word-break: break-word;
+  }
+
+  &.checked {
+    background: v.$primary-dim;
+    border-color: v.$primary;
+    color: #fff;
+  }
+
+  &.win {
+    background: linear-gradient(135deg, v.$primary, v.$accent);
+    border-color: v.$accent;
+    color: #1a1830;
+    font-weight: 700;
+  }
+
+  &.free {
+    background: v.$surface-2;
+    color: v.$text-dim;
+    font-weight: 700;
+    letter-spacing: 1px;
+  }
+}

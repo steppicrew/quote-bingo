@@ -1,0 +1,23 @@
+@use '../styles/vars' as v;
+
+.switcher {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+  scrollbar-width: thin;
+
+  .chip {
+    white-space: nowrap;
+    border-radius: 999px;
+    padding: 8px 16px;
+    flex: 0 0 auto;
+
+    &.active {
+      background: v.$primary;
+      border-color: v.$primary;
+      color: #fff;
+      font-weight: 600;
+    }
+  }
+}

@@ -1,0 +1,54 @@
+@use '../styles/vars' as v;
+
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  z-index: 50;
+}
+
+.modal {
+  background: v.$surface;
+  border: 1px solid v.$border;
+  border-radius: v.$radius;
+  padding: 20px;
+  width: 100%;
+  max-width: 360px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  align-items: center;
+  box-shadow: v.$shadow;
+
+  h2 {
+    margin: 0;
+    font-size: 18px;
+    align-self: flex-start;
+  }
+  button {
+    width: 100%;
+  }
+  .dim {
+    align-self: flex-start;
+  }
+}
+
+.qr-canvas {
+  border-radius: v.$radius-sm;
+  background: #fff;
+  padding: 8px;
+}
+
+.qr-scan-region {
+  width: 100%;
+  border-radius: v.$radius-sm;
+  overflow: hidden;
+  video {
+    width: 100% !important;
+    display: block;
+  }
+}

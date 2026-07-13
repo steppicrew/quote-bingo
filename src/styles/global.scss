@@ -1,0 +1,175 @@
+@use 'vars' as v;
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  background: v.$bg;
+  color: v.$text;
+  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  -webkit-tap-highlight-color: transparent;
+}
+
+#root {
+  max-width: 720px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  border: 1px solid v.$border;
+  background: v.$surface-2;
+  border-radius: v.$radius-sm;
+  padding: 10px 14px;
+  transition: background 0.15s, border-color 0.15s;
+
+  &:hover {
+    border-color: v.$primary;
+  }
+  &:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+  }
+}
+
+button.primary {
+  background: v.$primary;
+  border-color: v.$primary;
+  color: #fff;
+  font-weight: 600;
+  &:hover {
+    background: v.$primary-dim;
+  }
+}
+
+button.ghost {
+  background: transparent;
+}
+
+button.danger {
+  border-color: v.$danger;
+  color: v.$danger;
+}
+
+input,
+textarea,
+select {
+  font: inherit;
+  color: v.$text;
+  background: v.$surface;
+  border: 1px solid v.$border;
+  border-radius: v.$radius-sm;
+  padding: 10px 12px;
+  width: 100%;
+  &:focus {
+    outline: none;
+    border-color: v.$primary;
+  }
+}
+
+select {
+  width: auto;
+  cursor: pointer;
+}
+
+textarea {
+  resize: vertical;
+  min-height: 96px;
+}
+
+a {
+  color: v.$primary;
+}
+
+.app {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
+}
+
+.topbar {
+  display: flex;
+  align-items: center;
+  gap: v.$gap;
+  padding: 14px 16px;
+  border-bottom: 1px solid v.$border;
+  position: sticky;
+  top: 0;
+  background: v.$bg;
+  z-index: 10;
+
+  h1 {
+    font-size: 18px;
+    margin: 0;
+    flex: 1;
+  }
+
+  .tabs {
+    display: flex;
+    gap: 6px;
+  }
+  .tabs button.active {
+    background: v.$primary;
+    border-color: v.$primary;
+    color: #fff;
+  }
+}
+
+.content {
+  flex: 1;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: v.$gap;
+}
+
+.card-tile {
+  background: v.$surface;
+  border: 1px solid v.$border;
+  border-radius: v.$radius;
+  padding: 14px;
+  box-shadow: v.$shadow;
+}
+
+.row {
+  display: flex;
+  gap: v.$gap;
+  align-items: center;
+}
+
+.spacer {
+  flex: 1;
+}
+
+.dim {
+  color: v.$text-dim;
+  font-size: 14px;
+}
+
+.badge {
+  font-size: 12px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  border: 1px solid v.$border;
+}
+.badge.ok {
+  color: v.$success;
+  border-color: v.$success;
+}
+.badge.warn {
+  color: v.$accent;
+  border-color: v.$accent;
+}
