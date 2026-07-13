@@ -53,3 +53,6 @@ Game offers only sizes the pool can fill.
 - `noUncheckedIndexedAccess` is on: array/record access is `T | undefined`. Handle it.
 - All user-facing strings are German.
 - Zustand persist has a `migrate` (version 1) that drops legacy cards lacking `size`.
+- Win celebration (toast + `confetti` from `src/lib/confetti.ts`) fires from a
+  `useEffect` in `Game`. Track the previous completed-line count **per card id** in a
+  ref — resetting to 0 replays past wins on game entry / person switch.
