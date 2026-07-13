@@ -25,11 +25,11 @@
   }
 
   .cell-text {
-    font-size: clamp(8px, 2.4vw, 13px);
-    line-height: 1.15;
-    max-height: 100%;
-    overflow: hidden;
+    // Font size is auto-fitted per cell by useAutoFitText.
+    line-height: 1.1;
+    max-width: 100%;
     word-break: break-word;
+    hyphens: auto;
   }
 
   &.checked {

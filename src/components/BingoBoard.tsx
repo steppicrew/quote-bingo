@@ -1,7 +1,7 @@
 import { useMemo, type ReactNode } from 'react'
-import clsx from 'clsx'
 import { type Card, centerIndex } from '../types'
 import { winningCells } from '../lib/card'
+import { Cell } from './Cell'
 import './BingoBoard.scss'
 
 interface Props {
@@ -23,18 +23,14 @@ export function BingoBoard({ card, quoteText, onToggle }: Props): ReactNode {
           ? 'FREI'
           : (quoteId && quoteText.get(quoteId)) || '(gelöschtes Zitat)'
         return (
-          <button
+          <Cell
             key={i}
-            className={clsx('cell', {
-              checked,
-              free: isFree,
-              win: winners.has(i),
-            })}
-            onClick={() => !isFree && onToggle(i)}
-            disabled={isFree}
-          >
-            <span className="cell-text">{text}</span>
-          </button>
+            text={text}
+            checked={checked}
+            free={isFree}
+            win={winners.has(i)}
+            onClick={() => onToggle(i)}
+          />
         )
       })}
     </div>
