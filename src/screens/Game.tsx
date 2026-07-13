@@ -3,6 +3,7 @@ import { useStore } from '../store'
 import { navigate } from '../router'
 import { SIZES, quotesNeeded } from '../types'
 import { completedLineCount, isFullCard } from '../lib/card'
+import { confetti } from '../lib/confetti'
 import { PersonSwitcher } from '../components/PersonSwitcher'
 import { BingoBoard } from '../components/BingoBoard'
 import { useToast } from '../components/toast-context'
@@ -48,25 +49,36 @@ export function Game(): ReactNode {
     return m
   }, [quotes])
 
-  // Toast on newly completed lines / full card.
-  const prevLines = useRef(0)
+  // Celebrate only on newly completed lines. Track the previous count
+  // per card id so entering the game or switching person establishes a
+  // baseline silently instead of replaying past wins.
+  const prevLines = useRef<{ cardId: string | null; lines: number }>({
+    cardId: null,
+    lines: 0,
+  })
   useEffect(() => {
     if (!card) {
-      prevLines.current = 0
+      prevLines.current = { cardId: null, lines: 0 }
       return
     }
     const lines = completedLineCount(card.size, card.checked)
-    if (lines > prevLines.current) {
-      if (isFullCard(card.checked)) toast('VOLLE KARTE! 🎉', 'win')
-      else toast('BINGO! 🎉', 'win')
+    const isSameCard = prevLines.current.cardId === card.personId
+    if (isSameCard && lines > prevLines.current.lines) {
+      if (isFullCard(card.checked)) {
+        toast('VOLLE KARTE! 🎉', 'win')
+        confetti(2)
+      } else {
+        toast('BINGO! 🎉', 'win')
+        confetti(1)
+      }
     }
-    prevLines.current = lines
+    prevLines.current = { cardId: card.personId, lines }
   }, [card, toast])
 
   const reshuffle = (): void => {
     if (active && confirm('Karte neu mischen? Angekreuzte Felder werden zurückgesetzt.')) {
       regenerateCard(active.id)
-      prevLines.current = 0
+      prevLines.current = { cardId: null, lines: 0 }
     }
   }
 
@@ -74,7 +86,7 @@ export function Game(): ReactNode {
     if (!active) return
     if (card && !confirm(`Auf ${size}×${size} umstellen? Die Karte wird neu erstellt.`)) return
     regenerateCard(active.id, size)
-    prevLines.current = 0
+    prevLines.current = { cardId: null, lines: 0 }
   }
 
   if (persons.length === 0) {
