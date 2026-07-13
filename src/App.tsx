@@ -6,7 +6,7 @@ import { PersonEditor } from './screens/PersonEditor'
 import { Game } from './screens/Game'
 import { ToastProvider } from './components/Toast'
 import { Settings } from './components/Settings'
-import { CogIcon, GameIcon, UsersIcon } from './components/icons'
+import { BackIcon, CogIcon, GameIcon, UsersIcon } from './components/icons'
 import './components/modal.scss'
 
 export function App(): ReactNode {
@@ -35,7 +35,16 @@ export function App(): ReactNode {
       <div className="app">
         <header className="topbar">
           <h1>Zitat-Bingo</h1>
-          {onGame ? (
+          {route.name === 'person' ? (
+            <button
+              className="icon-btn"
+              aria-label="Zurück zur Übersicht"
+              title="Zurück zur Übersicht"
+              onClick={() => navigate({ name: 'manage' })}
+            >
+              <BackIcon />
+            </button>
+          ) : onGame ? (
             <button
               className="icon-btn"
               aria-label="Verwalten"
