@@ -102,6 +102,7 @@ export function PersonEditor({ id }: { id: string }): ReactNode {
           <input
             value={q.text}
             onChange={(e) => editQuote(q.id, e.target.value)}
+            onBlur={(e) => editQuote(q.id, e.target.value.trim())}
           />
           <button className="ghost danger" onClick={() => deleteQuote(q.id)}>
             ✕

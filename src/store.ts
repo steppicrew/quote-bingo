@@ -113,7 +113,7 @@ export const useStore = create<State & Actions>()(
 
       editQuote: (id, text) =>
         set((s) => ({
-          quotes: s.quotes.map((q) => (q.id === id ? { ...q, text: text.trim() } : q)),
+          quotes: s.quotes.map((q) => (q.id === id ? { ...q, text } : q)),
         })),
 
       deleteQuote: (id) =>
