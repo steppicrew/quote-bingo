@@ -17,7 +17,11 @@
   justify-content: center;
   text-align: center;
   overflow: hidden;
+  // Grid items default to min-width/height:auto, letting content force the
+  // track larger. Pin to 0 so every cell stays exactly one 1fr track — text
+  // is scaled to the cell, never the other way round.
   min-width: 0;
+  min-height: 0;
   transition: background 0.12s, transform 0.08s;
 
   &:active {
@@ -28,6 +32,8 @@
     // Font size is auto-fitted per cell by useAutoFitText.
     line-height: 1.1;
     max-width: 100%;
+    max-height: 100%;
+    overflow: hidden;
     word-break: break-word;
     hyphens: auto;
   }

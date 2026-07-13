@@ -15,7 +15,13 @@ export function BingoBoard({ card, quoteText, onToggle }: Props): ReactNode {
   const center = centerIndex(card.size)
 
   return (
-    <div className="board" style={{ gridTemplateColumns: `repeat(${card.size}, 1fr)` }}>
+    <div
+      className="board"
+      style={{
+        gridTemplateColumns: `repeat(${card.size}, 1fr)`,
+        gridTemplateRows: `repeat(${card.size}, 1fr)`,
+      }}
+    >
       {card.cells.map((quoteId, i) => {
         const isFree = i === center
         const checked = card.checked[i] ?? false
@@ -24,7 +30,10 @@ export function BingoBoard({ card, quoteText, onToggle }: Props): ReactNode {
           : (quoteId && quoteText.get(quoteId)) || '(gelöschtes Zitat)'
         return (
           <Cell
-            key={i}
+            // Include the card's creation stamp so every reshuffle remounts the
+            // cells; each Cell then re-measures on a fresh, painted node instead
+            // of relying on a resize event that never comes (box size unchanged).
+            key={`${card.createdAt}-${i}`}
             text={text}
             checked={checked}
             free={isFree}
