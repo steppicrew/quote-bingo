@@ -1,0 +1,22 @@
+@use '../styles/vars' as v;
+
+.modal.settings {
+  align-items: stretch;
+
+  .setting {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: v.$gap;
+    flex-wrap: wrap;
+  }
+
+  .about {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    font-size: 13px;
+    border-top: 1px solid v.$border;
+    padding-top: 12px;
+  }
+}

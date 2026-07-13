@@ -1,0 +1,27 @@
+@use '../styles/vars' as v;
+
+.theme-toggle {
+  display: inline-flex;
+  border: 1px solid v.$border;
+  border-radius: 999px;
+  overflow: hidden;
+  background: v.$surface;
+
+  .seg {
+    border: none;
+    border-radius: 0;
+    background: transparent;
+    padding: 8px 14px;
+    color: v.$text-dim;
+
+    &:hover {
+      color: v.$text;
+    }
+
+    &.active {
+      background: v.$primary;
+      color: #fff;
+      font-weight: 600;
+    }
+  }
+}

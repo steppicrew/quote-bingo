@@ -1,17 +1,25 @@
-import { useEffect, type ReactNode } from 'react'
-import clsx from 'clsx'
+import { useEffect, useState, type ReactNode } from 'react'
 import { useRoute, navigate } from './router'
 import { useStore } from './store'
 import { Manage } from './screens/Manage'
 import { PersonEditor } from './screens/PersonEditor'
 import { Game } from './screens/Game'
 import { ToastProvider } from './components/Toast'
+import { Settings } from './components/Settings'
+import { CogIcon, GameIcon, UsersIcon } from './components/icons'
 import './components/modal.scss'
 
 export function App(): ReactNode {
   const route = useRoute()
   const hydrated = useStore((s) => s.hydrated)
   const hasPersons = useStore((s) => s.persons.length > 0)
+  const theme = useStore((s) => s.theme)
+  const [settingsOpen, setSettingsOpen] = useState(false)
+
+  // Apply the selected theme to <html> (CSS custom properties switch on it).
+  useEffect(() => {
+    document.documentElement.dataset.theme = theme
+  }, [theme])
 
   // First start (no data yet): send the user to Verwalten to set things up.
   useEffect(() => {
@@ -20,27 +28,40 @@ export function App(): ReactNode {
     }
   }, [hydrated, hasPersons, route.name])
 
-  const tab: 'manage' | 'game' = route.name === 'game' ? 'game' : 'manage'
+  const onGame = route.name === 'game'
 
   return (
     <ToastProvider>
       <div className="app">
         <header className="topbar">
           <h1>Zitat-Bingo</h1>
-          <div className="tabs">
+          {onGame ? (
             <button
-              className={clsx({ active: tab === 'manage' })}
+              className="icon-btn"
+              aria-label="Verwalten"
+              title="Verwalten"
               onClick={() => navigate({ name: 'manage' })}
             >
-              Verwalten
+              <UsersIcon />
             </button>
+          ) : (
             <button
-              className={clsx({ active: tab === 'game' })}
+              className="icon-btn"
+              aria-label="Spielen"
+              title="Spielen"
               onClick={() => navigate({ name: 'game' })}
             >
-              Spielen
+              <GameIcon />
             </button>
-          </div>
+          )}
+          <button
+            className="icon-btn"
+            aria-label="Einstellungen"
+            title="Einstellungen"
+            onClick={() => setSettingsOpen(true)}
+          >
+            <CogIcon />
+          </button>
         </header>
 
         {!hydrated ? (
@@ -54,6 +75,8 @@ export function App(): ReactNode {
         ) : (
           <Manage />
         )}
+
+        {settingsOpen && <Settings onClose={() => setSettingsOpen(false)} />}
       </div>
     </ToastProvider>
   )

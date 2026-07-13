@@ -26,11 +26,14 @@ const uid = (): Id =>
     ? crypto.randomUUID()
     : `${Date.now()}-${Math.random().toString(36).slice(2)}`
 
+export type Theme = 'dark' | 'light' | 'system'
+
 interface State {
   persons: Person[]
   quotes: Quote[]
   cards: Record<Id, Card>
   activePersonId: Id | null
+  theme: Theme
   hydrated: boolean
 }
 
@@ -52,6 +55,8 @@ interface Actions {
 
   /** Merge an imported list into a person (matched by name, else created). */
   importList: (name: string, quotes: string[]) => { personId: Id } & MergeResult
+
+  setTheme: (theme: Theme) => void
 }
 
 const quotesFor = (quotes: Quote[], personId: Id): string[] =>
@@ -64,6 +69,7 @@ export const useStore = create<State & Actions>()(
       quotes: [],
       cards: {},
       activePersonId: null,
+      theme: 'system',
       hydrated: false,
 
       addPerson: (name) => {
@@ -159,6 +165,8 @@ export const useStore = create<State & Actions>()(
         set({ quotes: [...others, ...rebuilt] })
         return { personId, ...merged }
       },
+
+      setTheme: (theme) => set({ theme }),
     }),
     {
       name: 'quote-bingo-state',
@@ -169,6 +177,7 @@ export const useStore = create<State & Actions>()(
         quotes: s.quotes,
         cards: s.cards,
         activePersonId: s.activePersonId,
+        theme: s.theme,
       }),
       // v0 cards had a fixed 5x5 shape without `size`; drop them so they
       // regenerate lazily with the new size-aware format.

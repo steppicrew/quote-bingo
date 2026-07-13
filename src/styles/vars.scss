@@ -1,22 +1,28 @@
-// Design tokens — single source of truth for colors and spacing.
+// Design tokens.
+//
+// Colors are CSS custom properties so the theme can switch at runtime. The SCSS
+// `$color` variables below simply forward to those custom properties, so every
+// existing `v.$primary` etc. keeps working while the actual value comes from the
+// active theme (see theme.scss for the light/dark definitions).
 
-$bg: #0f0e1a;
-$surface: #1a1830;
-$surface-2: #242142;
-$border: #35315c;
+$bg: var(--bg);
+$surface: var(--surface);
+$surface-2: var(--surface-2);
+$border: var(--border);
 
-$text: #ece9ff;
-$text-dim: #a39fc9;
+$text: var(--text);
+$text-dim: var(--text-dim);
 
-$primary: #7c6cff;
-$primary-dim: #5b4fd6;
-$accent: #ffd166;
+$primary: var(--primary);
+$primary-dim: var(--primary-dim);
+$accent: var(--accent);
 
-$success: #3ddc97;
-$danger: #ff6b6b;
+$success: var(--success);
+$danger: var(--danger);
 
+// Non-themed tokens.
 $radius: 12px;
 $radius-sm: 8px;
 $gap: 12px;
 
-$shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
+$shadow: 0 6px 20px var(--shadow-color);

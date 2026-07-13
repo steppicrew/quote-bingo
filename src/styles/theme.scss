@@ -1,0 +1,54 @@
+// Theme palettes as CSS custom properties.
+//
+// `<html>` carries data-theme = "dark" | "light" | "system" (set from the store).
+// "system" follows the OS via prefers-color-scheme.
+
+@mixin dark {
+  --bg: #0f0e1a;
+  --surface: #1a1830;
+  --surface-2: #242142;
+  --border: #35315c;
+  --text: #ece9ff;
+  --text-dim: #a39fc9;
+  --primary: #7c6cff;
+  --primary-dim: #5b4fd6;
+  --accent: #ffd166;
+  --success: #3ddc97;
+  --danger: #ff6b6b;
+  --shadow-color: rgba(0, 0, 0, 0.35);
+}
+
+@mixin light {
+  --bg: #f4f2fb;
+  --surface: #ffffff;
+  --surface-2: #ece9f8;
+  --border: #d5cff0;
+  --text: #1c1830;
+  --text-dim: #6b6590;
+  --primary: #6a4bff;
+  --primary-dim: #5b3fe0;
+  --accent: #e0a800;
+  --success: #1f9e6a;
+  --danger: #d6483f;
+  --shadow-color: rgba(60, 50, 110, 0.18);
+}
+
+// Default (no attribute) = dark.
+:root {
+  @include dark;
+}
+
+:root[data-theme='dark'] {
+  @include dark;
+}
+
+:root[data-theme='light'] {
+  @include light;
+}
+
+:root[data-theme='system'] {
+  @include dark;
+  @media (prefers-color-scheme: light) {
+    @include light;
+  }
+}
