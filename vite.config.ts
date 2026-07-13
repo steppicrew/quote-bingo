@@ -14,10 +14,12 @@ export default defineConfig({
         short_name: 'Bingo',
         description: 'Offline-Bingo mit Zitaten, die andere sicher bald sagen werden.',
         lang: 'de',
+        id: '/',
+        scope: '/',
         theme_color: '#1e1b4b',
         background_color: '#0f0e1a',
         display: 'standalone',
-        start_url: '.',
+        start_url: '/',
         icons: [
           { src: 'icon-192.png', sizes: '192x192', type: 'image/png' },
           { src: 'icon-512.png', sizes: '512x512', type: 'image/png' },
