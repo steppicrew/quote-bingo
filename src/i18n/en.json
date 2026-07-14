@@ -6,6 +6,7 @@
       "back": "Back to overview",
       "manage": "Manage",
       "play": "Play",
+      "sound": "Win signal: {{state}} (tap to change)",
       "settings": "Settings"
     }
   },
@@ -60,8 +61,11 @@
     "title": "Settings",
     "design": "Theme",
     "language": "Language",
-    "sound": "Win sound",
+    "sound": "Win signal",
+    "soundOn": "On",
+    "soundVibrate": "Vibrate only",
     "soundOff": "Off",
+    "soundType": "Fanfare",
     "soundTadaa": "Ta-daa",
     "soundArpeggio": "Arpeggio",
     "import": "Import",

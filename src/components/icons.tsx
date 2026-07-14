@@ -52,3 +52,34 @@ export function GameIcon(): ReactNode {
     </svg>
   )
 }
+
+export function SoundOnIcon(): ReactNode {
+  return (
+    <svg {...base}>
+      <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+      <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
+      <path d="M19.07 4.93a10 10 0 0 1 0 14.14" />
+    </svg>
+  )
+}
+
+export function SoundVibrateIcon(): ReactNode {
+  return (
+    <svg {...base}>
+      <rect x="8" y="4" width="8" height="16" rx="1.5" />
+      <line x1="11" y1="17" x2="13" y2="17" />
+      <line x1="4" y1="9" x2="4" y2="15" />
+      <line x1="20" y1="9" x2="20" y2="15" />
+    </svg>
+  )
+}
+
+export function SoundOffIcon(): ReactNode {
+  return (
+    <svg {...base}>
+      <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+      <line x1="23" y1="9" x2="17" y2="15" />
+      <line x1="17" y1="9" x2="23" y2="15" />
+    </svg>
+  )
+}

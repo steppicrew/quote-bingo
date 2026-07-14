@@ -6,6 +6,7 @@
       "back": "Zurück zur Übersicht",
       "manage": "Verwalten",
       "play": "Spielen",
+      "sound": "Gewinn-Signal: {{state}} (tippen zum Wechseln)",
       "settings": "Einstellungen"
     }
   },
@@ -60,8 +61,11 @@
     "title": "Einstellungen",
     "design": "Design",
     "language": "Sprache",
-    "sound": "Gewinn-Sound",
+    "sound": "Gewinn-Signal",
+    "soundOn": "An",
+    "soundVibrate": "Nur Vibration",
     "soundOff": "Aus",
+    "soundType": "Fanfare",
     "soundTadaa": "Ta-daa",
     "soundArpeggio": "Arpeggio",
     "import": "Importieren",

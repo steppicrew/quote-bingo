@@ -28,11 +28,18 @@ function note(ac: AudioContext, freq: number, at: number, dur: number, gainPeak:
   const attack = 0.03
   const release = Math.min(0.25, dur * 0.4)
   const sustain = gainPeak * 0.7
+  // A final short linear fade to *true* zero avoids the click ("nack") an
+  // exponential ramp leaves: it can only reach a tiny floor, so cutting the
+  // oscillator there leaves a discontinuity. Ramp exp to the floor slightly
+  // early, then linearly to 0, and stop the oscillator exactly at 0.
+  const tail = 0.012
+  const end = at + dur
   master.gain.setValueAtTime(0.0001, at)
   master.gain.exponentialRampToValueAtTime(gainPeak, at + attack)
   master.gain.exponentialRampToValueAtTime(sustain, at + attack + 0.08)
   master.gain.setValueAtTime(sustain, at + Math.max(attack + 0.08, dur - release))
-  master.gain.exponentialRampToValueAtTime(0.0001, at + dur)
+  master.gain.exponentialRampToValueAtTime(0.0008, end - tail)
+  master.gain.linearRampToValueAtTime(0, end)
 
   for (const [type, detune] of [
     ['triangle', -6],
@@ -47,11 +54,14 @@ function note(ac: AudioContext, freq: number, at: number, dur: number, gainPeak:
     osc.connect(g)
     g.connect(master)
     osc.start(at)
-    osc.stop(at + dur + 0.05)
+    osc.stop(end) // stop exactly when the gain reaches 0
   }
 }
 
-export type SoundKind = 'off' | 'tadaa' | 'arpeggio'
+/** How a win is celebrated. */
+export type SoundMode = 'on' | 'vibrate' | 'off'
+/** Which fanfare plays when the mode is 'on'. */
+export type SoundKind = 'tadaa' | 'arpeggio'
 
 /**
  * "Ta-daa!" — modelled on a reference recording: a short bright pickup on G4
@@ -93,33 +103,43 @@ function playArpeggio(ac: AudioContext, big: boolean, t0: number): void {
 }
 
 // Seconds between the start of consecutive repeats, per sound.
-const REPEAT_GAP: Record<Exclude<SoundKind, 'off'>, number> = {
+const REPEAT_GAP: Record<SoundKind, number> = {
   tadaa: 0.72,
   arpeggio: 0.5,
 }
 
 /**
- * Play the chosen win sound plus a vibration. `big` (full card) brightens the
- * sound and strengthens the vibration. `times` repeats the sound back-to-back
- * (e.g. 2 for a double bingo). No-ops for 'off' or when audio is unavailable.
+ * Celebrate a win. `mode` gates it: 'off' does nothing, 'vibrate' fires only
+ * haptics, 'on' plays the `kind` fanfare plus haptics. `big` (full card)
+ * brightens the sound and strengthens the vibration; `times` repeats it
+ * back-to-back (e.g. 2 for a double bingo).
+ *
+ * Note: the web can't read the phone's ringer/silent switch, so 'on' plays
+ * audio regardless of system mute — 'vibrate'/'off' are the manual opt-outs.
  */
-export function playFanfare(kind: SoundKind, big = false, times = 1): void {
-  if (kind === 'off') return
+export function playFanfare(
+  mode: SoundMode,
+  kind: SoundKind,
+  big = false,
+  times = 1,
+): void {
+  if (mode === 'off') return
   const reps = Math.max(1, times)
 
-  const ac = audioCtx()
-  if (ac) {
-    const gap = REPEAT_GAP[kind]
-    for (let i = 0; i < reps; i++) {
-      const at = ac.currentTime + 0.01 + i * gap
-      if (kind === 'tadaa') playTadaa(ac, big, at)
-      else playArpeggio(ac, big, at)
+  if (mode === 'on') {
+    const ac = audioCtx()
+    if (ac) {
+      const gap = REPEAT_GAP[kind]
+      for (let i = 0; i < reps; i++) {
+        const at = ac.currentTime + 0.01 + i * gap
+        if (kind === 'tadaa') playTadaa(ac, big, at)
+        else playArpeggio(ac, big, at)
+      }
     }
   }
 
   if (typeof navigator !== 'undefined' && typeof navigator.vibrate === 'function') {
     const one = big ? [30, 60, 40, 30, 140] : [25, 60, 90]
-    // Repeat the pulse pattern too, separated by a short gap.
     const pattern: number[] = []
     for (let i = 0; i < reps; i++) pattern.push(...one, 120)
     navigator.vibrate(pattern)

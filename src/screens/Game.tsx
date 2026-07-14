@@ -32,6 +32,7 @@ export function Game(): ReactNode {
   const ensureCard = useStore((s) => s.ensureCard)
   const regenerateCard = useStore((s) => s.regenerateCard)
   const toggleCell = useStore((s) => s.toggleCell)
+  const soundMode = useStore((s) => s.soundMode)
   const soundKind = useStore((s) => s.soundKind)
   const toast = useToast()
 
@@ -100,10 +101,10 @@ export function Game(): ReactNode {
       setShakeKey((k) => k + 1)
       // Sound the fanfare once per line completed (double bingo = twice, …);
       // a full card is a single grand flourish.
-      playFanfare(soundKind, big || combo >= 2, big ? 1 : combo)
+      playFanfare(soundMode, soundKind, big || combo >= 2, big ? 1 : combo)
     }
     prevLines.current = { cardId: card.personId, lines }
-  }, [card, toast, t, soundKind])
+  }, [card, toast, t, soundMode, soundKind])
 
   const reshuffle = (): void => {
     if (active && confirm(t('game.reshuffleConfirm'))) {

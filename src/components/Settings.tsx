@@ -4,7 +4,7 @@ import { type QuoteListExport } from '../types'
 import { importFromFile } from '../lib/share'
 import { useInstall } from '../lib/install'
 import { useModalDismiss } from '../lib/useModalDismiss'
-import { playFanfare, type SoundKind } from '../lib/fanfare'
+import { playFanfare, type SoundKind, type SoundMode } from '../lib/fanfare'
 import { useTranslation } from 'react-i18next'
 import { ThemeToggle } from './ThemeToggle'
 import { LanguageToggle } from './LanguageToggle'
@@ -21,6 +21,8 @@ interface Props {
 export function Settings({ onClose }: Props): ReactNode {
   const { t } = useTranslation()
   const importList = useStore((s) => s.importList)
+  const soundMode = useStore((s) => s.soundMode)
+  const setSoundMode = useStore((s) => s.setSoundMode)
   const soundKind = useStore((s) => s.soundKind)
   const setSoundKind = useStore((s) => s.setSoundKind)
   const { canInstall, promptInstall } = useInstall()
@@ -69,14 +71,31 @@ export function Settings({ onClose }: Props): ReactNode {
           <span>{t('settings.sound')}</span>
           <select
             aria-label={t('settings.sound')}
+            value={soundMode}
+            onChange={(e) => {
+              const mode = e.target.value as SoundMode
+              setSoundMode(mode)
+              playFanfare(mode, soundKind) // preview the choice
+            }}
+          >
+            <option value="on">{t('settings.soundOn')}</option>
+            <option value="vibrate">{t('settings.soundVibrate')}</option>
+            <option value="off">{t('settings.soundOff')}</option>
+          </select>
+        </div>
+
+        <div className="setting">
+          <span>{t('settings.soundType')}</span>
+          <select
+            aria-label={t('settings.soundType')}
             value={soundKind}
+            disabled={soundMode !== 'on'}
             onChange={(e) => {
               const kind = e.target.value as SoundKind
               setSoundKind(kind)
-              playFanfare(kind) // preview the choice
+              playFanfare('on', kind) // preview the choice
             }}
           >
-            <option value="off">{t('settings.soundOff')}</option>
             <option value="tadaa">{t('settings.soundTadaa')}</option>
             <option value="arpeggio">{t('settings.soundArpeggio')}</option>
           </select>

@@ -6,6 +6,7 @@
       "back": "Volver al resumen",
       "manage": "Gestionar",
       "play": "Jugar",
+      "sound": "Señal de victoria: {{state}} (toca para cambiar)",
       "settings": "Ajustes"
     }
   },
@@ -60,8 +61,11 @@
     "title": "Ajustes",
     "design": "Tema",
     "language": "Idioma",
-    "sound": "Sonido de victoria",
+    "sound": "Señal de victoria",
+    "soundOn": "Activado",
+    "soundVibrate": "Solo vibración",
     "soundOff": "Desactivado",
+    "soundType": "Fanfarria",
     "soundTadaa": "Ta-daa",
     "soundArpeggio": "Arpegio",
     "import": "Importar",

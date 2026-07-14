@@ -13,7 +13,7 @@ import {
 import { idbStorage } from './lib/db'
 import { generateCard } from './lib/card'
 import { mergeQuotes, type MergeResult } from './lib/share'
-import { type SoundKind } from './lib/fanfare'
+import { type SoundKind, type SoundMode } from './lib/fanfare'
 
 /** Largest offered size whose quota fits the pool, preferring DEFAULT_SIZE. */
 function bestSize(poolCount: number): number {
@@ -37,6 +37,7 @@ interface State {
   activePersonId: Id | null
   theme: Theme
   locale: Locale
+  soundMode: SoundMode
   soundKind: SoundKind
   hydrated: boolean
 }
@@ -65,7 +66,10 @@ interface Actions {
 
   setTheme: (theme: Theme) => void
   setLocale: (locale: Locale) => void
+  setSoundMode: (soundMode: SoundMode) => void
   setSoundKind: (soundKind: SoundKind) => void
+  /** Cycle the nav-bar sound toggle: on → vibrate → off → on. */
+  cycleSoundMode: () => void
 }
 
 const quotesFor = (quotes: Quote[], personId: Id): string[] =>
@@ -80,6 +84,7 @@ export const useStore = create<State & Actions>()(
       activePersonId: null,
       theme: 'system',
       locale: 'system',
+      soundMode: 'on',
       soundKind: 'tadaa',
       hydrated: false,
 
@@ -181,7 +186,17 @@ export const useStore = create<State & Actions>()(
 
       setTheme: (theme) => set({ theme }),
       setLocale: (locale) => set({ locale }),
+      setSoundMode: (soundMode) => set({ soundMode }),
       setSoundKind: (soundKind) => set({ soundKind }),
+      cycleSoundMode: () =>
+        set((s) => {
+          const next: Record<SoundMode, SoundMode> = {
+            on: 'vibrate',
+            vibrate: 'off',
+            off: 'on',
+          }
+          return { soundMode: next[s.soundMode] }
+        }),
     }),
     {
       name: 'quote-bingo-state',
@@ -194,6 +209,7 @@ export const useStore = create<State & Actions>()(
         activePersonId: s.activePersonId,
         theme: s.theme,
         locale: s.locale,
+        soundMode: s.soundMode,
         soundKind: s.soundKind,
       }),
       migrate: (persisted, version) => {

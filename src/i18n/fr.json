@@ -6,6 +6,7 @@
       "back": "Retour à l'aperçu",
       "manage": "Gérer",
       "play": "Jouer",
+      "sound": "Signal de victoire : {{state}} (appuyer pour changer)",
       "settings": "Paramètres"
     }
   },
@@ -60,8 +61,11 @@
     "title": "Paramètres",
     "design": "Thème",
     "language": "Langue",
-    "sound": "Son de victoire",
+    "sound": "Signal de victoire",
+    "soundOn": "Activé",
+    "soundVibrate": "Vibration seule",
     "soundOff": "Désactivé",
+    "soundType": "Fanfare",
     "soundTadaa": "Ta-daa",
     "soundArpeggio": "Arpège",
     "import": "Importer",
