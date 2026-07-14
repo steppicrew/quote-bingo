@@ -11,14 +11,15 @@ merge quote lists with friends via **QR code** or **JSON file**.
 
 - 📴 **Fully offline** — installable PWA, data stored in IndexedDB.
 - 👥 **Per-person quote pools** — one bingo card per person, persistent across sessions.
+- 🎨 **Per-person accent colour** — pick from a preset palette; the person's board recolours.
 - 🎯 **Configurable card size** — 3×3 up to 7×7 (odd sizes can have a free centre).
 - 🃏 **Optional joker** — toggle the free centre per card (needs one more quote when off).
 - 🔀 **Reshuffle** cards on demand; checked cells and progress are saved.
 - 🏆 **Spectacular wins** — confetti, a full-screen banner, board shake, a pulse on the
   freshly-completed line, and a selectable win sound (ta-daa / arpeggio / off, synthesised
   offline) with haptics. A full card gets a bigger, golden celebration.
-- 🌍 **Multilingual UI** — German, English, French, Spanish; follows the browser language
-  by default (English fallback), selectable in Settings.
+- 🌍 **Multilingual UI** — German, English, French, Spanish (incl. the document title);
+  follows the browser language by default (English fallback), selectable in Settings.
 - 🌓 **Light / dark / system theme**.
 - 📤 **Share & merge** — export/import quote lists as file or QR, with automatic
   de-duplication when merging.

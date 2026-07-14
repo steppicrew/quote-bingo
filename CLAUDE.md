@@ -28,16 +28,24 @@ localized (de/en/fr/es) via react-i18next; the German build name is "Zitate-Bing
 
 ## Architecture
 
-- **Data model** (`src/types.ts`): `Person`, `Quote` (text only), `Card` (per-person,
-  persistent, holds `size` + `joker` + `cells` + `checked`). Helpers take joker into
-  account: `quotesNeeded(size, joker)`, `centerIndex(size, joker)`,
-  `freeCenterActive(size, joker)`; `hasFreeCenter(size)` is the pure odd-size check.
+- **Data model** (`src/types.ts`): `Person` (optional `accent?: AccentName`), `Quote`
+  (text only), `Card` (per-person, persistent, holds `size` + `joker` + `cells` +
+  `checked`). Helpers take joker into account: `quotesNeeded(size, joker)`,
+  `centerIndex(size, joker)`, `freeCenterActive(size, joker)`; `hasFreeCenter(size)` is
+  the pure odd-size check.
+- **Per-person accent** (`src/lib/accents.ts`): a preset palette (`ACCENTS`,
+  indigo/rose/emerald/amber/sky/violet + `default`). `accentStyle(name)` returns the
+  `--primary`/`--primary-dim`/`--accent` overrides, applied inline to the Game `.content`
+  so the active person's board recolours. Picked via swatches in `PersonEditor`; the gold
+  win-tile styling is intentionally accent-independent.
 - **Card logic** (`src/lib/card.ts`): `generateCard(personId, ids, size, joker)`
   (Fisher–Yates; free centre only when `joker && odd size`),
   `linesFor`/`winningCells`/`completedLineCount`, `isFullCard`.
 - **i18n** (`src/i18n/index.ts` + `{de,en,fr,es}.json`): `de` is the source of truth.
   Store `locale` ('system'|de|en|fr|es) drives `i18n.changeLanguage` from `App`;
   'system' follows `navigator.language`, **falling back to English** (`fallbackLng: 'en'`).
+  `App` also sets `document.title` from `app.title` (keyed on `i18n.language` so it updates
+  after the language resolves); `index.html` holds the pre-JS fallback "Zitate-Bingo".
 - **Modal dismissal** (`src/lib/useModalDismiss.ts`): phone Back button + Escape close
   modals via a pushed history entry. Note the module-level `suppressNextPop` guard — the
   cleanup's async `history.back()` popstate must not be read as a user Back under
