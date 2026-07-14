@@ -11,11 +11,10 @@ import { playFanfare } from '../lib/fanfare'
 import { PersonSwitcher } from '../components/PersonSwitcher'
 import { BingoBoard } from '../components/BingoBoard'
 import { WinBanner } from '../components/WinBanner'
-import { useToast } from '../components/toast-context'
 
 const MIN_POOL = quotesNeeded(SIZES[0]!) // smallest card's requirement (3x3 -> 8)
 
-/** Banner/toast text for a win of `combo` lines completed by one tap. */
+/** Banner text for a win of `combo` lines completed by one tap. */
 function winLabel(t: TFunction, combo: number): string {
   if (combo === 2) return t('game.doubleBingo')
   if (combo === 3) return t('game.tripleBingo')
@@ -35,7 +34,6 @@ export function Game(): ReactNode {
   const toggleCell = useStore((s) => s.toggleCell)
   const soundMode = useStore((s) => s.soundMode)
   const soundKind = useStore((s) => s.soundKind)
-  const toast = useToast()
 
   // Win presentation: banner text + a bump key that retriggers the board shake.
   const [winBanner, setWinBanner] = useState<{ text: string; big: boolean } | null>(null)
@@ -92,7 +90,6 @@ export function Game(): ReactNode {
       // Lines this single tap completed at once (1 = Bingo, 2 = Double, …).
       const combo = lines - prevLines.current.lines
       const text = big ? t('game.fullCard') : winLabel(t, combo)
-      toast(text, 'win')
       // A full card or a multi-line combo earns the bigger, golden burst.
       const grand = big || combo >= 2
       confetti(grand ? { intensity: big ? 2 : 1.5, gold: true } : { intensity: 1 })
@@ -105,7 +102,7 @@ export function Game(): ReactNode {
       playFanfare(soundMode, soundKind, big || combo >= 2, big ? 1 : combo)
     }
     prevLines.current = { cardId: card.personId, lines }
-  }, [card, toast, t, soundMode, soundKind])
+  }, [card, t, soundMode, soundKind])
 
   const reshuffle = (): void => {
     if (active && confirm(t('game.reshuffleConfirm'))) {

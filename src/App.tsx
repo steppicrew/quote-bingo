@@ -52,6 +52,12 @@ export function App(): ReactNode {
     document.documentElement.lang = resolved
   }, [locale, i18n])
 
+  // Keep the document title localized. Depends on i18n.language so it updates
+  // after changeLanguage resolves, not just on the locale setting.
+  useEffect(() => {
+    document.title = t('app.title')
+  }, [t, i18n.language])
+
   // First start (no data yet): send the user to Verwalten to set things up.
   useEffect(() => {
     if (hydrated && !hasPersons && route.name === 'game') {
@@ -94,20 +100,22 @@ export function App(): ReactNode {
               <GameIcon />
             </button>
           )}
-          <button
-            className="icon-btn"
-            aria-label={t('app.nav.sound', { state: t(soundModeLabelKey[soundMode]) })}
-            title={t('app.nav.sound', { state: t(soundModeLabelKey[soundMode]) })}
-            onClick={cycleSoundMode}
-          >
-            {soundMode === 'on' ? (
-              <SoundOnIcon />
-            ) : soundMode === 'vibrate' ? (
-              <SoundVibrateIcon />
-            ) : (
-              <SoundOffIcon />
-            )}
-          </button>
+          {onGame && (
+            <button
+              className="icon-btn"
+              aria-label={t('app.nav.sound', { state: t(soundModeLabelKey[soundMode]) })}
+              title={t('app.nav.sound', { state: t(soundModeLabelKey[soundMode]) })}
+              onClick={cycleSoundMode}
+            >
+              {soundMode === 'on' ? (
+                <SoundOnIcon />
+              ) : soundMode === 'vibrate' ? (
+                <SoundVibrateIcon />
+              ) : (
+                <SoundOffIcon />
+              )}
+            </button>
+          )}
           <button
             className="icon-btn"
             aria-label={t('app.nav.settings')}
