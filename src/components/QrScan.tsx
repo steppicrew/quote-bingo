@@ -2,6 +2,7 @@ import { useEffect, useRef, useState, type ReactNode } from 'react'
 import { Html5Qrcode, Html5QrcodeScannerState } from 'html5-qrcode'
 import { decodeList } from '../lib/share'
 import { type QuoteListExport } from '../types'
+import { useModalDismiss } from '../lib/useModalDismiss'
 
 interface Props {
   onResult: (list: QuoteListExport) => void
@@ -14,6 +15,7 @@ export function QrScan({ onResult, onClose }: Props): ReactNode {
   const [error, setError] = useState<string | null>(null)
   const scannerRef = useRef<Html5Qrcode | null>(null)
   const doneRef = useRef(false)
+  useModalDismiss(onClose)
 
   useEffect(() => {
     const scanner = new Html5Qrcode(REGION_ID, { verbose: false })

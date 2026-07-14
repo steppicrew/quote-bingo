@@ -3,6 +3,7 @@ import { useStore } from '../store'
 import { type QuoteListExport } from '../types'
 import { importFromFile } from '../lib/share'
 import { useInstall } from '../lib/install'
+import { useModalDismiss } from '../lib/useModalDismiss'
 import { ThemeToggle } from './ThemeToggle'
 import { useToast } from './toast-context'
 import './Settings.scss'
@@ -21,6 +22,7 @@ export function Settings({ onClose }: Props): ReactNode {
 
   const [scanning, setScanning] = useState(false)
   const fileRef = useRef<HTMLInputElement>(null)
+  useModalDismiss(onClose)
 
   const applyImport = (list: QuoteListExport): void => {
     const res = importList(list.person.name, list.quotes)

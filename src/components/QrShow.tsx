@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState, type ReactNode } from 'react'
 import QRCode from 'qrcode'
 import { encodeList, QR_MAX_CHARS } from '../lib/share'
+import { useModalDismiss } from '../lib/useModalDismiss'
 
 interface Props {
   name: string
@@ -12,6 +13,7 @@ export function QrShow({ name, quotes, onClose }: Props): ReactNode {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const [tooBig, setTooBig] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  useModalDismiss(onClose)
 
   useEffect(() => {
     let cancelled = false
