@@ -18,8 +18,9 @@ merge quote lists with friends via **QR code** or **JSON file**.
 - 🏆 **Spectacular wins** — confetti, a full-screen banner, board shake, a pulse on the
   freshly-completed line, and a selectable win sound (ta-daa / arpeggio / off, synthesised
   offline) with haptics. A full card gets a bigger, golden celebration.
-- 🌍 **Multilingual UI** — German, English, French, Spanish (incl. the document title);
-  follows the browser language by default (English fallback), selectable in Settings.
+- 🌍 **Multilingual UI** — German, English, French, Spanish, Chinese, Japanese (incl. the
+  document title); follows the browser language by default (English fallback), selectable
+  in Settings.
 - 🌓 **Light / dark / system theme**.
 - 📤 **Share & merge** — export/import quote lists as file or QR, with automatic
   de-duplication when merging.

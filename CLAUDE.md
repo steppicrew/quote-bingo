@@ -3,7 +3,7 @@
 Fully offline PWA. Build bingo cards from quotes people will "probably say sooner or
 later", then check cells in game mode as they get said. No backend — all state lives in
 the browser (IndexedDB). Share/merge quote lists via QR code or JSON file. UI is
-localized (de/en/fr/es) via react-i18next; the German build name is "Zitate-Bingo".
+localized (de/en/fr/es/zh/ja) via react-i18next; the German build name is "Zitate-Bingo".
 
 ## Stack
 
@@ -41,9 +41,11 @@ localized (de/en/fr/es) via react-i18next; the German build name is "Zitate-Bing
 - **Card logic** (`src/lib/card.ts`): `generateCard(personId, ids, size, joker)`
   (Fisher–Yates; free centre only when `joker && odd size`),
   `linesFor`/`winningCells`/`completedLineCount`, `isFullCard`.
-- **i18n** (`src/i18n/index.ts` + `{de,en,fr,es}.json`): `de` is the source of truth.
-  Store `locale` ('system'|de|en|fr|es) drives `i18n.changeLanguage` from `App`;
+- **i18n** (`src/i18n/index.ts` + `{de,en,fr,es,zh,ja}.json`): `de` is the source of truth.
+  Store `locale` ('system'|de|en|fr|es|zh|ja) drives `i18n.changeLanguage` from `App`;
   'system' follows `navigator.language`, **falling back to English** (`fallbackLng: 'en'`).
+  zh/ja have no plural forms — use `_other` keys only. The font stack in `global.scss`
+  includes common CJK system fonts (no bundled webfont) so they render without tofu.
   `App` also sets `document.title` from `app.title` (keyed on `i18n.language` so it updates
   after the language resolves); `index.html` holds the pre-JS fallback "Zitate-Bingo".
 - **Modal dismissal** (`src/lib/useModalDismiss.ts`): phone Back button + Escape close
