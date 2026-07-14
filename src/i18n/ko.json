@@ -1,0 +1,119 @@
+{
+  "app": {
+    "title": "명언 빙고",
+    "loading": "불러오는 중…",
+    "nav": {
+      "back": "개요로 돌아가기",
+      "manage": "관리",
+      "play": "플레이",
+      "sound": "승리 신호: {{state}} (탭하여 변경)",
+      "settings": "설정"
+    }
+  },
+  "game": {
+    "bingo": "빙고! 🎉",
+    "doubleBingo": "더블 빙고! 🎉",
+    "tripleBingo": "트리플 빙고! 🎉",
+    "quadBingo": "쿼드러플 빙고! 🎉",
+    "fullCard": "풀 카드! 🎉",
+    "reshuffleConfirm": "카드를 다시 섞을까요? 체크된 칸이 초기화됩니다.",
+    "resizeConfirm": "{{size}}×{{size}}(으)로 바꿀까요? 카드가 다시 생성됩니다.",
+    "jokerConfirm": "조커 칸을 변경할까요? 카드가 다시 생성됩니다.",
+    "jokerLabel": "조커",
+    "jokerDisabledHint": "명언이 너무 적어 조커 없는 카드를 만들 수 없습니다.",
+    "noPersons": "아직 아무도 없습니다.",
+    "toManage": "관리로 이동",
+    "poolTooSmall": "“{{name}}”에는 명언이 {{count}}개 있습니다 – 가장 작은 카드(3×3)에는 {{min}}개가 필요합니다.",
+    "addQuotes": "명언 추가",
+    "size": "크기",
+    "reshuffle": "다시 섞기"
+  },
+  "manage": {
+    "newPersonPlaceholder": "새 사람의 이름",
+    "add": "추가",
+    "empty": "아직 아무도 없습니다. 누군가를 추가하고 명언을 채워 보세요.",
+    "quoteCount_other": "명언 {{count}}개",
+    "upTo": "최대 {{size}}×{{size}}",
+    "remaining": "{{count}}개 남음"
+  },
+  "editor": {
+    "notFound": "사람을 찾을 수 없습니다.",
+    "back": "뒤로",
+    "quotesAdded_other": "명언 {{count}}개 추가됨",
+    "deleteConfirm": "“{{name}}”와(과) 모든 명언을 삭제할까요?",
+    "badgeCount_other": "명언 {{count}}개",
+    "badgeUpTo": " · 최대 {{size}}×{{size}}",
+    "badgeMin": " · 3×3에는 최소 {{min}}개",
+    "exportFile": "파일 내보내기",
+    "showQr": "QR 표시",
+    "bulkPlaceholder": "명언 추가 – 한 줄에 하나",
+    "addQuotes": "명언 추가",
+    "noQuotes": "아직 명언이 없습니다.",
+    "delete": "삭제",
+    "accent": "색상"
+  },
+  "board": {
+    "free": "무료",
+    "deletedQuote": "(삭제된 명언)"
+  },
+  "accent": {
+    "default": "기본",
+    "indigo": "인디고",
+    "rose": "로즈",
+    "emerald": "에메랄드",
+    "amber": "앰버",
+    "sky": "스카이",
+    "violet": "바이올렛"
+  },
+  "settings": {
+    "title": "설정",
+    "design": "테마",
+    "language": "언어",
+    "sound": "승리 신호",
+    "soundOn": "켜기",
+    "soundVibrate": "진동만",
+    "soundOff": "끄기",
+    "soundType": "팡파르",
+    "soundTadaa": "따-단",
+    "soundArpeggio": "아르페지오",
+    "import": "가져오기",
+    "file": "파일",
+    "scanQr": "QR 스캔",
+    "app": "앱",
+    "install": "설치",
+    "installed": "설치됨 / 사용 불가",
+    "importResult": "“{{name}}” 가져옴: +{{added}}개 추가, {{skipped}}개 중복 건너뜀",
+    "importFailed": "가져오기 실패",
+    "close": "닫기"
+  },
+  "qr": {
+    "shareTitle": "“{{name}}” 공유",
+    "error": "오류: {{error}}",
+    "showFailed": "QR 생성 실패",
+    "tooBig": "이 목록은 QR 코드에 비해 너무 큽니다(명언 {{count}}개). 대신 <1>파일 내보내기</1>를 사용하세요.",
+    "scanHint": "다른 기기로 스캔하여 명언을 가져오세요.",
+    "scanTitle": "명언 목록 스캔",
+    "invalidCode": "스캔한 코드는 유효한 명언 목록이 아닙니다.",
+    "cameraUnavailable": "카메라를 사용할 수 없습니다",
+    "close": "닫기"
+  },
+  "theme": {
+    "light": "밝게",
+    "dark": "어둡게",
+    "system": "시스템",
+    "label": "테마"
+  },
+  "lang": {
+    "system": "시스템",
+    "de": "Deutsch",
+    "en": "English",
+    "fr": "Français",
+    "es": "Español",
+    "zh": "中文",
+    "ja": "日本語",
+    "ko": "한국어",
+    "pt": "Português",
+    "it": "Italiano",
+    "label": "언어"
+  }
+}

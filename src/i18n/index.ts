@@ -7,8 +7,11 @@ import fr from './fr.json'
 import es from './es.json'
 import zh from './zh.json'
 import ja from './ja.json'
+import ko from './ko.json'
+import pt from './pt.json'
+import it from './it.json'
 
-export const SUPPORTED_LNGS = ['de', 'en', 'fr', 'es', 'zh', 'ja'] as const
+export const SUPPORTED_LNGS = ['de', 'en', 'fr', 'es', 'zh', 'ja', 'ko', 'pt', 'it'] as const
 
 // Static imports so Workbox precaches every locale — the app stays fully
 // offline. The store's persisted `locale` drives changeLanguage() from App;
@@ -24,6 +27,9 @@ void i18n
       es: { translation: es },
       zh: { translation: zh },
       ja: { translation: ja },
+      ko: { translation: ko },
+      pt: { translation: pt },
+      it: { translation: it },
     },
     fallbackLng: 'en',
     supportedLngs: [...SUPPORTED_LNGS],

@@ -1,0 +1,122 @@
+{
+  "app": {
+    "title": "Bingo de Citações",
+    "loading": "A carregar…",
+    "nav": {
+      "back": "Voltar à visão geral",
+      "manage": "Gerir",
+      "play": "Jogar",
+      "sound": "Sinal de vitória: {{state}} (toque para mudar)",
+      "settings": "Definições"
+    }
+  },
+  "game": {
+    "bingo": "BINGO! 🎉",
+    "doubleBingo": "BINGO DUPLO! 🎉",
+    "tripleBingo": "BINGO TRIPLO! 🎉",
+    "quadBingo": "BINGO QUÁDRUPLO! 🎉",
+    "fullCard": "CARTELA CHEIA! 🎉",
+    "reshuffleConfirm": "Baralhar a cartela? As células marcadas serão repostas.",
+    "resizeConfirm": "Mudar para {{size}}×{{size}}? A cartela será gerada novamente.",
+    "jokerConfirm": "Alterar a casa curinga? A cartela será gerada novamente.",
+    "jokerLabel": "Curinga",
+    "jokerDisabledHint": "Poucas citações para uma cartela sem curinga.",
+    "noPersons": "Ainda não há pessoas.",
+    "toManage": "Ir para a gestão",
+    "poolTooSmall": "“{{name}}” tem {{count}} citações – a cartela mais pequena (3×3) precisa de {{min}}.",
+    "addQuotes": "Adicionar citações",
+    "size": "Tamanho",
+    "reshuffle": "Baralhar"
+  },
+  "manage": {
+    "newPersonPlaceholder": "Nome da nova pessoa",
+    "add": "Adicionar",
+    "empty": "Ainda não há pessoas. Adicione alguém e preencha o conjunto de citações.",
+    "quoteCount_one": "{{count}} citação",
+    "quoteCount_other": "{{count}} citações",
+    "upTo": "até {{size}}×{{size}}",
+    "remaining": "faltam {{count}}"
+  },
+  "editor": {
+    "notFound": "Pessoa não encontrada.",
+    "back": "Voltar",
+    "quotesAdded_one": "{{count}} citação adicionada",
+    "quotesAdded_other": "{{count}} citações adicionadas",
+    "deleteConfirm": "Eliminar “{{name}}” e todas as citações?",
+    "badgeCount_one": "{{count}} citação",
+    "badgeCount_other": "{{count}} citações",
+    "badgeUpTo": " · até {{size}}×{{size}}",
+    "badgeMin": " · mín. {{min}} para 3×3",
+    "exportFile": "Exportar ficheiro",
+    "showQr": "Mostrar QR",
+    "bulkPlaceholder": "Adicionar citações – uma por linha",
+    "addQuotes": "Adicionar citações",
+    "noQuotes": "Ainda não há citações.",
+    "delete": "Eliminar",
+    "accent": "Cor"
+  },
+  "board": {
+    "free": "LIVRE",
+    "deletedQuote": "(citação eliminada)"
+  },
+  "accent": {
+    "default": "Padrão",
+    "indigo": "Índigo",
+    "rose": "Rosa",
+    "emerald": "Esmeralda",
+    "amber": "Âmbar",
+    "sky": "Céu",
+    "violet": "Violeta"
+  },
+  "settings": {
+    "title": "Definições",
+    "design": "Tema",
+    "language": "Idioma",
+    "sound": "Sinal de vitória",
+    "soundOn": "Ligado",
+    "soundVibrate": "Apenas vibração",
+    "soundOff": "Desligado",
+    "soundType": "Fanfarra",
+    "soundTadaa": "Ta-dá",
+    "soundArpeggio": "Arpejo",
+    "import": "Importar",
+    "file": "Ficheiro",
+    "scanQr": "Ler QR",
+    "app": "Aplicação",
+    "install": "Instalar",
+    "installed": "Instalada / não disponível",
+    "importResult": "“{{name}}” importado: +{{added}} novas, {{skipped}} duplicadas ignoradas",
+    "importFailed": "Falha na importação",
+    "close": "Fechar"
+  },
+  "qr": {
+    "shareTitle": "Partilhar “{{name}}”",
+    "error": "Erro: {{error}}",
+    "showFailed": "Falha no QR",
+    "tooBig": "Esta lista é demasiado grande para um código QR ({{count}} citações). Use antes <1>Exportar ficheiro</1>.",
+    "scanHint": "Leia com outro dispositivo para importar as citações.",
+    "scanTitle": "Ler lista de citações",
+    "invalidCode": "O código lido não é uma lista de citações válida.",
+    "cameraUnavailable": "Câmara não disponível",
+    "close": "Fechar"
+  },
+  "theme": {
+    "light": "Claro",
+    "dark": "Escuro",
+    "system": "Sistema",
+    "label": "Tema"
+  },
+  "lang": {
+    "system": "Sistema",
+    "de": "Deutsch",
+    "en": "English",
+    "fr": "Français",
+    "es": "Español",
+    "zh": "中文",
+    "ja": "日本語",
+    "ko": "한국어",
+    "pt": "Português",
+    "it": "Italiano",
+    "label": "Idioma"
+  }
+}
