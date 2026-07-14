@@ -47,12 +47,19 @@ localized (de/en/fr/es) via react-i18next; the German build name is "Zitate-Bing
   text). Import merges into a person matched by name (case-insensitive), else creates one.
 - **Install** (`src/lib/install.ts`): captures `beforeinstallprompt` at module load,
   `useInstall()` exposes `canInstall` + `promptInstall`. Hidden when already standalone.
+- **Win effects**: `confetti` (`src/lib/confetti.ts`, canvas, `{ intensity, gold }`),
+  `playFanfare(kind, big)` (`src/lib/fanfare.ts`, dependency-free Web Audio synth —
+  `'off'|'tadaa'|'arpeggio'` — plus haptics; the persisted `soundKind` selects it),
+  `WinBanner` (full-screen flash), and a scoped cell pulse. `winningCellsThrough(size,
+  checked, index)` in `card.ts` returns only the lines the last-tapped cell completed, so
+  the pulse animates that line, not every winning line. All effects honour
+  `prefers-reduced-motion`.
 - **Routing** (`src/router.ts`): hash-based. Default route `#/` = **Spielen** (game).
   `#/manage` = Verwalten, `#/person/:id` = quote editor. First start with no persons
   redirects to Verwalten (`src/App.tsx`).
 - **Screens**: `Game`, `Manage`, `PersonEditor`. **Components**: `BingoBoard`, `Cell`,
   `PersonSwitcher`, `QrShow`, `QrScan` (both lazy-loaded), `Toast`, `ThemeToggle`,
-  `LanguageToggle`, `Settings`.
+  `LanguageToggle`, `WinBanner`, `Settings`.
 
 ## Card sizes
 
@@ -72,9 +79,10 @@ joker-off requirement.
   plurals and variables — no manual ternaries or template concatenation.
 - Zustand persist is at **version 2**: `migrate` drops legacy cards lacking `size` (v0→v1)
   and defaults `joker: true` on cards lacking the flag (v1→v2). Persisted slice also
-  carries `theme` + `locale`.
+  carries `theme`, `locale`, `soundKind`.
 - A committed `pre-commit` hook (`.githooks/pre-commit`) bumps the patch version in
   `package.json` on every commit. Enable per clone: `git config core.hooksPath .githooks`.
-- Win celebration (toast + `confetti` from `src/lib/confetti.ts`) fires from a
-  `useEffect` in `Game`. Track the previous completed-line count **per card id** in a
-  ref — resetting to 0 replays past wins on game entry / person switch.
+- Win celebration fires from a `useEffect` in `Game` on a newly completed line. Track the
+  previous completed-line count **per card id** in a ref — resetting to 0 replays past
+  wins on game entry / person switch. The tapped index is captured in `lastToggledRef` at
+  click time so the effect can pulse only the line it completed (`winningCellsThrough`).
