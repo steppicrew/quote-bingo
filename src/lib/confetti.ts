@@ -1,24 +1,55 @@
-// Dependency-free confetti burst on a full-screen canvas overlay.
-// Draws colored rectangles under gravity for a short duration, then
-// removes its canvas. Honors prefers-reduced-motion (no-op).
+// Dependency-free confetti burst on a full-screen canvas overlay. Draws
+// tumbling ribbons/rectangles under gravity, then removes its canvas. Honors
+// prefers-reduced-motion (no-op).
 
 const COLORS = ['#f43f5e', '#f59e0b', '#22c55e', '#3b82f6', '#a855f7', '#eab308']
+// Gold-heavy palette for the bigger (full-card) celebration.
+const GOLD = ['#ffd700', '#f59e0b', '#fff4b8', '#eab308', '#ffcc33', '#fde68a']
 
 interface Particle {
   x: number
   y: number
   vx: number
   vy: number
-  size: number
+  w: number
+  h: number
   color: string
   rot: number
   vrot: number
 }
 
-/** Fire a confetti burst. `intensity` scales particle count. */
-export function confetti(intensity = 1): void {
+interface Options {
+  /** Particle-count multiplier. */
+  intensity?: number
+  /** Use the gold palette and a second delayed burst. */
+  gold?: boolean
+}
+
+function spawn(W: number, H: number, count: number, palette: string[]): Particle[] {
+  return Array.from({ length: count }, () => {
+    const fromLeft = Math.random() < 0.5
+    const ribbon = Math.random() < 0.35
+    const size = 5 + Math.random() * 6
+    return {
+      x: fromLeft ? 0 : W,
+      y: H * (0.5 + Math.random() * 0.4),
+      vx: (fromLeft ? 1 : -1) * (6 + Math.random() * 9),
+      vy: -(9 + Math.random() * 10),
+      w: size,
+      h: ribbon ? size * 1.8 : size * 0.6,
+      color: palette[Math.floor(Math.random() * palette.length)]!,
+      rot: Math.random() * Math.PI,
+      vrot: (Math.random() - 0.5) * 0.5,
+    }
+  })
+}
+
+/** Fire a confetti burst. */
+export function confetti(opts: number | Options = 1): void {
   if (typeof window === 'undefined') return
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+
+  const { intensity = 1, gold = false } = typeof opts === 'number' ? { intensity: opts } : opts
 
   const canvas = document.createElement('canvas')
   canvas.style.cssText =
@@ -37,28 +68,22 @@ export function confetti(intensity = 1): void {
 
   const W = window.innerWidth
   const H = window.innerHeight
-  const count = Math.round(120 * intensity)
-  const parts: Particle[] = Array.from({ length: count }, () => {
-    const fromLeft = Math.random() < 0.5
-    return {
-      x: fromLeft ? 0 : W,
-      y: H * (0.5 + Math.random() * 0.4),
-      vx: (fromLeft ? 1 : -1) * (6 + Math.random() * 8),
-      vy: -(9 + Math.random() * 9),
-      size: 5 + Math.random() * 6,
-      color: COLORS[Math.floor(Math.random() * COLORS.length)]!,
-      rot: Math.random() * Math.PI,
-      vrot: (Math.random() - 0.5) * 0.4,
-    }
-  })
+  const palette = gold ? GOLD : COLORS
+  const parts = spawn(W, H, Math.round(140 * intensity), palette)
+  // A gold celebration gets a second, delayed pop for extra drama.
+  let secondFired = !gold
 
-  const gravity = 0.32
+  const gravity = 0.3
   const drag = 0.99
   const start = performance.now()
-  const durationMs = 2600
+  const durationMs = gold ? 3200 : 2600
 
   const frame = (now: number): void => {
     const elapsed = now - start
+    if (!secondFired && elapsed > 450) {
+      secondFired = true
+      parts.push(...spawn(W, H, Math.round(90 * intensity), palette))
+    }
     ctx.clearRect(0, 0, W, H)
     for (const p of parts) {
       p.vx *= drag
@@ -72,7 +97,7 @@ export function confetti(intensity = 1): void {
       ctx.translate(p.x, p.y)
       ctx.rotate(p.rot)
       ctx.fillStyle = p.color
-      ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size * 0.6)
+      ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h)
       ctx.restore()
     }
     if (elapsed < durationMs) {

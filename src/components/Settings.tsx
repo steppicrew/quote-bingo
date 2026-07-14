@@ -4,6 +4,7 @@ import { type QuoteListExport } from '../types'
 import { importFromFile } from '../lib/share'
 import { useInstall } from '../lib/install'
 import { useModalDismiss } from '../lib/useModalDismiss'
+import { playFanfare, type SoundKind } from '../lib/fanfare'
 import { useTranslation } from 'react-i18next'
 import { ThemeToggle } from './ThemeToggle'
 import { LanguageToggle } from './LanguageToggle'
@@ -20,6 +21,8 @@ interface Props {
 export function Settings({ onClose }: Props): ReactNode {
   const { t } = useTranslation()
   const importList = useStore((s) => s.importList)
+  const soundKind = useStore((s) => s.soundKind)
+  const setSoundKind = useStore((s) => s.setSoundKind)
   const { canInstall, promptInstall } = useInstall()
   const toast = useToast()
 
@@ -60,6 +63,23 @@ export function Settings({ onClose }: Props): ReactNode {
         <div className="setting">
           <span>{t('settings.language')}</span>
           <LanguageToggle />
+        </div>
+
+        <div className="setting">
+          <span>{t('settings.sound')}</span>
+          <select
+            aria-label={t('settings.sound')}
+            value={soundKind}
+            onChange={(e) => {
+              const kind = e.target.value as SoundKind
+              setSoundKind(kind)
+              playFanfare(kind) // preview the choice
+            }}
+          >
+            <option value="off">{t('settings.soundOff')}</option>
+            <option value="tadaa">{t('settings.soundTadaa')}</option>
+            <option value="arpeggio">{t('settings.soundArpeggio')}</option>
+          </select>
         </div>
 
         <div className="setting">

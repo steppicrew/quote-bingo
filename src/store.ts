@@ -13,6 +13,7 @@ import {
 import { idbStorage } from './lib/db'
 import { generateCard } from './lib/card'
 import { mergeQuotes, type MergeResult } from './lib/share'
+import { type SoundKind } from './lib/fanfare'
 
 /** Largest offered size whose quota fits the pool, preferring DEFAULT_SIZE. */
 function bestSize(poolCount: number): number {
@@ -36,6 +37,7 @@ interface State {
   activePersonId: Id | null
   theme: Theme
   locale: Locale
+  soundKind: SoundKind
   hydrated: boolean
 }
 
@@ -63,6 +65,7 @@ interface Actions {
 
   setTheme: (theme: Theme) => void
   setLocale: (locale: Locale) => void
+  setSoundKind: (soundKind: SoundKind) => void
 }
 
 const quotesFor = (quotes: Quote[], personId: Id): string[] =>
@@ -77,6 +80,7 @@ export const useStore = create<State & Actions>()(
       activePersonId: null,
       theme: 'system',
       locale: 'system',
+      soundKind: 'tadaa',
       hydrated: false,
 
       addPerson: (name) => {
@@ -177,6 +181,7 @@ export const useStore = create<State & Actions>()(
 
       setTheme: (theme) => set({ theme }),
       setLocale: (locale) => set({ locale }),
+      setSoundKind: (soundKind) => set({ soundKind }),
     }),
     {
       name: 'quote-bingo-state',
@@ -189,6 +194,7 @@ export const useStore = create<State & Actions>()(
         activePersonId: s.activePersonId,
         theme: s.theme,
         locale: s.locale,
+        soundKind: s.soundKind,
       }),
       migrate: (persisted, version) => {
         const p = persisted as Partial<State> | undefined

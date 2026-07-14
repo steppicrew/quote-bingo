@@ -1,0 +1,82 @@
+.win-banner {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: auto;
+  background: radial-gradient(
+    circle at center,
+    rgba(0, 0, 0, 0.35),
+    rgba(0, 0, 0, 0) 70%
+  );
+  animation: win-backdrop 0.4s ease-out both;
+}
+
+.win-banner__text {
+  font-size: clamp(2.5rem, 14vw, 7rem);
+  font-weight: 900;
+  letter-spacing: 0.02em;
+  text-align: center;
+  color: #fff;
+  text-shadow:
+    0 2px 12px rgba(0, 0, 0, 0.5),
+    0 0 30px rgba(168, 85, 247, 0.5);
+  animation: win-pop 0.5s cubic-bezier(0.2, 1.4, 0.4, 1) both;
+
+  &.big {
+    // Solid gold rather than a background-clip gradient: clipping the
+    // background to text also repaints any emoji (🎉) in the flat gradient,
+    // making it yellow. A plain color + glow leaves the emoji its own colours.
+    color: #ffd700;
+    text-shadow:
+      0 2px 12px rgba(0, 0, 0, 0.5),
+      0 0 40px rgba(255, 215, 0, 0.6);
+    animation:
+      win-pop 0.5s cubic-bezier(0.2, 1.4, 0.4, 1) both,
+      win-shimmer 1.6s ease-in-out 0.5s infinite;
+  }
+}
+
+@keyframes win-backdrop {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes win-pop {
+  0% {
+    transform: scale(0.3) rotate(-6deg);
+    opacity: 0;
+  }
+  60% {
+    transform: scale(1.12) rotate(2deg);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1) rotate(0);
+    opacity: 1;
+  }
+}
+
+@keyframes win-shimmer {
+  0%,
+  100% {
+    filter: brightness(1);
+  }
+  50% {
+    filter: brightness(1.35);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .win-banner,
+  .win-banner__text {
+    animation-duration: 0.01ms;
+    animation-iteration-count: 1;
+  }
+}

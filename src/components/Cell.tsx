@@ -7,10 +7,11 @@ interface Props {
   checked: boolean
   free: boolean
   win: boolean
+  pulse: boolean
   onClick: () => void
 }
 
-export function Cell({ text, checked, free, win, onClick }: Props): ReactNode {
+export function Cell({ text, checked, free, win, pulse, onClick }: Props): ReactNode {
   const btnRef = useRef<HTMLButtonElement>(null)
   const textRef = useRef<HTMLSpanElement>(null)
   useAutoFitText(btnRef, textRef, text)
@@ -18,7 +19,7 @@ export function Cell({ text, checked, free, win, onClick }: Props): ReactNode {
   return (
     <button
       ref={btnRef}
-      className={clsx('cell', { checked, free, win })}
+      className={clsx('cell', { checked, free, win, pulse })}
       onClick={() => !free && onClick()}
       disabled={free}
     >

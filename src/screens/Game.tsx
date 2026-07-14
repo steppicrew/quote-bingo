@@ -1,12 +1,14 @@
-import { useEffect, useMemo, useRef, type ReactNode } from 'react'
+import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useStore } from '../store'
 import { navigate } from '../router'
 import { SIZES, quotesNeeded, hasFreeCenter } from '../types'
-import { completedLineCount, isFullCard } from '../lib/card'
+import { completedLineCount, isFullCard, winningCellsThrough } from '../lib/card'
 import { confetti } from '../lib/confetti'
+import { playFanfare } from '../lib/fanfare'
 import { PersonSwitcher } from '../components/PersonSwitcher'
 import { BingoBoard } from '../components/BingoBoard'
+import { WinBanner } from '../components/WinBanner'
 import { useToast } from '../components/toast-context'
 
 const MIN_POOL = quotesNeeded(SIZES[0]!) // smallest card's requirement (3x3 -> 8)
@@ -21,7 +23,16 @@ export function Game(): ReactNode {
   const ensureCard = useStore((s) => s.ensureCard)
   const regenerateCard = useStore((s) => s.regenerateCard)
   const toggleCell = useStore((s) => s.toggleCell)
+  const soundKind = useStore((s) => s.soundKind)
   const toast = useToast()
+
+  // Win presentation: banner text + a bump key that retriggers the board shake.
+  const [winBanner, setWinBanner] = useState<{ text: string; big: boolean } | null>(null)
+  const [shakeKey, setShakeKey] = useState(0)
+  // Cells to pulse on the current win — only the line(s) the last tap completed.
+  const [pulseCells, setPulseCells] = useState<ReadonlySet<number>>(new Set())
+  // Index of the most recently tapped cell, read by the win effect below.
+  const lastToggledRef = useRef<number>(-1)
 
   // Default to first person if none active.
   const active = persons.find((p) => p.id === activePersonId) ?? persons[0] ?? null
@@ -66,16 +77,17 @@ export function Game(): ReactNode {
     const lines = completedLineCount(card.size, card.checked)
     const isSameCard = prevLines.current.cardId === card.personId
     if (isSameCard && lines > prevLines.current.lines) {
-      if (isFullCard(card.checked)) {
-        toast(t('game.fullCard'), 'win')
-        confetti(2)
-      } else {
-        toast(t('game.bingo'), 'win')
-        confetti(1)
-      }
+      const big = isFullCard(card.checked)
+      toast(big ? t('game.fullCard') : t('game.bingo'), 'win')
+      confetti(big ? { intensity: 2, gold: true } : { intensity: 1 })
+      setWinBanner({ text: big ? t('game.fullCard') : t('game.bingo'), big })
+      // Pulse only the line(s) the last-tapped cell just completed.
+      setPulseCells(winningCellsThrough(card.size, card.checked, lastToggledRef.current))
+      setShakeKey((k) => k + 1)
+      playFanfare(soundKind, big)
     }
     prevLines.current = { cardId: card.personId, lines }
-  }, [card, toast, t])
+  }, [card, toast, t, soundKind])
 
   const reshuffle = (): void => {
     if (active && confirm(t('game.reshuffleConfirm'))) {
@@ -129,7 +141,12 @@ export function Game(): ReactNode {
           <BingoBoard
             card={card}
             quoteText={quoteText}
-            onToggle={(i) => toggleCell(active.id, i)}
+            onToggle={(i) => {
+              lastToggledRef.current = i
+              toggleCell(active.id, i)
+            }}
+            shakeKey={shakeKey}
+            pulseCells={pulseCells}
           />
           <div className="row">
             <label className="dim" htmlFor="size">
@@ -170,6 +187,14 @@ export function Game(): ReactNode {
             </button>
           </div>
         </>
+      )}
+
+      {winBanner && (
+        <WinBanner
+          text={winBanner.text}
+          big={winBanner.big}
+          onDone={() => setWinBanner(null)}
+        />
       )}
     </div>
   )

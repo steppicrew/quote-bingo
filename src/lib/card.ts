@@ -77,6 +77,24 @@ export function winningCells(size: number, checked: readonly boolean[]): Set<num
   return cells
 }
 
+/**
+ * Cells of completed lines that pass through `throughIndex` — i.e. the lines
+ * the last-toggled cell just completed. Empty when that cell completes none.
+ */
+export function winningCellsThrough(
+  size: number,
+  checked: readonly boolean[],
+  throughIndex: number,
+): Set<number> {
+  const cells = new Set<number>()
+  for (const line of linesFor(size)) {
+    if (line.includes(throughIndex) && line.every((cell) => checked[cell])) {
+      for (const cell of line) cells.add(cell)
+    }
+  }
+  return cells
+}
+
 /** Count of fully-checked winning lines. */
 export function completedLineCount(size: number, checked: readonly boolean[]): number {
   let n = 0
