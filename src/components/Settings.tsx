@@ -4,7 +4,9 @@ import { type QuoteListExport } from '../types'
 import { importFromFile } from '../lib/share'
 import { useInstall } from '../lib/install'
 import { useModalDismiss } from '../lib/useModalDismiss'
+import { useTranslation } from 'react-i18next'
 import { ThemeToggle } from './ThemeToggle'
+import { LanguageToggle } from './LanguageToggle'
 import { useToast } from './toast-context'
 import './Settings.scss'
 
@@ -16,6 +18,7 @@ interface Props {
 }
 
 export function Settings({ onClose }: Props): ReactNode {
+  const { t } = useTranslation()
   const importList = useStore((s) => s.importList)
   const { canInstall, promptInstall } = useInstall()
   const toast = useToast()
@@ -27,7 +30,11 @@ export function Settings({ onClose }: Props): ReactNode {
   const applyImport = (list: QuoteListExport): void => {
     const res = importList(list.person.name, list.quotes)
     toast(
-      `„${list.person.name}“ importiert: +${res.added} neu, ${res.skipped} Duplikate übersprungen`,
+      t('settings.importResult', {
+        name: list.person.name,
+        added: res.added,
+        skipped: res.skipped,
+      }),
     )
   }
 
@@ -36,41 +43,46 @@ export function Settings({ onClose }: Props): ReactNode {
     try {
       applyImport(await importFromFile(file))
     } catch (e) {
-      toast(e instanceof Error ? e.message : 'Import fehlgeschlagen')
+      toast(e instanceof Error ? e.message : t('settings.importFailed'))
     }
   }
 
   return (
     <div className="modal-backdrop" onClick={onClose}>
       <div className="modal settings" onClick={(e) => e.stopPropagation()}>
-        <h2>Einstellungen</h2>
+        <h2>{t('settings.title')}</h2>
 
         <div className="setting">
-          <span>Design</span>
+          <span>{t('settings.design')}</span>
           <ThemeToggle />
         </div>
 
         <div className="setting">
-          <span>Importieren</span>
+          <span>{t('settings.language')}</span>
+          <LanguageToggle />
+        </div>
+
+        <div className="setting">
+          <span>{t('settings.import')}</span>
           <div className="row">
-            <button onClick={() => fileRef.current?.click()}>Datei</button>
-            <button onClick={() => setScanning(true)}>QR scannen</button>
+            <button onClick={() => fileRef.current?.click()}>{t('settings.file')}</button>
+            <button onClick={() => setScanning(true)}>{t('settings.scanQr')}</button>
           </div>
         </div>
 
         <div className="setting">
-          <span>App</span>
+          <span>{t('settings.app')}</span>
           {canInstall ? (
             <button className="primary" onClick={() => void promptInstall()}>
-              Installieren
+              {t('settings.install')}
             </button>
           ) : (
-            <span className="dim">Installiert / nicht verfügbar</span>
+            <span className="dim">{t('settings.installed')}</span>
           )}
         </div>
 
         <div className="about dim">
-          <div>Zitat-Bingo v{__APP_VERSION__}</div>
+          <div>{t('app.title')} v{__APP_VERSION__}</div>
           <a
             href="https://github.com/steppicrew/quote-bingo"
             target="_blank"
@@ -81,7 +93,7 @@ export function Settings({ onClose }: Props): ReactNode {
         </div>
 
         <button className="primary" onClick={onClose}>
-          Schließen
+          {t('settings.close')}
         </button>
 
         <input

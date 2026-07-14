@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState, type ReactNode } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Html5Qrcode, Html5QrcodeScannerState } from 'html5-qrcode'
 import { decodeList } from '../lib/share'
 import { type QuoteListExport } from '../types'
@@ -12,6 +13,7 @@ interface Props {
 const REGION_ID = 'qr-scan-region'
 
 export function QrScan({ onResult, onClose }: Props): ReactNode {
+  const { t } = useTranslation()
   const [error, setError] = useState<string | null>(null)
   const scannerRef = useRef<Html5Qrcode | null>(null)
   const doneRef = useRef(false)
@@ -40,29 +42,29 @@ export function QrScan({ onResult, onClose }: Props): ReactNode {
               stop()
               onResult(list)
             } catch {
-              setError('Gescannter Code ist keine gültige Zitatliste.')
+              setError(t('qr.invalidCode'))
             }
           })()
         },
         () => undefined,
       )
       .catch((e: unknown) => {
-        setError(e instanceof Error ? e.message : 'Kamera nicht verfügbar')
+        setError(e instanceof Error ? e.message : t('qr.cameraUnavailable'))
       })
 
     return () => {
       stop()
     }
-  }, [onResult])
+  }, [onResult, t])
 
   return (
     <div className="modal-backdrop" onClick={onClose}>
       <div className="modal" onClick={(e) => e.stopPropagation()}>
-        <h2>Zitatliste scannen</h2>
+        <h2>{t('qr.scanTitle')}</h2>
         <div id={REGION_ID} className="qr-scan-region" />
         {error && <p className="dim">{error}</p>}
         <button className="primary" onClick={onClose}>
-          Schließen
+          {t('qr.close')}
         </button>
       </div>
     </div>

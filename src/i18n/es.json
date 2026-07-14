@@ -1,0 +1,95 @@
+{
+  "app": {
+    "title": "Bingo de citas",
+    "loading": "Cargando…",
+    "nav": {
+      "back": "Volver al resumen",
+      "manage": "Gestionar",
+      "play": "Jugar",
+      "settings": "Ajustes"
+    }
+  },
+  "game": {
+    "bingo": "¡BINGO! 🎉",
+    "fullCard": "¡CARTÓN LLENO! 🎉",
+    "reshuffleConfirm": "¿Rebarajar el cartón? Las casillas marcadas se restablecerán.",
+    "resizeConfirm": "¿Cambiar a {{size}}×{{size}}? El cartón se regenerará.",
+    "jokerConfirm": "¿Cambiar la casilla comodín? El cartón se regenerará.",
+    "jokerLabel": "Comodín",
+    "jokerDisabledHint": "Muy pocas citas para un cartón sin comodín.",
+    "noPersons": "Aún no hay personas.",
+    "toManage": "Ir a la gestión",
+    "poolTooSmall": "«{{name}}» tiene {{count}} citas; el cartón más pequeño (3×3) necesita {{min}}.",
+    "addQuotes": "Añadir citas",
+    "size": "Tamaño",
+    "reshuffle": "Rebarajar"
+  },
+  "manage": {
+    "newPersonPlaceholder": "Nombre de la nueva persona",
+    "add": "Añadir",
+    "empty": "Aún no hay personas. Añade a alguien y llena el conjunto de citas.",
+    "quoteCount_one": "{{count}} cita",
+    "quoteCount_other": "{{count}} citas",
+    "upTo": "hasta {{size}}×{{size}}",
+    "remaining": "faltan {{count}}"
+  },
+  "editor": {
+    "notFound": "Persona no encontrada.",
+    "back": "Volver",
+    "quotesAdded_one": "{{count}} cita añadida",
+    "quotesAdded_other": "{{count}} citas añadidas",
+    "deleteConfirm": "¿Eliminar «{{name}}» y todas las citas?",
+    "badgeCount_one": "{{count}} cita",
+    "badgeCount_other": "{{count}} citas",
+    "badgeUpTo": " · hasta {{size}}×{{size}}",
+    "badgeMin": " · mín. {{min}} para 3×3",
+    "exportFile": "Exportar archivo",
+    "showQr": "Mostrar QR",
+    "bulkPlaceholder": "Añadir citas – una por línea",
+    "addQuotes": "Añadir citas",
+    "noQuotes": "Aún no hay citas."
+  },
+  "board": {
+    "free": "LIBRE",
+    "deletedQuote": "(cita eliminada)"
+  },
+  "settings": {
+    "title": "Ajustes",
+    "design": "Tema",
+    "language": "Idioma",
+    "import": "Importar",
+    "file": "Archivo",
+    "scanQr": "Escanear QR",
+    "app": "Aplicación",
+    "install": "Instalar",
+    "installed": "Instalada / no disponible",
+    "importResult": "«{{name}}» importado: +{{added}} nuevas, {{skipped}} duplicados omitidos",
+    "importFailed": "Error de importación",
+    "close": "Cerrar"
+  },
+  "qr": {
+    "shareTitle": "Compartir «{{name}}»",
+    "error": "Error: {{error}}",
+    "showFailed": "Error de QR",
+    "tooBig": "Esta lista es demasiado grande para un código QR ({{count}} citas). Usa <1>Exportar archivo</1> en su lugar.",
+    "scanHint": "Escanea con otro dispositivo para importar las citas.",
+    "scanTitle": "Escanear lista de citas",
+    "invalidCode": "El código escaneado no es una lista de citas válida.",
+    "cameraUnavailable": "Cámara no disponible",
+    "close": "Cerrar"
+  },
+  "theme": {
+    "light": "Claro",
+    "dark": "Oscuro",
+    "system": "Sistema",
+    "label": "Tema"
+  },
+  "lang": {
+    "system": "Sistema",
+    "de": "Deutsch",
+    "en": "English",
+    "fr": "Français",
+    "es": "Español",
+    "label": "Idioma"
+  }
+}

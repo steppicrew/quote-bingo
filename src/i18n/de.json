@@ -1,0 +1,95 @@
+{
+  "app": {
+    "title": "Zitate-Bingo",
+    "loading": "Wird geladen…",
+    "nav": {
+      "back": "Zurück zur Übersicht",
+      "manage": "Verwalten",
+      "play": "Spielen",
+      "settings": "Einstellungen"
+    }
+  },
+  "game": {
+    "bingo": "BINGO! 🎉",
+    "fullCard": "VOLLE KARTE! 🎉",
+    "reshuffleConfirm": "Karte neu mischen? Angekreuzte Felder werden zurückgesetzt.",
+    "resizeConfirm": "Auf {{size}}×{{size}} umstellen? Die Karte wird neu erstellt.",
+    "jokerConfirm": "Joker-Feld ändern? Die Karte wird neu erstellt.",
+    "jokerLabel": "Joker",
+    "jokerDisabledHint": "Zu wenige Zitate für ein Feld ohne Joker.",
+    "noPersons": "Noch keine Personen.",
+    "toManage": "Zur Verwaltung",
+    "poolTooSmall": "„{{name}}“ hat {{count}} Zitate – für die kleinste Karte (3×3) werden {{min}} benötigt.",
+    "addQuotes": "Zitate hinzufügen",
+    "size": "Größe",
+    "reshuffle": "Neu mischen"
+  },
+  "manage": {
+    "newPersonPlaceholder": "Name der neuen Person",
+    "add": "Hinzufügen",
+    "empty": "Noch keine Personen. Füge jemanden hinzu und fülle den Zitat-Pool.",
+    "quoteCount_one": "{{count}} Zitat",
+    "quoteCount_other": "{{count}} Zitate",
+    "upTo": "bis {{size}}×{{size}}",
+    "remaining": "noch {{count}}"
+  },
+  "editor": {
+    "notFound": "Person nicht gefunden.",
+    "back": "Zurück",
+    "quotesAdded_one": "{{count}} Zitat hinzugefügt",
+    "quotesAdded_other": "{{count}} Zitate hinzugefügt",
+    "deleteConfirm": "„{{name}}“ und alle Zitate löschen?",
+    "badgeCount_one": "{{count}} Zitat",
+    "badgeCount_other": "{{count}} Zitate",
+    "badgeUpTo": " · bis {{size}}×{{size}}",
+    "badgeMin": " · min. {{min}} für 3×3",
+    "exportFile": "Datei exportieren",
+    "showQr": "QR anzeigen",
+    "bulkPlaceholder": "Zitate hinzufügen – eines pro Zeile",
+    "addQuotes": "Zitate hinzufügen",
+    "noQuotes": "Noch keine Zitate."
+  },
+  "board": {
+    "free": "FREI",
+    "deletedQuote": "(gelöschtes Zitat)"
+  },
+  "settings": {
+    "title": "Einstellungen",
+    "design": "Design",
+    "language": "Sprache",
+    "import": "Importieren",
+    "file": "Datei",
+    "scanQr": "QR scannen",
+    "app": "App",
+    "install": "Installieren",
+    "installed": "Installiert / nicht verfügbar",
+    "importResult": "„{{name}}“ importiert: +{{added}} neu, {{skipped}} Duplikate übersprungen",
+    "importFailed": "Import fehlgeschlagen",
+    "close": "Schließen"
+  },
+  "qr": {
+    "shareTitle": "„{{name}}“ teilen",
+    "error": "Fehler: {{error}}",
+    "showFailed": "QR fehlgeschlagen",
+    "tooBig": "Diese Liste ist zu groß für einen QR-Code ({{count}} Zitate). Nutze stattdessen <1>Datei exportieren</1>.",
+    "scanHint": "Mit einem anderen Gerät scannen, um die Zitate zu importieren.",
+    "scanTitle": "Zitatliste scannen",
+    "invalidCode": "Gescannter Code ist keine gültige Zitatliste.",
+    "cameraUnavailable": "Kamera nicht verfügbar",
+    "close": "Schließen"
+  },
+  "theme": {
+    "light": "Hell",
+    "dark": "Dunkel",
+    "system": "System",
+    "label": "Design"
+  },
+  "lang": {
+    "system": "System",
+    "de": "Deutsch",
+    "en": "English",
+    "fr": "Français",
+    "es": "Español",
+    "label": "Sprache"
+  }
+}

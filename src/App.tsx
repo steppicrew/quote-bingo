@@ -1,6 +1,8 @@
 import { useEffect, useState, type ReactNode } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useRoute, navigate } from './router'
 import { useStore } from './store'
+import { SUPPORTED_LNGS } from './i18n'
 import { Manage } from './screens/Manage'
 import { PersonEditor } from './screens/PersonEditor'
 import { Game } from './screens/Game'
@@ -11,15 +13,28 @@ import './components/modal.scss'
 
 export function App(): ReactNode {
   const route = useRoute()
+  const { t, i18n } = useTranslation()
   const hydrated = useStore((s) => s.hydrated)
   const hasPersons = useStore((s) => s.persons.length > 0)
   const theme = useStore((s) => s.theme)
+  const locale = useStore((s) => s.locale)
   const [settingsOpen, setSettingsOpen] = useState(false)
 
   // Apply the selected theme to <html> (CSS custom properties switch on it).
   useEffect(() => {
     document.documentElement.dataset.theme = theme
   }, [theme])
+
+  // Apply the selected UI language. 'system' defers to the browser's language
+  // (i18next's detector picked it at init); an explicit code overrides it.
+  useEffect(() => {
+    const resolved =
+      locale === 'system'
+        ? SUPPORTED_LNGS.find((l) => (navigator.language || 'en').startsWith(l)) ?? 'en'
+        : locale
+    void i18n.changeLanguage(resolved)
+    document.documentElement.lang = resolved
+  }, [locale, i18n])
 
   // First start (no data yet): send the user to Verwalten to set things up.
   useEffect(() => {
@@ -34,12 +49,12 @@ export function App(): ReactNode {
     <ToastProvider>
       <div className="app">
         <header className="topbar">
-          <h1>Zitat-Bingo</h1>
+          <h1>{t('app.title')}</h1>
           {route.name === 'person' ? (
             <button
               className="icon-btn"
-              aria-label="Zurück zur Übersicht"
-              title="Zurück zur Übersicht"
+              aria-label={t('app.nav.back')}
+              title={t('app.nav.back')}
               onClick={() => navigate({ name: 'manage' })}
             >
               <BackIcon />
@@ -47,8 +62,8 @@ export function App(): ReactNode {
           ) : onGame ? (
             <button
               className="icon-btn"
-              aria-label="Verwalten"
-              title="Verwalten"
+              aria-label={t('app.nav.manage')}
+              title={t('app.nav.manage')}
               onClick={() => navigate({ name: 'manage' })}
             >
               <UsersIcon />
@@ -56,8 +71,8 @@ export function App(): ReactNode {
           ) : (
             <button
               className="icon-btn"
-              aria-label="Spielen"
-              title="Spielen"
+              aria-label={t('app.nav.play')}
+              title={t('app.nav.play')}
               onClick={() => navigate({ name: 'game' })}
             >
               <GameIcon />
@@ -65,8 +80,8 @@ export function App(): ReactNode {
           )}
           <button
             className="icon-btn"
-            aria-label="Einstellungen"
-            title="Einstellungen"
+            aria-label={t('app.nav.settings')}
+            title={t('app.nav.settings')}
             onClick={() => setSettingsOpen(true)}
           >
             <CogIcon />
@@ -75,7 +90,7 @@ export function App(): ReactNode {
 
         {!hydrated ? (
           <div className="content">
-            <p className="dim">Wird geladen…</p>
+            <p className="dim">{t('app.loading')}</p>
           </div>
         ) : route.name === 'person' ? (
           <PersonEditor id={route.id} />

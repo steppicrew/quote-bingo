@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, type ReactNode } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useStore } from '../store'
 import { navigate } from '../router'
 import { SIZES, quotesNeeded, hasFreeCenter } from '../types'
@@ -11,6 +12,7 @@ import { useToast } from '../components/toast-context'
 const MIN_POOL = quotesNeeded(SIZES[0]!) // smallest card's requirement (3x3 -> 8)
 
 export function Game(): ReactNode {
+  const { t } = useTranslation()
   const persons = useStore((s) => s.persons)
   const quotes = useStore((s) => s.quotes)
   const cards = useStore((s) => s.cards)
@@ -65,18 +67,18 @@ export function Game(): ReactNode {
     const isSameCard = prevLines.current.cardId === card.personId
     if (isSameCard && lines > prevLines.current.lines) {
       if (isFullCard(card.checked)) {
-        toast('VOLLE KARTE! 🎉', 'win')
+        toast(t('game.fullCard'), 'win')
         confetti(2)
       } else {
-        toast('BINGO! 🎉', 'win')
+        toast(t('game.bingo'), 'win')
         confetti(1)
       }
     }
     prevLines.current = { cardId: card.personId, lines }
-  }, [card, toast])
+  }, [card, toast, t])
 
   const reshuffle = (): void => {
-    if (active && confirm('Karte neu mischen? Angekreuzte Felder werden zurückgesetzt.')) {
+    if (active && confirm(t('game.reshuffleConfirm'))) {
       regenerateCard(active.id)
       prevLines.current = { cardId: null, lines: 0 }
     }
@@ -84,7 +86,7 @@ export function Game(): ReactNode {
 
   const changeSize = (size: number): void => {
     if (!active) return
-    if (card && !confirm(`Auf ${size}×${size} umstellen? Die Karte wird neu erstellt.`)) return
+    if (card && !confirm(t('game.resizeConfirm', { size }))) return
     // Dropping the joker needs one more quote; if the pool can't cover it at the
     // new size, fall back to a free centre.
     const keepJoker = card ? card.joker : true
@@ -95,7 +97,7 @@ export function Game(): ReactNode {
 
   const changeJoker = (joker: boolean): void => {
     if (!active || !card) return
-    if (!confirm('Joker-Feld ändern? Die Karte wird neu erstellt.')) return
+    if (!confirm(t('game.jokerConfirm'))) return
     regenerateCard(active.id, card.size, joker)
     prevLines.current = { cardId: null, lines: 0 }
   }
@@ -103,9 +105,9 @@ export function Game(): ReactNode {
   if (persons.length === 0) {
     return (
       <div className="content">
-        <p className="dim">Noch keine Personen.</p>
+        <p className="dim">{t('game.noPersons')}</p>
         <button className="primary" onClick={() => navigate({ name: 'manage' })}>
-          Zur Verwaltung
+          {t('game.toManage')}
         </button>
       </div>
     )
@@ -117,9 +119,8 @@ export function Game(): ReactNode {
 
       {active && !ready && (
         <p className="dim">
-          „{active.name}“ hat {poolCount} Zitate – für die kleinste Karte (3×3) werden{' '}
-          {MIN_POOL} benötigt.{' '}
-          <a href={`#/person/${active.id}`}>Zitate hinzufügen</a>
+          {t('game.poolTooSmall', { name: active.name, count: poolCount, min: MIN_POOL })}{' '}
+          <a href={`#/person/${active.id}`}>{t('game.addQuotes')}</a>
         </p>
       )}
 
@@ -132,7 +133,7 @@ export function Game(): ReactNode {
           />
           <div className="row">
             <label className="dim" htmlFor="size">
-              Größe
+              {t('game.size')}
             </label>
             <select
               id="size"
@@ -150,7 +151,7 @@ export function Game(): ReactNode {
                 className="dim joker-toggle"
                 title={
                   poolCount < quotesNeeded(card.size, false)
-                    ? 'Zu wenige Zitate für ein Feld ohne Joker.'
+                    ? t('game.jokerDisabledHint')
                     : undefined
                 }
               >
@@ -160,12 +161,12 @@ export function Game(): ReactNode {
                   disabled={!card.joker && poolCount < quotesNeeded(card.size, false)}
                   onChange={(e) => changeJoker(e.target.checked)}
                 />
-                Joker
+                {t('game.jokerLabel')}
               </label>
             )}
             <div className="spacer" />
             <button className="ghost" onClick={reshuffle}>
-              Neu mischen
+              {t('game.reshuffle')}
             </button>
           </div>
         </>

@@ -1,0 +1,30 @@
+#!/bin/sh
+# Auto-bump the patch (3rd) version level on every commit and stage the change,
+# so each commit ships a unique version. Skips merge commits and any commit that
+# doesn't already touch tracked source (nothing staged -> git aborts anyway).
+set -e
+
+# Don't bump during rebases / merges to avoid rewriting history versions.
+if [ -f "$(git rev-parse --git-dir)/MERGE_HEAD" ]; then
+  exit 0
+fi
+
+pkg="package.json"
+[ -f "$pkg" ] || exit 0
+
+current=$(sed -n 's/.*"version": "\([0-9]*\.[0-9]*\.[0-9]*\)".*/\1/p' "$pkg" | head -n1)
+[ -n "$current" ] || exit 0
+
+major=${current%%.*}
+rest=${current#*.}
+minor=${rest%%.*}
+patch=${rest##*.}
+next="$major.$minor.$((patch + 1))"
+
+# Portable in-place edit (BSD/GNU sed differ on -i).
+tmp=$(mktemp)
+sed "s/\"version\": \"$current\"/\"version\": \"$next\"/" "$pkg" > "$tmp"
+mv "$tmp" "$pkg"
+git add "$pkg"
+
+echo "pre-commit: version $current -> $next"

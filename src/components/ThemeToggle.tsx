@@ -1,28 +1,26 @@
 import { type ReactNode } from 'react'
+import { useTranslation } from 'react-i18next'
 import clsx from 'clsx'
 import { useStore, type Theme } from '../store'
 import './ThemeToggle.scss'
 
-const OPTIONS: { value: Theme; label: string }[] = [
-  { value: 'light', label: 'Hell' },
-  { value: 'dark', label: 'Dunkel' },
-  { value: 'system', label: 'System' },
-]
+const OPTIONS: Theme[] = ['light', 'dark', 'system']
 
 export function ThemeToggle(): ReactNode {
+  const { t } = useTranslation()
   const theme = useStore((s) => s.theme)
   const setTheme = useStore((s) => s.setTheme)
 
   return (
-    <div className="theme-toggle" role="group" aria-label="Design">
-      {OPTIONS.map((o) => (
+    <div className="theme-toggle" role="group" aria-label={t('theme.label')}>
+      {OPTIONS.map((value) => (
         <button
-          key={o.value}
-          className={clsx('seg', { active: theme === o.value })}
-          aria-pressed={theme === o.value}
-          onClick={() => setTheme(o.value)}
+          key={value}
+          className={clsx('seg', { active: theme === value })}
+          aria-pressed={theme === value}
+          onClick={() => setTheme(value)}
         >
-          {o.label}
+          {t(`theme.${value}`)}
         </button>
       ))}
     </div>

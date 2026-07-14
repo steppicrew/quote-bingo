@@ -1,4 +1,5 @@
 import { lazy, Suspense, useMemo, useState, type ReactNode } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useStore } from '../store'
 import { navigate } from '../router'
 import { SIZES, quotesNeeded } from '../types'
@@ -10,6 +11,7 @@ const QrShow = lazy(() =>
 )
 
 export function PersonEditor({ id }: { id: string }): ReactNode {
+  const { t } = useTranslation()
   const person = useStore((s) => s.persons.find((p) => p.id === id))
   const quotes = useStore((s) => s.quotes)
   const addQuotes = useStore((s) => s.addQuotes)
@@ -30,8 +32,8 @@ export function PersonEditor({ id }: { id: string }): ReactNode {
   if (!person) {
     return (
       <div className="content">
-        <p className="dim">Person nicht gefunden.</p>
-        <button onClick={() => navigate({ name: 'manage' })}>Zurück</button>
+        <p className="dim">{t('editor.notFound')}</p>
+        <button onClick={() => navigate({ name: 'manage' })}>{t('editor.back')}</button>
       </div>
     )
   }
@@ -45,11 +47,11 @@ export function PersonEditor({ id }: { id: string }): ReactNode {
     if (!lines.length) return
     addQuotes(id, lines)
     setBulk('')
-    toast(`${lines.length} Zitat${lines.length === 1 ? '' : 'e'} hinzugefügt`)
+    toast(t('editor.quotesAdded', { count: lines.length }))
   }
 
   const remove = (): void => {
-    if (confirm(`„${person.name}“ und alle Zitate löschen?`)) {
+    if (confirm(t('editor.deleteConfirm', { name: person.name }))) {
       deletePerson(id)
       navigate({ name: 'manage' })
     }
@@ -69,33 +71,33 @@ export function PersonEditor({ id }: { id: string }): ReactNode {
 
       <div className="row">
         <span className={`badge ${maxPlayable ? 'ok' : 'warn'}`}>
-          {mine.length} Zitate
+          {t('editor.badgeCount', { count: mine.length })}
           {maxPlayable
-            ? ` · bis ${maxPlayable}×${maxPlayable}`
-            : ` · min. ${minPool} für 3×3`}
+            ? t('editor.badgeUpTo', { size: maxPlayable })
+            : t('editor.badgeMin', { min: minPool })}
         </span>
         <div className="spacer" />
-        <button onClick={() => exportToFile(person.name, texts)}>Datei exportieren</button>
+        <button onClick={() => exportToFile(person.name, texts)}>{t('editor.exportFile')}</button>
         <button onClick={() => setShowQr(true)} disabled={texts.length === 0}>
-          QR anzeigen
+          {t('editor.showQr')}
         </button>
       </div>
 
       <div className="card-tile">
         <textarea
-          placeholder="Zitate hinzufügen – eines pro Zeile"
+          placeholder={t('editor.bulkPlaceholder')}
           value={bulk}
           onChange={(e) => setBulk(e.target.value)}
         />
         <div className="row" style={{ marginTop: 10 }}>
           <div className="spacer" />
           <button className="primary" onClick={addBulk}>
-            Zitate hinzufügen
+            {t('editor.addQuotes')}
           </button>
         </div>
       </div>
 
-      {mine.length === 0 && <p className="dim">Noch keine Zitate.</p>}
+      {mine.length === 0 && <p className="dim">{t('editor.noQuotes')}</p>}
 
       {mine.map((q) => (
         <div key={q.id} className="card-tile row">

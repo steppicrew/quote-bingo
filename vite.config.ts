@@ -18,7 +18,7 @@ export default defineConfig({
       registerType: 'autoUpdate',
       includeAssets: ['favicon.svg', 'icon-192.png', 'icon-512.png', 'icon-maskable.png'],
       manifest: {
-        name: 'Zitat-Bingo',
+        name: 'Zitate-Bingo',
         short_name: 'Bingo',
         description: 'Offline-Bingo mit Zitaten, die andere sicher bald sagen werden.',
         lang: 'de',

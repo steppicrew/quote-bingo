@@ -27,6 +27,7 @@ const uid = (): Id =>
     : `${Date.now()}-${Math.random().toString(36).slice(2)}`
 
 export type Theme = 'dark' | 'light' | 'system'
+export type Locale = 'de' | 'en' | 'fr' | 'es' | 'system'
 
 interface State {
   persons: Person[]
@@ -34,6 +35,7 @@ interface State {
   cards: Record<Id, Card>
   activePersonId: Id | null
   theme: Theme
+  locale: Locale
   hydrated: boolean
 }
 
@@ -60,6 +62,7 @@ interface Actions {
   importList: (name: string, quotes: string[]) => { personId: Id } & MergeResult
 
   setTheme: (theme: Theme) => void
+  setLocale: (locale: Locale) => void
 }
 
 const quotesFor = (quotes: Quote[], personId: Id): string[] =>
@@ -73,6 +76,7 @@ export const useStore = create<State & Actions>()(
       cards: {},
       activePersonId: null,
       theme: 'system',
+      locale: 'system',
       hydrated: false,
 
       addPerson: (name) => {
@@ -172,6 +176,7 @@ export const useStore = create<State & Actions>()(
       },
 
       setTheme: (theme) => set({ theme }),
+      setLocale: (locale) => set({ locale }),
     }),
     {
       name: 'quote-bingo-state',
@@ -183,6 +188,7 @@ export const useStore = create<State & Actions>()(
         cards: s.cards,
         activePersonId: s.activePersonId,
         theme: s.theme,
+        locale: s.locale,
       }),
       migrate: (persisted, version) => {
         const p = persisted as Partial<State> | undefined

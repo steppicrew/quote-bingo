@@ -1,0 +1,95 @@
+{
+  "app": {
+    "title": "Quote Bingo",
+    "loading": "Loading…",
+    "nav": {
+      "back": "Back to overview",
+      "manage": "Manage",
+      "play": "Play",
+      "settings": "Settings"
+    }
+  },
+  "game": {
+    "bingo": "BINGO! 🎉",
+    "fullCard": "FULL CARD! 🎉",
+    "reshuffleConfirm": "Reshuffle the card? Checked cells will be reset.",
+    "resizeConfirm": "Switch to {{size}}×{{size}}? The card will be regenerated.",
+    "jokerConfirm": "Change the joker field? The card will be regenerated.",
+    "jokerLabel": "Joker",
+    "jokerDisabledHint": "Too few quotes for a card without a joker.",
+    "noPersons": "No people yet.",
+    "toManage": "Go to management",
+    "poolTooSmall": "“{{name}}” has {{count}} quotes – the smallest card (3×3) needs {{min}}.",
+    "addQuotes": "Add quotes",
+    "size": "Size",
+    "reshuffle": "Reshuffle"
+  },
+  "manage": {
+    "newPersonPlaceholder": "Name of the new person",
+    "add": "Add",
+    "empty": "No people yet. Add someone and fill the quote pool.",
+    "quoteCount_one": "{{count}} quote",
+    "quoteCount_other": "{{count}} quotes",
+    "upTo": "up to {{size}}×{{size}}",
+    "remaining": "{{count}} to go"
+  },
+  "editor": {
+    "notFound": "Person not found.",
+    "back": "Back",
+    "quotesAdded_one": "{{count}} quote added",
+    "quotesAdded_other": "{{count}} quotes added",
+    "deleteConfirm": "Delete “{{name}}” and all quotes?",
+    "badgeCount_one": "{{count}} quote",
+    "badgeCount_other": "{{count}} quotes",
+    "badgeUpTo": " · up to {{size}}×{{size}}",
+    "badgeMin": " · min. {{min}} for 3×3",
+    "exportFile": "Export file",
+    "showQr": "Show QR",
+    "bulkPlaceholder": "Add quotes – one per line",
+    "addQuotes": "Add quotes",
+    "noQuotes": "No quotes yet."
+  },
+  "board": {
+    "free": "FREE",
+    "deletedQuote": "(deleted quote)"
+  },
+  "settings": {
+    "title": "Settings",
+    "design": "Theme",
+    "language": "Language",
+    "import": "Import",
+    "file": "File",
+    "scanQr": "Scan QR",
+    "app": "App",
+    "install": "Install",
+    "installed": "Installed / not available",
+    "importResult": "“{{name}}” imported: +{{added}} new, {{skipped}} duplicates skipped",
+    "importFailed": "Import failed",
+    "close": "Close"
+  },
+  "qr": {
+    "shareTitle": "Share “{{name}}”",
+    "error": "Error: {{error}}",
+    "showFailed": "QR failed",
+    "tooBig": "This list is too large for a QR code ({{count}} quotes). Use <1>Export file</1> instead.",
+    "scanHint": "Scan with another device to import the quotes.",
+    "scanTitle": "Scan quote list",
+    "invalidCode": "The scanned code is not a valid quote list.",
+    "cameraUnavailable": "Camera not available",
+    "close": "Close"
+  },
+  "theme": {
+    "light": "Light",
+    "dark": "Dark",
+    "system": "System",
+    "label": "Theme"
+  },
+  "lang": {
+    "system": "System",
+    "de": "Deutsch",
+    "en": "English",
+    "fr": "Français",
+    "es": "Español",
+    "label": "Language"
+  }
+}

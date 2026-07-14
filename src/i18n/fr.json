@@ -1,0 +1,95 @@
+{
+  "app": {
+    "title": "Bingo des citations",
+    "loading": "Chargement…",
+    "nav": {
+      "back": "Retour à l'aperçu",
+      "manage": "Gérer",
+      "play": "Jouer",
+      "settings": "Paramètres"
+    }
+  },
+  "game": {
+    "bingo": "BINGO ! 🎉",
+    "fullCard": "CARTE PLEINE ! 🎉",
+    "reshuffleConfirm": "Remélanger la carte ? Les cases cochées seront réinitialisées.",
+    "resizeConfirm": "Passer en {{size}}×{{size}} ? La carte sera régénérée.",
+    "jokerConfirm": "Modifier la case joker ? La carte sera régénérée.",
+    "jokerLabel": "Joker",
+    "jokerDisabledHint": "Trop peu de citations pour une carte sans joker.",
+    "noPersons": "Aucune personne pour le moment.",
+    "toManage": "Aller à la gestion",
+    "poolTooSmall": "« {{name}} » a {{count}} citations – la plus petite carte (3×3) en nécessite {{min}}.",
+    "addQuotes": "Ajouter des citations",
+    "size": "Taille",
+    "reshuffle": "Remélanger"
+  },
+  "manage": {
+    "newPersonPlaceholder": "Nom de la nouvelle personne",
+    "add": "Ajouter",
+    "empty": "Aucune personne pour le moment. Ajoutez quelqu'un et remplissez la réserve de citations.",
+    "quoteCount_one": "{{count}} citation",
+    "quoteCount_other": "{{count}} citations",
+    "upTo": "jusqu'à {{size}}×{{size}}",
+    "remaining": "encore {{count}}"
+  },
+  "editor": {
+    "notFound": "Personne introuvable.",
+    "back": "Retour",
+    "quotesAdded_one": "{{count}} citation ajoutée",
+    "quotesAdded_other": "{{count}} citations ajoutées",
+    "deleteConfirm": "Supprimer « {{name}} » et toutes les citations ?",
+    "badgeCount_one": "{{count}} citation",
+    "badgeCount_other": "{{count}} citations",
+    "badgeUpTo": " · jusqu'à {{size}}×{{size}}",
+    "badgeMin": " · min. {{min}} pour 3×3",
+    "exportFile": "Exporter le fichier",
+    "showQr": "Afficher le QR",
+    "bulkPlaceholder": "Ajouter des citations – une par ligne",
+    "addQuotes": "Ajouter des citations",
+    "noQuotes": "Aucune citation pour le moment."
+  },
+  "board": {
+    "free": "LIBRE",
+    "deletedQuote": "(citation supprimée)"
+  },
+  "settings": {
+    "title": "Paramètres",
+    "design": "Thème",
+    "language": "Langue",
+    "import": "Importer",
+    "file": "Fichier",
+    "scanQr": "Scanner un QR",
+    "app": "Application",
+    "install": "Installer",
+    "installed": "Installé / non disponible",
+    "importResult": "« {{name}} » importé : +{{added}} nouvelles, {{skipped}} doublons ignorés",
+    "importFailed": "Échec de l'importation",
+    "close": "Fermer"
+  },
+  "qr": {
+    "shareTitle": "Partager « {{name}} »",
+    "error": "Erreur : {{error}}",
+    "showFailed": "Échec du QR",
+    "tooBig": "Cette liste est trop grande pour un QR code ({{count}} citations). Utilisez plutôt <1>Exporter le fichier</1>.",
+    "scanHint": "Scannez avec un autre appareil pour importer les citations.",
+    "scanTitle": "Scanner la liste de citations",
+    "invalidCode": "Le code scanné n'est pas une liste de citations valide.",
+    "cameraUnavailable": "Caméra non disponible",
+    "close": "Fermer"
+  },
+  "theme": {
+    "light": "Clair",
+    "dark": "Sombre",
+    "system": "Système",
+    "label": "Thème"
+  },
+  "lang": {
+    "system": "Système",
+    "de": "Deutsch",
+    "en": "English",
+    "fr": "Français",
+    "es": "Español",
+    "label": "Langue"
+  }
+}
