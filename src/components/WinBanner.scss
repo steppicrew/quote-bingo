@@ -23,7 +23,9 @@
   text-shadow:
     0 2px 12px rgba(0, 0, 0, 0.5),
     0 0 30px rgba(168, 85, 247, 0.5);
-  animation: win-pop 0.5s cubic-bezier(0.2, 1.4, 0.4, 1) both;
+  animation:
+    win-pop 0.5s cubic-bezier(0.2, 1.4, 0.4, 1) both,
+    win-wobble 0.5s ease-in-out 0.5s 2;
 
   &.big {
     // Solid gold rather than a background-clip gradient: clipping the
@@ -35,6 +37,7 @@
       0 0 40px rgba(255, 215, 0, 0.6);
     animation:
       win-pop 0.5s cubic-bezier(0.2, 1.4, 0.4, 1) both,
+      win-wobble 0.5s ease-in-out 0.5s 2,
       win-shimmer 1.6s ease-in-out 0.5s infinite;
   }
 }
@@ -60,6 +63,25 @@
   100% {
     transform: scale(1) rotate(0);
     opacity: 1;
+  }
+}
+
+@keyframes win-wobble {
+  0%,
+  100% {
+    transform: translateX(0) rotate(0);
+  }
+  20% {
+    transform: translateX(-10px) rotate(-2deg);
+  }
+  40% {
+    transform: translateX(9px) rotate(2deg);
+  }
+  60% {
+    transform: translateX(-6px) rotate(-1deg);
+  }
+  80% {
+    transform: translateX(4px) rotate(1deg);
   }
 }
 

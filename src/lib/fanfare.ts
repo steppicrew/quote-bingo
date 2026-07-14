@@ -139,9 +139,11 @@ export function playFanfare(
   }
 
   if (typeof navigator !== 'undefined' && typeof navigator.vibrate === 'function') {
-    const one = big ? [30, 60, 40, 30, 140] : [25, 60, 90]
+    // Stronger, longer buzz so a win is felt clearly. Full card ends on a big
+    // sustained rumble; a regular bingo still gets a firm triple pulse.
+    const one = big ? [60, 50, 60, 50, 90, 50, 260] : [50, 40, 60, 40, 160]
     const pattern: number[] = []
-    for (let i = 0; i < reps; i++) pattern.push(...one, 120)
+    for (let i = 0; i < reps; i++) pattern.push(...one, 140)
     navigator.vibrate(pattern)
   }
 }
