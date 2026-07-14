@@ -29,7 +29,7 @@ const uid = (): Id =>
     : `${Date.now()}-${Math.random().toString(36).slice(2)}`
 
 export type Theme = 'dark' | 'light' | 'system'
-export type Locale = 'de' | 'en' | 'fr' | 'es' | 'system'
+export type Locale = 'de' | 'en' | 'fr' | 'es' | 'zh' | 'ja' | 'system'
 
 interface State {
   persons: Person[]

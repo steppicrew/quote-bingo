@@ -19,7 +19,14 @@ body,
 body {
   background: v.$bg;
   color: v.$text;
-  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  // Latin system stack first, then common CJK system fonts so Chinese/Japanese
+  // render without tofu on devices that ship them (most phones/desktops). No
+  // bundled webfont — keeps the PWA small and fully offline.
+  font-family:
+    system-ui, -apple-system, 'Segoe UI', Roboto,
+    'PingFang SC', 'Hiragino Sans', 'Hiragino Kaku Gothic ProN',
+    'Microsoft YaHei', 'Noto Sans CJK SC', 'Noto Sans SC', 'Noto Sans JP',
+    sans-serif;
   -webkit-tap-highlight-color: transparent;
 }
 

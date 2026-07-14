@@ -2,7 +2,7 @@ import { type ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useStore, type Locale } from '../store'
 
-const OPTIONS: Locale[] = ['system', 'de', 'en', 'fr', 'es']
+const OPTIONS: Locale[] = ['system', 'de', 'en', 'fr', 'es', 'zh', 'ja']
 
 export function LanguageToggle(): ReactNode {
   const { t } = useTranslation()

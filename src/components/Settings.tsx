@@ -63,7 +63,10 @@ export function Settings({ onClose }: Props): ReactNode {
         </div>
 
         <div className="setting">
-          <span>{t('settings.language')}</span>
+          <span>
+            {t('settings.language')}
+            {t('settings.language') !== 'Language' && ' / Language'}
+          </span>
           <LanguageToggle />
         </div>
 

@@ -1,0 +1,116 @@
+{
+  "app": {
+    "title": "语录宾果",
+    "loading": "加载中…",
+    "nav": {
+      "back": "返回概览",
+      "manage": "管理",
+      "play": "开始游戏",
+      "sound": "获胜提示：{{state}}（点按切换）",
+      "settings": "设置"
+    }
+  },
+  "game": {
+    "bingo": "宾果！🎉",
+    "doubleBingo": "双重宾果！🎉",
+    "tripleBingo": "三重宾果！🎉",
+    "quadBingo": "四重宾果！🎉",
+    "fullCard": "满卡！🎉",
+    "reshuffleConfirm": "重新洗牌？已勾选的格子将被重置。",
+    "resizeConfirm": "切换到 {{size}}×{{size}}？卡片将重新生成。",
+    "jokerConfirm": "更改百搭格？卡片将重新生成。",
+    "jokerLabel": "百搭",
+    "jokerDisabledHint": "语录太少，无法生成没有百搭格的卡片。",
+    "noPersons": "还没有人。",
+    "toManage": "前往管理",
+    "poolTooSmall": "“{{name}}”有 {{count}} 条语录——最小的卡片（3×3）需要 {{min}} 条。",
+    "addQuotes": "添加语录",
+    "size": "尺寸",
+    "reshuffle": "重新洗牌"
+  },
+  "manage": {
+    "newPersonPlaceholder": "新成员的名字",
+    "add": "添加",
+    "empty": "还没有人。添加成员并填充语录库。",
+    "quoteCount_other": "{{count}} 条语录",
+    "upTo": "最多 {{size}}×{{size}}",
+    "remaining": "还差 {{count}} 条"
+  },
+  "editor": {
+    "notFound": "未找到该成员。",
+    "back": "返回",
+    "quotesAdded_other": "已添加 {{count}} 条语录",
+    "deleteConfirm": "删除“{{name}}”及其所有语录？",
+    "badgeCount_other": "{{count}} 条语录",
+    "badgeUpTo": " · 最多 {{size}}×{{size}}",
+    "badgeMin": " · 3×3 至少需 {{min}}",
+    "exportFile": "导出文件",
+    "showQr": "显示二维码",
+    "bulkPlaceholder": "添加语录——每行一条",
+    "addQuotes": "添加语录",
+    "noQuotes": "还没有语录。",
+    "delete": "删除",
+    "accent": "颜色"
+  },
+  "board": {
+    "free": "免费",
+    "deletedQuote": "（已删除的语录）"
+  },
+  "accent": {
+    "default": "默认",
+    "indigo": "靛蓝",
+    "rose": "玫红",
+    "emerald": "翠绿",
+    "amber": "琥珀",
+    "sky": "天蓝",
+    "violet": "紫罗兰"
+  },
+  "settings": {
+    "title": "设置",
+    "design": "主题",
+    "language": "语言",
+    "sound": "获胜提示",
+    "soundOn": "开启",
+    "soundVibrate": "仅震动",
+    "soundOff": "关闭",
+    "soundType": "音效",
+    "soundTadaa": "嗒-哒",
+    "soundArpeggio": "琶音",
+    "import": "导入",
+    "file": "文件",
+    "scanQr": "扫描二维码",
+    "app": "应用",
+    "install": "安装",
+    "installed": "已安装 / 不可用",
+    "importResult": "已导入“{{name}}”：新增 +{{added}}，跳过 {{skipped}} 条重复",
+    "importFailed": "导入失败",
+    "close": "关闭"
+  },
+  "qr": {
+    "shareTitle": "分享“{{name}}”",
+    "error": "错误：{{error}}",
+    "showFailed": "二维码生成失败",
+    "tooBig": "此列表对二维码来说太大（{{count}} 条语录）。请改用<1>导出文件</1>。",
+    "scanHint": "用另一台设备扫描以导入语录。",
+    "scanTitle": "扫描语录列表",
+    "invalidCode": "扫描的代码不是有效的语录列表。",
+    "cameraUnavailable": "摄像头不可用",
+    "close": "关闭"
+  },
+  "theme": {
+    "light": "浅色",
+    "dark": "深色",
+    "system": "跟随系统",
+    "label": "主题"
+  },
+  "lang": {
+    "system": "跟随系统",
+    "de": "Deutsch",
+    "en": "English",
+    "fr": "Français",
+    "es": "Español",
+    "zh": "中文",
+    "ja": "日本語",
+    "label": "语言"
+  }
+}

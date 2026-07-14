@@ -1,0 +1,116 @@
+{
+  "app": {
+    "title": "名言ビンゴ",
+    "loading": "読み込み中…",
+    "nav": {
+      "back": "一覧に戻る",
+      "manage": "管理",
+      "play": "プレイ",
+      "sound": "勝利の合図：{{state}}（タップで切替）",
+      "settings": "設定"
+    }
+  },
+  "game": {
+    "bingo": "ビンゴ！🎉",
+    "doubleBingo": "ダブルビンゴ！🎉",
+    "tripleBingo": "トリプルビンゴ！🎉",
+    "quadBingo": "クアッドビンゴ！🎉",
+    "fullCard": "フルカード！🎉",
+    "reshuffleConfirm": "カードを引き直しますか？チェック済みのマスはリセットされます。",
+    "resizeConfirm": "{{size}}×{{size}} に切り替えますか？カードは再生成されます。",
+    "jokerConfirm": "ジョーカーマスを変更しますか？カードは再生成されます。",
+    "jokerLabel": "ジョーカー",
+    "jokerDisabledHint": "名言が少なすぎて、ジョーカーなしのカードを作れません。",
+    "noPersons": "まだ誰もいません。",
+    "toManage": "管理へ移動",
+    "poolTooSmall": "「{{name}}」には名言が {{count}} 件あります。最小のカード（3×3）には {{min}} 件必要です。",
+    "addQuotes": "名言を追加",
+    "size": "サイズ",
+    "reshuffle": "引き直す"
+  },
+  "manage": {
+    "newPersonPlaceholder": "新しい人の名前",
+    "add": "追加",
+    "empty": "まだ誰もいません。誰かを追加して名言プールを埋めましょう。",
+    "quoteCount_other": "名言 {{count}} 件",
+    "upTo": "最大 {{size}}×{{size}}",
+    "remaining": "あと {{count}} 件"
+  },
+  "editor": {
+    "notFound": "その人が見つかりません。",
+    "back": "戻る",
+    "quotesAdded_other": "名言を {{count}} 件追加しました",
+    "deleteConfirm": "「{{name}}」とすべての名言を削除しますか？",
+    "badgeCount_other": "名言 {{count}} 件",
+    "badgeUpTo": " · 最大 {{size}}×{{size}}",
+    "badgeMin": " · 3×3 には最低 {{min}} 件",
+    "exportFile": "ファイルを書き出す",
+    "showQr": "QRを表示",
+    "bulkPlaceholder": "名言を追加 – 1行に1つ",
+    "addQuotes": "名言を追加",
+    "noQuotes": "まだ名言がありません。",
+    "delete": "削除",
+    "accent": "カラー"
+  },
+  "board": {
+    "free": "フリー",
+    "deletedQuote": "（削除された名言）"
+  },
+  "accent": {
+    "default": "デフォルト",
+    "indigo": "インディゴ",
+    "rose": "ローズ",
+    "emerald": "エメラルド",
+    "amber": "アンバー",
+    "sky": "スカイ",
+    "violet": "バイオレット"
+  },
+  "settings": {
+    "title": "設定",
+    "design": "テーマ",
+    "language": "言語",
+    "sound": "勝利の合図",
+    "soundOn": "オン",
+    "soundVibrate": "振動のみ",
+    "soundOff": "オフ",
+    "soundType": "ファンファーレ",
+    "soundTadaa": "タッダー",
+    "soundArpeggio": "アルペジオ",
+    "import": "インポート",
+    "file": "ファイル",
+    "scanQr": "QRをスキャン",
+    "app": "アプリ",
+    "install": "インストール",
+    "installed": "インストール済み / 利用不可",
+    "importResult": "「{{name}}」をインポート：+{{added}} 件追加、{{skipped}} 件の重複をスキップ",
+    "importFailed": "インポートに失敗しました",
+    "close": "閉じる"
+  },
+  "qr": {
+    "shareTitle": "「{{name}}」を共有",
+    "error": "エラー：{{error}}",
+    "showFailed": "QRの生成に失敗しました",
+    "tooBig": "このリストはQRコードには大きすぎます（名言 {{count}} 件）。代わりに<1>ファイルを書き出す</1>をご利用ください。",
+    "scanHint": "別のデバイスでスキャンして名言をインポートします。",
+    "scanTitle": "名言リストをスキャン",
+    "invalidCode": "スキャンしたコードは有効な名言リストではありません。",
+    "cameraUnavailable": "カメラが利用できません",
+    "close": "閉じる"
+  },
+  "theme": {
+    "light": "ライト",
+    "dark": "ダーク",
+    "system": "システム",
+    "label": "テーマ"
+  },
+  "lang": {
+    "system": "システム",
+    "de": "Deutsch",
+    "en": "English",
+    "fr": "Français",
+    "es": "Español",
+    "zh": "中文",
+    "ja": "日本語",
+    "label": "言語"
+  }
+}
