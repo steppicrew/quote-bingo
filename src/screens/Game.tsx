@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
+import { type TFunction } from 'i18next'
 import { useStore } from '../store'
 import { navigate } from '../router'
 import { SIZES, quotesNeeded, hasFreeCenter } from '../types'
@@ -12,6 +13,14 @@ import { WinBanner } from '../components/WinBanner'
 import { useToast } from '../components/toast-context'
 
 const MIN_POOL = quotesNeeded(SIZES[0]!) // smallest card's requirement (3x3 -> 8)
+
+/** Banner/toast text for a win of `combo` lines completed by one tap. */
+function winLabel(t: TFunction, combo: number): string {
+  if (combo === 2) return t('game.doubleBingo')
+  if (combo === 3) return t('game.tripleBingo')
+  if (combo >= 4) return t('game.quadBingo')
+  return t('game.bingo')
+}
 
 export function Game(): ReactNode {
   const { t } = useTranslation()
@@ -78,13 +87,20 @@ export function Game(): ReactNode {
     const isSameCard = prevLines.current.cardId === card.personId
     if (isSameCard && lines > prevLines.current.lines) {
       const big = isFullCard(card.checked)
-      toast(big ? t('game.fullCard') : t('game.bingo'), 'win')
-      confetti(big ? { intensity: 2, gold: true } : { intensity: 1 })
-      setWinBanner({ text: big ? t('game.fullCard') : t('game.bingo'), big })
+      // Lines this single tap completed at once (1 = Bingo, 2 = Double, …).
+      const combo = lines - prevLines.current.lines
+      const text = big ? t('game.fullCard') : winLabel(t, combo)
+      toast(text, 'win')
+      // A full card or a multi-line combo earns the bigger, golden burst.
+      const grand = big || combo >= 2
+      confetti(grand ? { intensity: big ? 2 : 1.5, gold: true } : { intensity: 1 })
+      setWinBanner({ text, big: grand })
       // Pulse only the line(s) the last-tapped cell just completed.
       setPulseCells(winningCellsThrough(card.size, card.checked, lastToggledRef.current))
       setShakeKey((k) => k + 1)
-      playFanfare(soundKind, big)
+      // Sound the fanfare once per line completed (double bingo = twice, …);
+      // a full card is a single grand flourish.
+      playFanfare(soundKind, big || combo >= 2, big ? 1 : combo)
     }
     prevLines.current = { cardId: card.personId, lines }
   }, [card, toast, t, soundKind])

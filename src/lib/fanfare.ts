@@ -58,9 +58,7 @@ export type SoundKind = 'off' | 'tadaa' | 'arpeggio'
  * ("ta", ~0.18s), a brief gap, then a sustained C-major chord ("daaa", ~1s)
  * that rings out. G4 -> C major is the classic V->I resolution.
  */
-function playTadaa(ac: AudioContext, big: boolean): void {
-  const t0 = ac.currentTime + 0.01
-
+function playTadaa(ac: AudioContext, big: boolean, t0: number): void {
   // "ta" — short, bright pickup on G4 (root + overtones like the reference).
   note(ac, 392.0, t0, 0.18, 0.2)
   note(ac, 783.99, t0, 0.16, 0.06) // octave sparkle
@@ -79,8 +77,7 @@ function playTadaa(ac: AudioContext, big: boolean): void {
 }
 
 /** Rising C major arpeggio (C5 E5 G5 C6) into a held top note. */
-function playArpeggio(ac: AudioContext, big: boolean): void {
-  const t0 = ac.currentTime + 0.01
+function playArpeggio(ac: AudioContext, big: boolean, t0: number): void {
   const seq: [number, number][] = [
     [523.25, 0.0],
     [659.25, 0.09],
@@ -95,21 +92,36 @@ function playArpeggio(ac: AudioContext, big: boolean): void {
   }
 }
 
+// Seconds between the start of consecutive repeats, per sound.
+const REPEAT_GAP: Record<Exclude<SoundKind, 'off'>, number> = {
+  tadaa: 0.72,
+  arpeggio: 0.5,
+}
+
 /**
  * Play the chosen win sound plus a vibration. `big` (full card) brightens the
- * sound and strengthens the vibration. No-ops for 'off' or when audio is
- * unavailable.
+ * sound and strengthens the vibration. `times` repeats the sound back-to-back
+ * (e.g. 2 for a double bingo). No-ops for 'off' or when audio is unavailable.
  */
-export function playFanfare(kind: SoundKind, big = false): void {
+export function playFanfare(kind: SoundKind, big = false, times = 1): void {
   if (kind === 'off') return
+  const reps = Math.max(1, times)
 
   const ac = audioCtx()
   if (ac) {
-    if (kind === 'tadaa') playTadaa(ac, big)
-    else playArpeggio(ac, big)
+    const gap = REPEAT_GAP[kind]
+    for (let i = 0; i < reps; i++) {
+      const at = ac.currentTime + 0.01 + i * gap
+      if (kind === 'tadaa') playTadaa(ac, big, at)
+      else playArpeggio(ac, big, at)
+    }
   }
 
   if (typeof navigator !== 'undefined' && typeof navigator.vibrate === 'function') {
-    navigator.vibrate(big ? [30, 60, 40, 30, 140] : [25, 60, 90])
+    const one = big ? [30, 60, 40, 30, 140] : [25, 60, 90]
+    // Repeat the pulse pattern too, separated by a short gap.
+    const pattern: number[] = []
+    for (let i = 0; i < reps; i++) pattern.push(...one, 120)
+    navigator.vibrate(pattern)
   }
 }

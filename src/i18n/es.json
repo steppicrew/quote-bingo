@@ -11,6 +11,9 @@
   },
   "game": {
     "bingo": "¡BINGO! 🎉",
+    "doubleBingo": "¡BINGO DOBLE! 🎉",
+    "tripleBingo": "¡BINGO TRIPLE! 🎉",
+    "quadBingo": "¡BINGO CUÁDRUPLE! 🎉",
     "fullCard": "¡CARTÓN LLENO! 🎉",
     "reshuffleConfirm": "¿Rebarajar el cartón? Las casillas marcadas se restablecerán.",
     "resizeConfirm": "¿Cambiar a {{size}}×{{size}}? El cartón se regenerará.",
