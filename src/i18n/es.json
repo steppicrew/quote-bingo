@@ -51,11 +51,22 @@
     "showQr": "Mostrar QR",
     "bulkPlaceholder": "Añadir citas – una por línea",
     "addQuotes": "Añadir citas",
-    "noQuotes": "Aún no hay citas."
+    "noQuotes": "Aún no hay citas.",
+    "delete": "Eliminar",
+    "accent": "Color"
   },
   "board": {
     "free": "LIBRE",
     "deletedQuote": "(cita eliminada)"
+  },
+  "accent": {
+    "default": "Predeterminado",
+    "indigo": "Índigo",
+    "rose": "Rosa",
+    "emerald": "Esmeralda",
+    "amber": "Ámbar",
+    "sky": "Cielo",
+    "violet": "Violeta"
   },
   "settings": {
     "title": "Ajustes",

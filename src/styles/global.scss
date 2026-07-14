@@ -196,3 +196,21 @@ a {
   color: v.$accent;
   border-color: v.$accent;
 }
+
+.accent-row {
+  flex-wrap: wrap;
+}
+
+.accent-swatch {
+  width: 26px;
+  height: 26px;
+  padding: 0;
+  border-radius: 50%;
+  border: 2px solid v.$border;
+  cursor: pointer;
+
+  &.active {
+    border-color: #fff;
+    box-shadow: 0 0 0 2px v.$primary;
+  }
+}

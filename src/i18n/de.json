@@ -51,11 +51,22 @@
     "showQr": "QR anzeigen",
     "bulkPlaceholder": "Zitate hinzufügen – eines pro Zeile",
     "addQuotes": "Zitate hinzufügen",
-    "noQuotes": "Noch keine Zitate."
+    "noQuotes": "Noch keine Zitate.",
+    "delete": "Löschen",
+    "accent": "Farbe"
   },
   "board": {
     "free": "FREI",
     "deletedQuote": "(gelöschtes Zitat)"
+  },
+  "accent": {
+    "default": "Standard",
+    "indigo": "Indigo",
+    "rose": "Rosé",
+    "emerald": "Smaragd",
+    "amber": "Bernstein",
+    "sky": "Himmelblau",
+    "violet": "Violett"
   },
   "settings": {
     "title": "Einstellungen",

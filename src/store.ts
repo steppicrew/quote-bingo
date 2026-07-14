@@ -1,6 +1,7 @@
 import { create } from 'zustand'
 import { persist, createJSONStorage } from 'zustand/middleware'
 import {
+  type AccentName,
   type Card,
   type Id,
   type Person,
@@ -45,6 +46,7 @@ interface State {
 interface Actions {
   addPerson: (name: string) => Id
   renamePerson: (id: Id, name: string) => void
+  setAccent: (id: Id, accent: AccentName) => void
   deletePerson: (id: Id) => void
   setActivePerson: (id: Id | null) => void
 
@@ -99,6 +101,11 @@ export const useStore = create<State & Actions>()(
       renamePerson: (id, name) =>
         set((s) => ({
           persons: s.persons.map((p) => (p.id === id ? { ...p, name: name.trim() } : p)),
+        })),
+
+      setAccent: (id, accent) =>
+        set((s) => ({
+          persons: s.persons.map((p) => (p.id === id ? { ...p, accent } : p)),
         })),
 
       deletePerson: (id) =>

@@ -1,8 +1,13 @@
 export type Id = string
 
+/** Named accent presets a person's board can use (else the default theme). */
+export type AccentName = 'default' | 'indigo' | 'rose' | 'emerald' | 'amber' | 'sky' | 'violet'
+
 export interface Person {
   id: Id
   name: string
+  /** Optional per-person accent; absent/`'default'` uses the app theme. */
+  accent?: AccentName
   createdAt: number
 }
 

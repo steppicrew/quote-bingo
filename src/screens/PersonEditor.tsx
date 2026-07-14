@@ -1,8 +1,10 @@
 import { lazy, Suspense, useMemo, useState, type ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
+import clsx from 'clsx'
 import { useStore } from '../store'
 import { navigate } from '../router'
 import { SIZES, quotesNeeded } from '../types'
+import { ACCENT_NAMES, accentSwatch } from '../lib/accents'
 import { exportToFile } from '../lib/share'
 import { useToast } from '../components/toast-context'
 
@@ -18,6 +20,7 @@ export function PersonEditor({ id }: { id: string }): ReactNode {
   const editQuote = useStore((s) => s.editQuote)
   const deleteQuote = useStore((s) => s.deleteQuote)
   const renamePerson = useStore((s) => s.renamePerson)
+  const setAccent = useStore((s) => s.setAccent)
   const deletePerson = useStore((s) => s.deletePerson)
   const toast = useToast()
 
@@ -65,8 +68,24 @@ export function PersonEditor({ id }: { id: string }): ReactNode {
           onChange={(e) => renamePerson(id, e.target.value)}
         />
         <button className="danger" onClick={remove}>
-          Löschen
+          {t('editor.delete')}
         </button>
+      </div>
+
+      <div className="row accent-row">
+        <span className="dim">{t('editor.accent')}</span>
+        {ACCENT_NAMES.map((name) => (
+          <button
+            key={name}
+            type="button"
+            className={clsx('accent-swatch', { active: (person.accent ?? 'default') === name })}
+            style={{ background: accentSwatch(name) }}
+            aria-label={t(`accent.${name}`)}
+            aria-pressed={(person.accent ?? 'default') === name}
+            title={t(`accent.${name}`)}
+            onClick={() => setAccent(id, name)}
+          />
+        ))}
       </div>
 
       <div className="row">

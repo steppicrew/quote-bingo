@@ -5,6 +5,7 @@ import { useStore } from '../store'
 import { navigate } from '../router'
 import { SIZES, quotesNeeded, hasFreeCenter } from '../types'
 import { completedLineCount, isFullCard, winningCellsThrough } from '../lib/card'
+import { accentStyle } from '../lib/accents'
 import { confetti } from '../lib/confetti'
 import { playFanfare } from '../lib/fanfare'
 import { PersonSwitcher } from '../components/PersonSwitcher'
@@ -143,7 +144,7 @@ export function Game(): ReactNode {
   }
 
   return (
-    <div className="content">
+    <div className="content" style={accentStyle(active?.accent)}>
       <PersonSwitcher persons={persons} activeId={active?.id ?? null} onSelect={setActivePerson} />
 
       {active && !ready && (

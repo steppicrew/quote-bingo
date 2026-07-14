@@ -81,10 +81,17 @@
   }
 
   &.win {
-    background: linear-gradient(135deg, v.$primary, v.$accent);
-    border-color: v.$accent;
+    // Richer than a plain checked cell: a warm gold gradient, a soft outer
+    // glow, and an inset highlight so the winning line reads as "premium".
+    background:
+      linear-gradient(150deg, #fff4b8 0%, #ffd76a 42%, v.$accent 100%);
+    border-color: #ffcf4d;
     color: #1a1830;
-    font-weight: 700;
+    font-weight: 800;
+    box-shadow:
+      0 0 14px rgba(255, 200, 60, 0.55),
+      inset 0 1px 2px rgba(255, 255, 255, 0.6),
+      inset 0 -2px 6px rgba(150, 90, 0, 0.25);
   }
 
   &.free {

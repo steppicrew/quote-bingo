@@ -51,11 +51,22 @@
     "showQr": "Show QR",
     "bulkPlaceholder": "Add quotes – one per line",
     "addQuotes": "Add quotes",
-    "noQuotes": "No quotes yet."
+    "noQuotes": "No quotes yet.",
+    "delete": "Delete",
+    "accent": "Colour"
   },
   "board": {
     "free": "FREE",
     "deletedQuote": "(deleted quote)"
+  },
+  "accent": {
+    "default": "Default",
+    "indigo": "Indigo",
+    "rose": "Rose",
+    "emerald": "Emerald",
+    "amber": "Amber",
+    "sky": "Sky",
+    "violet": "Violet"
   },
   "settings": {
     "title": "Settings",
