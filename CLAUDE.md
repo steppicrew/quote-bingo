@@ -48,11 +48,15 @@ localized (de/en/fr/es) via react-i18next; the German build name is "Zitate-Bing
 - **Install** (`src/lib/install.ts`): captures `beforeinstallprompt` at module load,
   `useInstall()` exposes `canInstall` + `promptInstall`. Hidden when already standalone.
 - **Win effects**: `confetti` (`src/lib/confetti.ts`, canvas, `{ intensity, gold }`),
-  `playFanfare(kind, big)` (`src/lib/fanfare.ts`, dependency-free Web Audio synth —
-  `'off'|'tadaa'|'arpeggio'` — plus haptics; the persisted `soundKind` selects it),
-  `WinBanner` (full-screen flash), and a scoped cell pulse. `winningCellsThrough(size,
-  checked, index)` in `card.ts` returns only the lines the last-tapped cell completed, so
-  the pulse animates that line, not every winning line. All effects honour
+  `playFanfare(mode, kind, big, times)` (`src/lib/fanfare.ts`, dependency-free Web Audio
+  synth). Two orthogonal persisted settings: `soundMode` (`'on'|'vibrate'|'off'` — off is
+  silent, vibrate is haptics-only, on plays audio + haptics; nav-bar icon cycles it, and
+  the web can't read the phone's silent switch so this is the manual opt-out) and
+  `soundKind` (`'tadaa'|'arpeggio'`, the fanfare used when on). `times` repeats the
+  fanfare per completed line (double/triple bingo). `WinBanner` (full-screen flash) and a
+  scoped cell pulse: `winningCellsThrough(size, checked, index)` in `card.ts` returns only
+  the lines the last-tapped cell completed, so the pulse animates that line, not every
+  winning line. All effects honour
   `prefers-reduced-motion`.
 - **Routing** (`src/router.ts`): hash-based. Default route `#/` = **Spielen** (game).
   `#/manage` = Verwalten, `#/person/:id` = quote editor. First start with no persons
@@ -79,7 +83,7 @@ joker-off requirement.
   plurals and variables — no manual ternaries or template concatenation.
 - Zustand persist is at **version 2**: `migrate` drops legacy cards lacking `size` (v0→v1)
   and defaults `joker: true` on cards lacking the flag (v1→v2). Persisted slice also
-  carries `theme`, `locale`, `soundKind`.
+  carries `theme`, `locale`, `soundMode`, `soundKind`.
 - A committed `pre-commit` hook (`.githooks/pre-commit`) bumps the patch version in
   `package.json` on every commit. Enable per clone: `git config core.hooksPath .githooks`.
 - Win celebration fires from a `useEffect` in `Game` on a newly completed line. Track the
