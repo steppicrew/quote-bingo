@@ -54,9 +54,21 @@ export function Game(): ReactNode {
   const ready = poolCount >= MIN_POOL
   const card = active ? cards[active.id] : undefined
 
-  // Sizes whose quota the current pool can satisfy.
-  const availableSizes = useMemo(
-    () => SIZES.filter((s) => poolCount >= quotesNeeded(s)),
+  // Selectable size+joker combinations the current pool can fill. Odd sizes
+  // offer a "with joker" entry and, if the pool is big enough, a "no joker"
+  // entry (which needs one extra quote); even sizes never have a free centre.
+  const cardOptions = useMemo(
+    () =>
+      SIZES.flatMap((s) => {
+        const opts: { size: number; joker: boolean }[] = []
+        if (hasFreeCenter(s)) {
+          if (poolCount >= quotesNeeded(s, true)) opts.push({ size: s, joker: true })
+          if (poolCount >= quotesNeeded(s, false)) opts.push({ size: s, joker: false })
+        } else if (poolCount >= quotesNeeded(s, false)) {
+          opts.push({ size: s, joker: false })
+        }
+        return opts
+      }),
     [poolCount],
   )
 
@@ -111,21 +123,10 @@ export function Game(): ReactNode {
     }
   }
 
-  const changeSize = (size: number): void => {
+  const changeCard = (size: number, joker: boolean): void => {
     if (!active) return
     if (card && !confirm(t('game.resizeConfirm', { size }))) return
-    // Dropping the joker needs one more quote; if the pool can't cover it at the
-    // new size, fall back to a free centre.
-    const keepJoker = card ? card.joker : true
-    const joker = keepJoker || poolCount < quotesNeeded(size, false)
     regenerateCard(active.id, size, joker)
-    prevLines.current = { cardId: null, lines: 0 }
-  }
-
-  const changeJoker = (joker: boolean): void => {
-    if (!active || !card) return
-    if (!confirm(t('game.jokerConfirm'))) return
-    regenerateCard(active.id, card.size, joker)
     prevLines.current = { cardId: null, lines: 0 }
   }
 
@@ -169,33 +170,19 @@ export function Game(): ReactNode {
             </label>
             <select
               id="size"
-              value={card.size}
-              onChange={(e) => changeSize(Number(e.target.value))}
+              value={`${card.size}:${card.joker ? 'j' : 'n'}`}
+              onChange={(e) => {
+                const [s, j] = e.target.value.split(':')
+                changeCard(Number(s), j === 'j')
+              }}
             >
-              {availableSizes.map((s) => (
-                <option key={s} value={s}>
-                  {s}×{s}
+              {cardOptions.map(({ size, joker }) => (
+                <option key={`${size}:${joker ? 'j' : 'n'}`} value={`${size}:${joker ? 'j' : 'n'}`}>
+                  {size}×{size}
+                  {joker ? ` (${t('game.jokerLabel')})` : ''}
                 </option>
               ))}
             </select>
-            {hasFreeCenter(card.size) && (
-              <label
-                className="dim joker-toggle"
-                title={
-                  poolCount < quotesNeeded(card.size, false)
-                    ? t('game.jokerDisabledHint')
-                    : undefined
-                }
-              >
-                <input
-                  type="checkbox"
-                  checked={card.joker}
-                  disabled={!card.joker && poolCount < quotesNeeded(card.size, false)}
-                  onChange={(e) => changeJoker(e.target.checked)}
-                />
-                {t('game.jokerLabel')}
-              </label>
-            )}
             <div className="spacer" />
             <button className="ghost" onClick={reshuffle}>
               {t('game.reshuffle')}
