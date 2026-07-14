@@ -48,8 +48,11 @@ interface Actions {
   editQuote: (id: Id, text: string) => void
   deleteQuote: (id: Id) => void
 
-  /** (Re)generate a card, optionally at a specific size (keeps current size if omitted). */
-  regenerateCard: (personId: Id, size?: number) => void
+  /**
+   * (Re)generate a card. Omitted `size`/`joker` keep the current card's values
+   * (defaulting to bestSize / free-centre-on for a brand-new card).
+   */
+  regenerateCard: (personId: Id, size?: number, joker?: boolean) => void
   ensureCard: (personId: Id) => void
   toggleCell: (personId: Id, index: number) => void
 
@@ -119,11 +122,13 @@ export const useStore = create<State & Actions>()(
       deleteQuote: (id) =>
         set((s) => ({ quotes: s.quotes.filter((q) => q.id !== id) })),
 
-      regenerateCard: (personId, size) =>
+      regenerateCard: (personId, size, joker) =>
         set((s) => {
           const ids = s.quotes.filter((q) => q.personId === personId).map((q) => q.id)
-          const target = size ?? s.cards[personId]?.size ?? bestSize(ids.length)
-          const card = generateCard(personId, ids, target)
+          const prev = s.cards[personId]
+          const target = size ?? prev?.size ?? bestSize(ids.length)
+          const useJoker = joker ?? prev?.joker ?? true
+          const card = generateCard(personId, ids, target, useJoker)
           return { cards: { ...s.cards, [personId]: card } }
         }),
 
@@ -138,7 +143,7 @@ export const useStore = create<State & Actions>()(
         set((s) => {
           const card = s.cards[personId]
           if (!card) return {}
-          const center = centerIndex(card.size)
+          const center = centerIndex(card.size, card.joker)
           if (index === center) return {}
           const checked = card.checked.slice()
           checked[index] = !checked[index]
@@ -170,7 +175,7 @@ export const useStore = create<State & Actions>()(
     }),
     {
       name: 'quote-bingo-state',
-      version: 1,
+      version: 2,
       storage: createJSONStorage(() => idbStorage),
       partialize: (s) => ({
         persons: s.persons,
@@ -179,16 +184,23 @@ export const useStore = create<State & Actions>()(
         activePersonId: s.activePersonId,
         theme: s.theme,
       }),
-      // v0 cards had a fixed 5x5 shape without `size`; drop them so they
-      // regenerate lazily with the new size-aware format.
       migrate: (persisted, version) => {
         const p = persisted as Partial<State> | undefined
+        // v0 cards had a fixed 5x5 shape without `size`; drop them so they
+        // regenerate lazily with the new size-aware format.
         if (p && version < 1 && p.cards) {
           const cards: Record<Id, Card> = {}
           for (const [pid, card] of Object.entries(p.cards)) {
             if (typeof card.size === 'number') cards[pid] = card
           }
           p.cards = cards
+        }
+        // v1 cards predate the per-card `joker` flag; they were generated with
+        // a free centre on odd sizes, so default joker on to preserve them.
+        if (p && version < 2 && p.cards) {
+          for (const card of Object.values(p.cards)) {
+            if (typeof card.joker !== 'boolean') card.joker = true
+          }
         }
         return persisted
       },

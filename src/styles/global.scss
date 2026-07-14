@@ -166,6 +166,17 @@ a {
   flex: 1;
 }
 
+.joker-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  cursor: pointer;
+
+  input:disabled {
+    cursor: not-allowed;
+  }
+}
+
 .dim {
   color: v.$text-dim;
   font-size: 14px;

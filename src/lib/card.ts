@@ -24,13 +24,18 @@ function shuffle<T>(input: readonly T[]): T[] {
  * Odd sizes get a free space at the centre; even sizes fill every cell.
  * Throws if the pool is too small for the chosen size.
  */
-export function generateCard(personId: Id, quoteIds: readonly Id[], size: number): Card {
-  const need = quotesNeeded(size)
+export function generateCard(
+  personId: Id,
+  quoteIds: readonly Id[],
+  size: number,
+  joker = true,
+): Card {
+  const need = quotesNeeded(size, joker)
   if (quoteIds.length < need) {
     throw new Error(`Need at least ${need} quotes for ${size}x${size}, have ${quoteIds.length}`)
   }
   const total = size * size
-  const center = centerIndex(size)
+  const center = centerIndex(size, joker)
   const picked = shuffle(quoteIds).slice(0, need)
   const cells: (Id | null)[] = []
   const checked: boolean[] = []
@@ -44,7 +49,7 @@ export function generateCard(personId: Id, quoteIds: readonly Id[], size: number
       checked.push(false)
     }
   }
-  return { personId, size, cells, checked, createdAt: Date.now() }
+  return { personId, size, joker, cells, checked, createdAt: Date.now() }
 }
 
 /** The winning lines (rows, cols, both diagonals) as cell-index arrays. */

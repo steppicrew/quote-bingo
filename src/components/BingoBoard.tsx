@@ -12,7 +12,7 @@ interface Props {
 
 export function BingoBoard({ card, quoteText, onToggle }: Props): ReactNode {
   const winners = useMemo(() => winningCells(card.size, card.checked), [card.size, card.checked])
-  const center = centerIndex(card.size)
+  const center = centerIndex(card.size, card.joker)
 
   return (
     <div

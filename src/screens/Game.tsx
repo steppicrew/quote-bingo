@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, type ReactNode } from 'react'
 import { useStore } from '../store'
 import { navigate } from '../router'
-import { SIZES, quotesNeeded } from '../types'
+import { SIZES, quotesNeeded, hasFreeCenter } from '../types'
 import { completedLineCount, isFullCard } from '../lib/card'
 import { confetti } from '../lib/confetti'
 import { PersonSwitcher } from '../components/PersonSwitcher'
@@ -85,7 +85,18 @@ export function Game(): ReactNode {
   const changeSize = (size: number): void => {
     if (!active) return
     if (card && !confirm(`Auf ${size}×${size} umstellen? Die Karte wird neu erstellt.`)) return
-    regenerateCard(active.id, size)
+    // Dropping the joker needs one more quote; if the pool can't cover it at the
+    // new size, fall back to a free centre.
+    const keepJoker = card ? card.joker : true
+    const joker = keepJoker || poolCount < quotesNeeded(size, false)
+    regenerateCard(active.id, size, joker)
+    prevLines.current = { cardId: null, lines: 0 }
+  }
+
+  const changeJoker = (joker: boolean): void => {
+    if (!active || !card) return
+    if (!confirm('Joker-Feld ändern? Die Karte wird neu erstellt.')) return
+    regenerateCard(active.id, card.size, joker)
     prevLines.current = { cardId: null, lines: 0 }
   }
 
@@ -134,6 +145,24 @@ export function Game(): ReactNode {
                 </option>
               ))}
             </select>
+            {hasFreeCenter(card.size) && (
+              <label
+                className="dim joker-toggle"
+                title={
+                  poolCount < quotesNeeded(card.size, false)
+                    ? 'Zu wenige Zitate für ein Feld ohne Joker.'
+                    : undefined
+                }
+              >
+                <input
+                  type="checkbox"
+                  checked={card.joker}
+                  disabled={!card.joker && poolCount < quotesNeeded(card.size, false)}
+                  onChange={(e) => changeJoker(e.target.checked)}
+                />
+                Joker
+              </label>
+            )}
             <div className="spacer" />
             <button className="ghost" onClick={reshuffle}>
               Neu mischen
