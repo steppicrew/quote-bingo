@@ -85,7 +85,7 @@
     "app": "Application",
     "install": "Installer",
     "installed": "Installé / non disponible",
-    "importResult": "« {{name}} » importé : +{{added}} nouvelles, {{skipped}} doublons ignorés",
+    "importResult": "« {{name}} » importé : +{{added}} nouvelles, {{updated}} mises à jour, {{skipped}} ignorées",
     "importFailed": "Échec de l'importation",
     "close": "Fermer"
   },

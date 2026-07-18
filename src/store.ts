@@ -3,6 +3,7 @@ import { persist, createJSONStorage } from 'zustand/middleware'
 import {
   type AccentName,
   type Card,
+  type ExportQuote,
   type Id,
   type Person,
   type Quote,
@@ -13,7 +14,7 @@ import {
 } from './types'
 import { idbStorage } from './lib/db'
 import { generateCard } from './lib/card'
-import { mergeQuotes, type MergeResult } from './lib/share'
+import { mergeQuotes } from './lib/share'
 import { type SoundKind, type SoundMode } from './lib/fanfare'
 
 /** Largest offered size whose quota fits the pool, preferring DEFAULT_SIZE. */
@@ -64,7 +65,10 @@ interface Actions {
   toggleCell: (personId: Id, index: number) => void
 
   /** Merge an imported list into a person (matched by name, else created). */
-  importList: (name: string, quotes: string[]) => { personId: Id } & MergeResult
+  importList: (
+    name: string,
+    quotes: readonly ExportQuote[],
+  ) => { personId: Id; added: number; updated: number; skipped: number }
 
   setTheme: (theme: Theme) => void
   setLocale: (locale: Locale) => void
@@ -74,8 +78,6 @@ interface Actions {
   cycleSoundMode: () => void
 }
 
-const quotesFor = (quotes: Quote[], personId: Id): string[] =>
-  quotes.filter((q) => q.personId === personId).map((q) => q.text)
 
 export const useStore = create<State & Actions>()(
   persist(
@@ -176,19 +178,27 @@ export const useStore = create<State & Actions>()(
           (p) => p.name.trim().toLowerCase() === name.trim().toLowerCase(),
         )
         const personId = target ? target.id : s.addPerson(name)
-        const existing = quotesFor(get().quotes, personId)
+        const existing = get().quotes.filter((q) => q.personId === personId)
         const merged = mergeQuotes(existing, quotes)
-        // Replace this person's quotes with the merged (deduped) set.
+
+        // Apply the reconciliation: keep existing quote objects' ids (so card
+        // cells stay valid), update the text of any that changed, and append
+        // the genuinely new ones. Matching by id-then-text happens in mergeQuotes.
+        const existingById = new Map(existing.map((q) => [q.id, q]))
         const now = Date.now()
+        const mine: Quote[] = merged.quotes.map((mq, i) => {
+          const prev = existingById.get(mq.id)
+          if (prev) return prev.text === mq.text ? prev : { ...prev, text: mq.text }
+          return { id: mq.id, personId, text: mq.text, createdAt: now + i }
+        })
         const others = get().quotes.filter((q) => q.personId !== personId)
-        const rebuilt: Quote[] = merged.quotes.map((text, i) => ({
-          id: uid(),
+        set({ quotes: [...others, ...mine] })
+        return {
           personId,
-          text,
-          createdAt: now + i,
-        }))
-        set({ quotes: [...others, ...rebuilt] })
-        return { personId, ...merged }
+          added: merged.added,
+          updated: merged.updated,
+          skipped: merged.skipped,
+        }
       },
 
       setTheme: (theme) => set({ theme }),

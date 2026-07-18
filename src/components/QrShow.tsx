@@ -3,10 +3,11 @@ import { useTranslation, Trans } from 'react-i18next'
 import QRCode from 'qrcode'
 import { encodeList, QR_MAX_CHARS } from '../lib/share'
 import { useModalDismiss } from '../lib/useModalDismiss'
+import { type ExportQuote } from '../types'
 
 interface Props {
   name: string
-  quotes: string[]
+  quotes: ExportQuote[]
   onClose: () => void
 }
 

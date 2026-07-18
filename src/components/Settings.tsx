@@ -38,6 +38,7 @@ export function Settings({ onClose }: Props): ReactNode {
       t('settings.importResult', {
         name: list.person.name,
         added: res.added,
+        updated: res.updated,
         skipped: res.skipped,
       }),
     )

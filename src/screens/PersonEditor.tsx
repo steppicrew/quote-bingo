@@ -96,7 +96,7 @@ export function PersonEditor({ id }: { id: string }): ReactNode {
             : t('editor.badgeMin', { min: minPool })}
         </span>
         <div className="spacer" />
-        <button onClick={() => exportToFile(person.name, texts)}>{t('editor.exportFile')}</button>
+        <button onClick={() => exportToFile(person.name, mine)}>{t('editor.exportFile')}</button>
         <button onClick={() => setShowQr(true)} disabled={texts.length === 0}>
           {t('editor.showQr')}
         </button>
@@ -133,7 +133,7 @@ export function PersonEditor({ id }: { id: string }): ReactNode {
 
       {showQr && (
         <Suspense fallback={null}>
-          <QrShow name={person.name} quotes={texts} onClose={() => setShowQr(false)} />
+          <QrShow name={person.name} quotes={mine} onClose={() => setShowQr(false)} />
         </Suspense>
       )}
     </div>

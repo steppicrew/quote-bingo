@@ -82,7 +82,7 @@
     "app": "アプリ",
     "install": "インストール",
     "installed": "インストール済み / 利用不可",
-    "importResult": "「{{name}}」をインポート：+{{added}} 件追加、{{skipped}} 件の重複をスキップ",
+    "importResult": "「{{name}}」をインポート：+{{added}} 件追加、{{updated}} 件更新、{{skipped}} 件スキップ",
     "importFailed": "インポートに失敗しました",
     "close": "閉じる"
   },

@@ -32,11 +32,21 @@ export interface Card {
   createdAt: number
 }
 
-/** Shareable unit = one person + their quotes (text only). */
+/** One quote as it travels in a share payload: a stable id plus its text. */
+export interface ExportQuote {
+  id: Id
+  text: string
+}
+
+/**
+ * Shareable unit = one person + their quotes. v2 carries per-quote ids so
+ * edits propagate on re-import; v1 (text-only) payloads are still accepted and
+ * normalised to `ExportQuote[]` with fresh ids on import.
+ */
 export interface QuoteListExport {
-  version: 1
+  version: 2
   person: { name: string }
-  quotes: string[]
+  quotes: ExportQuote[]
 }
 
 export const MIN_SIZE = 3

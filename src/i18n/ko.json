@@ -82,7 +82,7 @@
     "app": "앱",
     "install": "설치",
     "installed": "설치됨 / 사용 불가",
-    "importResult": "“{{name}}” 가져옴: +{{added}}개 추가, {{skipped}}개 중복 건너뜀",
+    "importResult": "“{{name}}” 가져옴: +{{added}}개 추가, {{updated}}개 업데이트, {{skipped}}개 건너뜀",
     "importFailed": "가져오기 실패",
     "close": "닫기"
   },
