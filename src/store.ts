@@ -142,7 +142,35 @@ export const useStore = create<State & Actions>()(
         })),
 
       deleteQuote: (id) =>
-        set((s) => ({ quotes: s.quotes.filter((q) => q.id !== id) })),
+        set((s) => {
+          const doomed = s.quotes.find((q) => q.id === id)
+          const quotes = s.quotes.filter((q) => q.id !== id)
+          if (!doomed) return { quotes }
+
+          // Replace only the deleted quote's cell(s) on this person's card with
+          // an unused quote, so every other (possibly checked) cell is kept as
+          // is. Falls back to leaving the cell if the pool has no spare.
+          const card = s.cards[doomed.personId]
+          if (!card || !card.cells.includes(id)) return { quotes }
+
+          const used = new Set(card.cells)
+          const spares = quotes
+            .filter((q) => q.personId === doomed.personId && !used.has(q.id))
+            .map((q) => q.id)
+          let si = 0
+          const cells = card.cells.slice()
+          const checked = card.checked.slice()
+          for (let i = 0; i < cells.length; i++) {
+            if (cells[i] === id && si < spares.length) {
+              cells[i] = spares[si++]!
+              checked[i] = false // fresh quote, not yet "said"
+            }
+          }
+          return {
+            quotes,
+            cards: { ...s.cards, [doomed.personId]: { ...card, cells, checked } },
+          }
+        }),
 
       regenerateCard: (personId, size, joker) =>
         set((s) => {
