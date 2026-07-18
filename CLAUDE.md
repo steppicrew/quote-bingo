@@ -56,8 +56,17 @@ localized (de/en/fr/es/it/pt/zh/ja/ko) via react-i18next; the German build name 
   cleanup's async `history.back()` popstate must not be read as a user Back under
   StrictMode. Used by `Settings`, `QrShow`, `QrScan`.
 - **Share** (`src/lib/share.ts`): `encodeList`/`decodeList` (gzip+base64url for QR),
-  `exportToFile`/`importFromFile` (JSON), `mergeQuotes` (dedupe by trimmed, lowercased
-  text). Import merges into a person matched by name (case-insensitive), else creates one.
+  `exportToFile`/`importFromFile` (JSON). Payload is **v2** — `QuoteListExport` carries a
+  stable **id per quote** (`{id,text}[]`); v1 (text-only `string[]`) payloads are still
+  accepted and normalised with fresh ids. `mergeQuotes` reconciles **by id then text**: an
+  id match updates the text in place (id kept, so card cells stay valid), a new id with an
+  existing text is skipped, an edit that collides with another existing text is skipped
+  (no duplicate), and genuinely new quotes are appended — returning `{added, updated,
+  skipped}`. `store.importList` applies this, preserving existing quote ids; import merges
+  into a person matched by name (case-insensitive), else creates one.
+- **Quote deletion** (`store.deleteQuote`): removes the quote and, on the owner's card,
+  swaps only that quote's cell(s) for an unused quote (resetting those cells to unchecked),
+  leaving every other cell + its checked state intact; no spare quote → cell left as-is.
 - **Install** (`src/lib/install.ts`): captures `beforeinstallprompt` at module load,
   `useInstall()` exposes `canInstall` + `promptInstall`. Hidden when already standalone.
 - **Win effects**: `confetti` (`src/lib/confetti.ts`, canvas, `{ intensity, gold }`),
