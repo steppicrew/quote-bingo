@@ -2,6 +2,8 @@
 // file, so it works fully offline) plus an optional vibration pattern. The
 // caller gates playback on the persisted `sound` setting.
 
+import { type SoundKind, type SoundMode } from '../types'
+
 let ctx: AudioContext | null = null
 
 function audioCtx(): AudioContext | null {
@@ -58,10 +60,9 @@ function note(ac: AudioContext, freq: number, at: number, dur: number, gainPeak:
   }
 }
 
-/** How a win is celebrated. */
-export type SoundMode = 'on' | 'vibrate' | 'off'
-/** Which fanfare plays when the mode is 'on'. */
-export type SoundKind = 'tadaa' | 'arpeggio'
+// SoundMode ('on'|'vibrate'|'off') and SoundKind ('tadaa'|'arpeggio') live in
+// types.ts; re-exported here for existing imports.
+export type { SoundMode, SoundKind } from '../types'
 
 /**
  * "Ta-daa!" — modelled on a reference recording: a short bright pickup on G4

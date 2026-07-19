@@ -85,6 +85,12 @@
     "app": "App",
     "install": "Install",
     "installed": "Installed / not available",
+    "backup": "All data",
+    "exportAll": "Export all",
+    "importAll": "Import all",
+    "restoreConfirm": "This file replaces ALL current data (people, quotes, cards, settings). Continue?",
+    "restoreDone": "Data restored",
+    "restoreFailed": "Restore failed",
     "importResult": "“{{name}}” imported: +{{added}} new, {{updated}} updated, {{skipped}} skipped",
     "importFailed": "Import failed",
     "close": "Close"

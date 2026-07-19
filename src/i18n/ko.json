@@ -82,6 +82,12 @@
     "app": "앱",
     "install": "설치",
     "installed": "설치됨 / 사용 불가",
+    "backup": "모든 데이터",
+    "exportAll": "전체 내보내기",
+    "importAll": "전체 가져오기",
+    "restoreConfirm": "이 파일은 현재의 모든 데이터(사람, 명언, 카드, 설정)를 덮어씁니다. 계속할까요?",
+    "restoreDone": "데이터를 복원했습니다",
+    "restoreFailed": "복원 실패",
     "importResult": "“{{name}}” 가져옴: +{{added}}개 추가, {{updated}}개 업데이트, {{skipped}}개 건너뜀",
     "importFailed": "가져오기 실패",
     "close": "닫기"

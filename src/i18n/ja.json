@@ -82,6 +82,12 @@
     "app": "アプリ",
     "install": "インストール",
     "installed": "インストール済み / 利用不可",
+    "backup": "すべてのデータ",
+    "exportAll": "すべて書き出す",
+    "importAll": "すべて読み込む",
+    "restoreConfirm": "このファイルは現在のすべてのデータ（人・名言・カード・設定）を置き換えます。続けますか？",
+    "restoreDone": "データを復元しました",
+    "restoreFailed": "復元に失敗しました",
     "importResult": "「{{name}}」をインポート：+{{added}} 件追加、{{updated}} 件更新、{{skipped}} 件スキップ",
     "importFailed": "インポートに失敗しました",
     "close": "閉じる"

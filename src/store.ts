@@ -2,11 +2,16 @@ import { create } from 'zustand'
 import { persist, createJSONStorage } from 'zustand/middleware'
 import {
   type AccentName,
+  type BackupData,
   type Card,
   type ExportQuote,
   type Id,
+  type Locale,
   type Person,
   type Quote,
+  type SoundKind,
+  type SoundMode,
+  type Theme,
   DEFAULT_SIZE,
   SIZES,
   quotesNeeded,
@@ -15,7 +20,6 @@ import {
 import { idbStorage } from './lib/db'
 import { generateCard } from './lib/card'
 import { mergeQuotes } from './lib/share'
-import { type SoundKind, type SoundMode } from './lib/fanfare'
 
 /** Largest offered size whose quota fits the pool, preferring DEFAULT_SIZE. */
 function bestSize(poolCount: number): number {
@@ -29,8 +33,18 @@ const uid = (): Id =>
     ? crypto.randomUUID()
     : `${Date.now()}-${Math.random().toString(36).slice(2)}`
 
-export type Theme = 'dark' | 'light' | 'system'
-export type Locale = 'de' | 'en' | 'fr' | 'es' | 'zh' | 'ja' | 'ko' | 'pt' | 'it' | 'system'
+// Re-exported for existing imports (`ThemeToggle`, `LanguageToggle`, …).
+export type { Theme, Locale, SoundMode, SoundKind } from './types'
+
+const THEMES = ['dark', 'light', 'system'] as const
+const LOCALES = ['de', 'en', 'fr', 'es', 'zh', 'ja', 'ko', 'pt', 'it', 'system'] as const
+const SOUND_MODES = ['on', 'vibrate', 'off'] as const
+const SOUND_KINDS = ['tadaa', 'arpeggio'] as const
+
+/** Return `v` if it is one of `allowed`, else `fallback`. */
+function oneOf<T extends string>(v: string, allowed: readonly T[], fallback: T): T {
+  return (allowed as readonly string[]).includes(v) ? (v as T) : fallback
+}
 
 interface State {
   persons: Person[]
@@ -76,6 +90,11 @@ interface Actions {
   setSoundKind: (soundKind: SoundKind) => void
   /** Cycle the nav-bar sound toggle: on → vibrate → off → on. */
   cycleSoundMode: () => void
+
+  /** The full persisted state for an "export all data" backup. */
+  backupData: () => BackupData
+  /** Replace the entire app state with a restored backup. */
+  restoreBackup: (data: BackupData) => void
 }
 
 
@@ -241,6 +260,34 @@ export const useStore = create<State & Actions>()(
             off: 'on',
           }
           return { soundMode: next[s.soundMode] }
+        }),
+
+      backupData: () => {
+        const s = get()
+        return {
+          persons: s.persons,
+          quotes: s.quotes,
+          cards: s.cards,
+          activePersonId: s.activePersonId,
+          theme: s.theme,
+          locale: s.locale,
+          soundMode: s.soundMode,
+          soundKind: s.soundKind,
+        }
+      },
+
+      restoreBackup: (data) =>
+        set({
+          persons: data.persons,
+          quotes: data.quotes,
+          cards: data.cards,
+          activePersonId: data.activePersonId,
+          // Settings come in as plain strings from the file; fall back to a
+          // sane default if the value isn't one we recognise.
+          theme: oneOf(data.theme, THEMES, 'system'),
+          locale: oneOf(data.locale, LOCALES, 'system'),
+          soundMode: oneOf(data.soundMode, SOUND_MODES, 'on'),
+          soundKind: oneOf(data.soundKind, SOUND_KINDS, 'tadaa'),
         }),
     }),
     {

@@ -1,4 +1,13 @@
-import { type ExportQuote, type QuoteListExport } from '../types'
+import {
+  type BackupData,
+  type BackupFile,
+  type Card,
+  type ExportQuote,
+  type Id,
+  type Person,
+  type Quote,
+  type QuoteListExport,
+} from '../types'
 
 const uid = (): string =>
   typeof crypto.randomUUID === 'function'
@@ -90,19 +99,68 @@ export async function decodeList(code: string): Promise<QuoteListExport> {
 
 // ---- plain JSON file IO --------------------------------------------------
 
-export function exportToFile(name: string, quotes: readonly ExportQuote[]): void {
-  const json = JSON.stringify(toExport(name, quotes), null, 2)
+function downloadJson(json: string, filename: string): void {
   const blob = new Blob([json], { type: 'application/json' })
   const url = URL.createObjectURL(blob)
   const a = document.createElement('a')
   a.href = url
-  a.download = `bingo-${name.replace(/[^\w-]+/g, '_')}.json`
+  a.download = filename
   a.click()
   URL.revokeObjectURL(url)
 }
 
+export function exportToFile(name: string, quotes: readonly ExportQuote[]): void {
+  const json = JSON.stringify(toExport(name, quotes), null, 2)
+  downloadJson(json, `bingo-${name.replace(/[^\w-]+/g, '_')}.json`)
+}
+
 export async function importFromFile(file: File): Promise<QuoteListExport> {
   return parseExport(JSON.parse(await file.text()))
+}
+
+// ---- full backup (export/import all data) --------------------------------
+
+/** Download the complete app state as a backup file. */
+export function exportBackup(state: BackupData): void {
+  const file: BackupFile = { app: 'quote-bingo-backup', version: 1, state }
+  const date = new Date().toISOString().slice(0, 10)
+  downloadJson(JSON.stringify(file, null, 2), `bingo-backup-${date}.json`)
+}
+
+function isRecord(v: unknown): v is Record<string, unknown> {
+  return typeof v === 'object' && v !== null
+}
+
+/** Validate + parse a backup file into restorable state. Throws if malformed. */
+export function parseBackup(raw: unknown): BackupData {
+  if (!isRecord(raw) || raw.app !== 'quote-bingo-backup' || raw.version !== 1) {
+    throw new Error('Unrecognised backup file')
+  }
+  const st = raw.state
+  if (
+    !isRecord(st) ||
+    !Array.isArray(st.persons) ||
+    !Array.isArray(st.quotes) ||
+    !isRecord(st.cards)
+  ) {
+    throw new Error('Unrecognised backup file')
+  }
+  // Settings are validated against their unions in store.restoreBackup, so a
+  // loose cast here is fine; a hand-edited/garbage value falls back on restore.
+  return {
+    persons: st.persons as Person[],
+    quotes: st.quotes as Quote[],
+    cards: st.cards as Record<Id, Card>,
+    activePersonId: typeof st.activePersonId === 'string' ? st.activePersonId : null,
+    theme: st.theme as BackupData['theme'],
+    locale: st.locale as BackupData['locale'],
+    soundMode: st.soundMode as BackupData['soundMode'],
+    soundKind: st.soundKind as BackupData['soundKind'],
+  }
+}
+
+export async function importBackupFile(file: File): Promise<BackupData> {
+  return parseBackup(JSON.parse(await file.text()))
 }
 
 // ---- merge / dedupe ------------------------------------------------------

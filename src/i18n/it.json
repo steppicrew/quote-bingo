@@ -85,6 +85,12 @@
     "app": "App",
     "install": "Installa",
     "installed": "Installata / non disponibile",
+    "backup": "Tutti i dati",
+    "exportAll": "Esporta tutto",
+    "importAll": "Importa tutto",
+    "restoreConfirm": "Questo file sostituisce TUTTI i dati attuali (persone, citazioni, cartelle, impostazioni). Continuare?",
+    "restoreDone": "Dati ripristinati",
+    "restoreFailed": "Ripristino non riuscito",
     "importResult": "“{{name}}” importato: +{{added}} nuove, {{updated}} aggiornate, {{skipped}} ignorate",
     "importFailed": "Importazione non riuscita",
     "close": "Chiudi"

@@ -49,6 +49,30 @@ export interface QuoteListExport {
   quotes: ExportQuote[]
 }
 
+export type Theme = 'dark' | 'light' | 'system'
+export type Locale = 'de' | 'en' | 'fr' | 'es' | 'zh' | 'ja' | 'ko' | 'pt' | 'it' | 'system'
+export type SoundMode = 'on' | 'vibrate' | 'off'
+export type SoundKind = 'tadaa' | 'arpeggio'
+
+/** The full persisted app state carried by an "export all data" backup. */
+export interface BackupData {
+  persons: Person[]
+  quotes: Quote[]
+  cards: Record<Id, Card>
+  activePersonId: Id | null
+  theme: Theme
+  locale: Locale
+  soundMode: SoundMode
+  soundKind: SoundKind
+}
+
+/** A complete-configuration backup file (all persons, boards, settings). */
+export interface BackupFile {
+  app: 'quote-bingo-backup'
+  version: 1
+  state: BackupData
+}
+
 export const MIN_SIZE = 3
 export const MAX_SIZE = 7
 export const DEFAULT_SIZE = 5

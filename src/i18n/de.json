@@ -85,6 +85,12 @@
     "app": "App",
     "install": "Installieren",
     "installed": "Installiert / nicht verfügbar",
+    "backup": "Alle Daten",
+    "exportAll": "Alles exportieren",
+    "importAll": "Alles importieren",
+    "restoreConfirm": "Diese Datei ersetzt ALLE aktuellen Daten (Personen, Zitate, Karten, Einstellungen). Fortfahren?",
+    "restoreDone": "Daten wiederhergestellt",
+    "restoreFailed": "Wiederherstellung fehlgeschlagen",
     "importResult": "„{{name}}“ importiert: +{{added}} neu, {{updated}} aktualisiert, {{skipped}} übersprungen",
     "importFailed": "Import fehlgeschlagen",
     "close": "Schließen"

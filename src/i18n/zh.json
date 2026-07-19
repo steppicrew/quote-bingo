@@ -82,6 +82,12 @@
     "app": "应用",
     "install": "安装",
     "installed": "已安装 / 不可用",
+    "backup": "全部数据",
+    "exportAll": "导出全部",
+    "importAll": "导入全部",
+    "restoreConfirm": "此文件将替换所有当前数据（人员、语录、卡片、设置）。是否继续？",
+    "restoreDone": "数据已恢复",
+    "restoreFailed": "恢复失败",
     "importResult": "已导入“{{name}}”：新增 +{{added}}，更新 {{updated}}，跳过 {{skipped}}",
     "importFailed": "导入失败",
     "close": "关闭"

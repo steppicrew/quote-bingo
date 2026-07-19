@@ -1,7 +1,7 @@
 import { lazy, Suspense, useRef, useState, type ReactNode } from 'react'
 import { useStore } from '../store'
 import { type QuoteListExport } from '../types'
-import { importFromFile } from '../lib/share'
+import { importFromFile, exportBackup, importBackupFile } from '../lib/share'
 import { useInstall } from '../lib/install'
 import { useModalDismiss } from '../lib/useModalDismiss'
 import { playFanfare, type SoundKind, type SoundMode } from '../lib/fanfare'
@@ -21,6 +21,8 @@ interface Props {
 export function Settings({ onClose }: Props): ReactNode {
   const { t } = useTranslation()
   const importList = useStore((s) => s.importList)
+  const backupData = useStore((s) => s.backupData)
+  const restoreBackup = useStore((s) => s.restoreBackup)
   const soundMode = useStore((s) => s.soundMode)
   const setSoundMode = useStore((s) => s.setSoundMode)
   const soundKind = useStore((s) => s.soundKind)
@@ -30,7 +32,20 @@ export function Settings({ onClose }: Props): ReactNode {
 
   const [scanning, setScanning] = useState(false)
   const fileRef = useRef<HTMLInputElement>(null)
+  const backupRef = useRef<HTMLInputElement>(null)
   useModalDismiss(onClose)
+
+  const onBackupFile = async (file: File | undefined): Promise<void> => {
+    if (!file) return
+    try {
+      const data = await importBackupFile(file)
+      if (!confirm(t('settings.restoreConfirm'))) return
+      restoreBackup(data)
+      toast(t('settings.restoreDone'))
+    } catch (e) {
+      toast(e instanceof Error ? e.message : t('settings.restoreFailed'))
+    }
+  }
 
   const applyImport = (list: QuoteListExport): void => {
     const res = importList(list.person.name, list.quotes)
@@ -114,6 +129,18 @@ export function Settings({ onClose }: Props): ReactNode {
         </div>
 
         <div className="setting">
+          <span>{t('settings.backup')}</span>
+          <div className="row">
+            <button onClick={() => exportBackup(backupData())}>
+              {t('settings.exportAll')}
+            </button>
+            <button onClick={() => backupRef.current?.click()}>
+              {t('settings.importAll')}
+            </button>
+          </div>
+        </div>
+
+        <div className="setting">
           <span>{t('settings.app')}</span>
           {canInstall ? (
             <button className="primary" onClick={() => void promptInstall()}>
@@ -146,6 +173,17 @@ export function Settings({ onClose }: Props): ReactNode {
           hidden
           onChange={(e) => {
             void onFile(e.target.files?.[0])
+            e.target.value = ''
+          }}
+        />
+
+        <input
+          ref={backupRef}
+          type="file"
+          accept="application/json,.json"
+          hidden
+          onChange={(e) => {
+            void onBackupFile(e.target.files?.[0])
             e.target.value = ''
           }}
         />

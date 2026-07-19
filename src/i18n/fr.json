@@ -85,6 +85,12 @@
     "app": "Application",
     "install": "Installer",
     "installed": "Installé / non disponible",
+    "backup": "Toutes les données",
+    "exportAll": "Tout exporter",
+    "importAll": "Tout importer",
+    "restoreConfirm": "Ce fichier remplace TOUTES les données actuelles (personnes, citations, cartes, réglages). Continuer ?",
+    "restoreDone": "Données restaurées",
+    "restoreFailed": "Échec de la restauration",
     "importResult": "« {{name}} » importé : +{{added}} nouvelles, {{updated}} mises à jour, {{skipped}} ignorées",
     "importFailed": "Échec de l'importation",
     "close": "Fermer"
