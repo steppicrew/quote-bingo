@@ -42,6 +42,15 @@ localized (de/en/fr/es/it/pt/zh/ja/ko) via react-i18next; the German build name 
 - **Card logic** (`src/lib/card.ts`): `generateCard(personId, ids, size, joker)`
   (Fisher–Yates; free centre only when `joker && odd size`),
   `linesFor`/`winningCells`/`completedLineCount`, `isFullCard`.
+- **Board sizing + text auto-fit** (`BingoBoard.tsx`, `useAutoFitText.ts`): the board must
+  be a **square** grid. CSS `aspect-ratio:1` is **not** reliable here — the grid's tall
+  wrapped-text content overrode it (cells rendered tall+narrow, e.g. 62×164, so words wrapped
+  per-character). Fix: a `ResizeObserver` in `BingoBoard` sets the board's `height` equal to
+  its width in JS, and tracks are `minmax(0,1fr)` (plain `1fr` = `minmax(auto,1fr)`, whose
+  `auto` min uses content height). `.cell-text` renders at `width:100%`; `useAutoFitText`
+  binary-searches the largest font that fits, measuring at that same wrap width with
+  `max-height`/`overflow` lifted so `scrollHeight` reports true overflow (else it clamps).
+  Retries across frames for slow standalone-PWA cold starts; refits on RO + `fonts.ready`.
 - **i18n** (`src/i18n/index.ts` + `{de,en,fr,es,it,pt,zh,ja,ko}.json`): `de` is the source
   of truth. Store `locale` ('system'|de|en|fr|es|it|pt|zh|ja|ko) drives
   `i18n.changeLanguage` from `App`; 'system' follows `navigator.language`, **falling back to
