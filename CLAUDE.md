@@ -76,6 +76,13 @@ localized (de/en/fr/es/it/pt/zh/ja/ko) via react-i18next; the German build name 
 - **Quote deletion** (`store.deleteQuote`): removes the quote and, on the owner's card,
   swaps only that quote's cell(s) for an unused quote (resetting those cells to unchecked),
   leaving every other cell + its checked state intact; no spare quote → cell left as-is.
+- **Full backup** (`exportBackup`/`parseBackup`/`importBackupFile` in `share.ts`,
+  `store.backupData`/`store.restoreBackup`): "Export all"/"Import all" in Settings save the
+  whole persisted slice (persons+accents, quotes+ids, cards+checked, theme/locale/sound) to
+  a `BackupFile` JSON (`app:'quote-bingo-backup'`, version 1). Import **replaces** all state
+  after a confirm; settings are re-validated against their unions on restore. The
+  `Theme`/`Locale`/`SoundMode`/`SoundKind` unions live in `types.ts` (so `BackupData` is
+  typed with literals, no circular import); `store.ts` and `fanfare.ts` re-export them.
 - **Install** (`src/lib/install.ts`): captures `beforeinstallprompt` at module load,
   `useInstall()` exposes `canInstall` + `promptInstall`. Hidden when already standalone.
 - **Win effects**: `confetti` (`src/lib/confetti.ts`, canvas, `{ intensity, gold }`),

@@ -24,6 +24,8 @@ merge quote lists with friends via **QR code** or **JSON file**.
 - 🌓 **Light / dark / system theme**.
 - 📤 **Share & merge** — export/import quote lists as file or QR, with automatic
   de-duplication when merging.
+- 💾 **Full backup** — export all data (every person, accent, quote, board, checked tile
+  and setting) to a JSON file and restore it 1:1 on another device.
 - 📱 The phone Back button closes open dialogs instead of leaving the app.
 
 ## Development
