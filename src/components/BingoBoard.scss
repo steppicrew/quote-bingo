@@ -4,7 +4,10 @@
   display: grid;
   gap: 6px;
   width: 100%;
+  // Height is set to equal the width in JS (BingoBoard) to force a square;
+  // aspect-ratio proved unreliable against the grid's tall text content.
   aspect-ratio: 1;
+  min-height: 0;
 
   &.shake {
     animation: board-shake 0.5s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
@@ -65,9 +68,12 @@
   }
 
   .cell-text {
-    // Font size is auto-fitted per cell by useAutoFitText.
+    // Font size is auto-fitted per cell by useAutoFitText. Fill the cell width
+    // (rather than shrink-to-fit) so the wrap width used while measuring the
+    // fit matches the wrap width at render — otherwise a flex item can wrap
+    // differently and overflow despite the measurement "fitting".
     line-height: 1.1;
-    max-width: 100%;
+    width: 100%;
     max-height: 100%;
     overflow: hidden;
     word-break: break-word;

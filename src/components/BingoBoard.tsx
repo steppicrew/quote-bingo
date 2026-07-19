@@ -42,13 +42,38 @@ export function BingoBoard({
     return () => window.clearTimeout(id)
   }, [shakeKey])
 
+  // Force the board to a square by setting its height to its own width. CSS
+  // `aspect-ratio` proved unreliable here: the grid's tall wrapped-text content
+  // won out and the board grew far past square (cells ended up ~62×164). An
+  // explicit pixel height gives the `minmax(0,1fr)` rows a definite box to
+  // divide, so every cell is a real square and the text auto-fit works.
+  useEffect(() => {
+    const el = boardRef.current
+    if (!el) return
+    const apply = (): void => {
+      const w = el.clientWidth
+      const target = `${w}px`
+      if (w > 0 && el.style.height !== target) el.style.height = target
+    }
+    apply()
+    // Observe the parent's width so our own height changes don't re-trigger us.
+    const ro = new ResizeObserver(apply)
+    if (el.parentElement) ro.observe(el.parentElement)
+    ro.observe(el)
+    return () => ro.disconnect()
+  }, [])
+
   return (
     <div
       ref={boardRef}
       className="board"
       style={{
-        gridTemplateColumns: `repeat(${card.size}, 1fr)`,
-        gridTemplateRows: `repeat(${card.size}, 1fr)`,
+        // minmax(0, 1fr) — not plain 1fr — so a cell with tall wrapped text
+        // can't force its row's min track size to the content height. Plain
+        // 1fr resolves to minmax(auto, 1fr), letting tall text stretch rows
+        // past the board's square aspect-ratio (cells became tall + narrow).
+        gridTemplateColumns: `repeat(${card.size}, minmax(0, 1fr))`,
+        gridTemplateRows: `repeat(${card.size}, minmax(0, 1fr))`,
       }}
     >
       {card.cells.map((quoteId, i) => {

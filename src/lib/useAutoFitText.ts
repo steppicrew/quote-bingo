@@ -31,36 +31,50 @@ export function useAutoFitText(
       const availH = box.clientHeight - padY
       if (availW <= 0 || availH <= 0) return false
 
+      // The `.cell-text` span renders at `width:100%` (fills the cell), so it
+      // wraps at exactly `availW` — the same width we measure at here. Lift its
+      // `max-height`/`overflow` so `scrollHeight` reports the true (possibly
+      // overflowing) content height instead of being clamped to the cell.
+      const s = el.style
+      const prev = { maxHeight: s.maxHeight, overflow: s.overflow }
+      s.maxHeight = 'none'
+      s.overflow = 'visible'
+
       let lo = MIN_PX
       let hi = MAX_PX
-      // Largest size that fits.
       while (hi - lo > 0.5) {
         const mid = (lo + hi) / 2
-        el.style.fontSize = `${mid}px`
-        const fits = el.scrollWidth <= availW && el.scrollHeight <= availH
+        s.fontSize = `${mid}px`
+        const fits = el.scrollWidth <= availW + 0.5 && el.scrollHeight <= availH + 0.5
         if (fits) lo = mid
         else hi = mid
       }
-      el.style.fontSize = `${lo}px`
+      s.fontSize = `${lo}px`
+
+      // Restore the constraints for normal rendering.
+      s.maxHeight = prev.maxHeight
+      s.overflow = prev.overflow
       return true
     }
 
-    // Measure once layout is stable. On mobile the first frame(s) after a
-    // (re)mount can still report a zero-sized box, so retry across a few frames
-    // until it has real dimensions instead of leaving a stale font size behind.
+    // Measure once layout is stable. On mobile — and especially in an installed
+    // (standalone) PWA — the first frames after a (re)mount can report a
+    // zero-sized box, so retry across a few frames until it has real dimensions
+    // instead of leaving the default font size behind.
     const schedule = (): void => {
       raf = requestAnimationFrame(() => {
-        if (!fit() && attempts++ < 10) schedule()
+        if (!fit() && attempts++ < 60) schedule()
       })
     }
     schedule()
 
     // Web-font metrics can settle after first paint; refit when fonts are ready.
-    if (document.fonts?.status === 'loading') {
-      void document.fonts.ready.then(() => fit())
+    if (document.fonts?.status !== 'loaded') {
+      void document.fonts?.ready.then(() => fit())
     }
 
-    // Genuine size changes (orientation, window resize) still refit.
+    // Genuine size changes (orientation, window resize, the board's height
+    // resolving) refit. This is the durable path once the box is sized.
     const ro = new ResizeObserver(() => fit())
     ro.observe(box)
 
