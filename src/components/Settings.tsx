@@ -131,7 +131,12 @@ export function Settings({ onClose }: Props): ReactNode {
         <div className="setting">
           <span>{t('settings.backup')}</span>
           <div className="row">
-            <button onClick={() => exportBackup(backupData())}>
+            <button
+              onClick={() => {
+                exportBackup(backupData())
+                toast(t('settings.exportedAll'))
+              }}
+            >
               {t('settings.exportAll')}
             </button>
             <button onClick={() => backupRef.current?.click()}>

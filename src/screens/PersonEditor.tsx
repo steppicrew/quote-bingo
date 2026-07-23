@@ -96,7 +96,14 @@ export function PersonEditor({ id }: { id: string }): ReactNode {
             : t('editor.badgeMin', { min: minPool })}
         </span>
         <div className="spacer" />
-        <button onClick={() => exportToFile(person.name, mine)}>{t('editor.exportFile')}</button>
+        <button
+          onClick={() => {
+            exportToFile(person.name, mine)
+            toast(t('editor.exportedFile'))
+          }}
+        >
+          {t('editor.exportFile')}
+        </button>
         <button onClick={() => setShowQr(true)} disabled={texts.length === 0}>
           {t('editor.showQr')}
         </button>
