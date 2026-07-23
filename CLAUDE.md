@@ -73,6 +73,23 @@ localized (de/en/fr/es/it/pt/zh/ja/ko) via react-i18next; the German build name 
   (no duplicate), and genuinely new quotes are appended — returning `{added, updated,
   skipped}`. `store.importList` applies this, preserving existing quote ids; import merges
   into a person matched by name (case-insensitive), else creates one.
+- **Quote ids are short** (`src/lib/id.ts`, `uid()` = 8-char base36). Ids only need to be
+  unique within a person's small quote pool; full UUIDs bloated the QR payload (36 chars
+  each, often > all quote text combined) and defeated gzip (random UUID = max entropy).
+  Short ids cut the payload ~40% with zero behaviour change (ids are opaque strings
+  everywhere — `mergeQuotes`, card `cells`, `deleteQuote`). Persist v2→v3 remints old UUIDs
+  (see version note below).
+- **Multi-QR chunking** (`chunkCode`/`parseChunk`/`joinChunks` in `share.ts`): even with
+  short ids a list can exceed `QR_MAX_CHARS` (800) — Jens's 31 quotes ≈ 1090 chars = 2
+  codes. `chunkCode` returns a single **bare** code when it fits (back-compatible with old
+  scanners), else numbered `QB1.<group>.<idx>.<total>.<body>` envelopes (`.` is a safe
+  separator — never in base64url; `group` = random 4-char base36 to associate a scan set).
+  `QrShow` paginates chunks with auto-advance + manual prev/next + progress dots; `QrScan`
+  detects the envelope, collects bodies into an `index→body` map (order-independent, deduped),
+  shows `N/total`, and reassembles + `decodeList`s once every index is present. A plain
+  (prefix-less) scan still decodes directly. The share payload keeps ids (edit-tracking
+  intact) — dropping ids from the wire would fit Jens in one QR but lose cross-device edit
+  propagation, so it was rejected.
 - **Quote deletion** (`store.deleteQuote`): removes the quote and, on the owner's card,
   swaps only that quote's cell(s) for an unused quote (resetting those cells to unchecked),
   leaving every other cell + its checked state intact; no spare quote → cell left as-is.
@@ -83,6 +100,9 @@ localized (de/en/fr/es/it/pt/zh/ja/ko) via react-i18next; the German build name 
   after a confirm; settings are re-validated against their unions on restore. The
   `Theme`/`Locale`/`SoundMode`/`SoundKind` unions live in `types.ts` (so `BackupData` is
   typed with literals, no circular import); `store.ts` and `fanfare.ts` re-export them.
+  Both export buttons ("Export file" in `PersonEditor`, "Export all" in `Settings`) fire a
+  confirmation toast — the browser's own download notification is too subtle and users
+  double-tapped.
 - **Install** (`src/lib/install.ts`): captures `beforeinstallprompt` at module load,
   `useInstall()` exposes `canInstall` + `promptInstall`. Hidden when already standalone.
 - **Win effects**: `confetti` (`src/lib/confetti.ts`, canvas, `{ intensity, gold }`),
@@ -119,9 +139,11 @@ joker-off requirement.
 - **All user-facing strings go through `t()`** (react-i18next). Add new keys to every
   locale in `src/i18n/*.json`; `de` is authored first. Use count/interpolation keys for
   plurals and variables — no manual ternaries or template concatenation.
-- Zustand persist is at **version 2**: `migrate` drops legacy cards lacking `size` (v0→v1)
-  and defaults `joker: true` on cards lacking the flag (v1→v2). Persisted slice also
-  carries `theme`, `locale`, `soundMode`, `soundKind`.
+- Zustand persist is at **version 3**: `migrate` drops legacy cards lacking `size` (v0→v1),
+  defaults `joker: true` on cards lacking the flag (v1→v2), and remints every quote id from
+  the old UUID to a short base36 id, rewriting matching card `cells` through the same
+  old→new map in place (v2→v3; `checked[]` is index-aligned so untouched, free-centre
+  `null`s kept). Persisted slice also carries `theme`, `locale`, `soundMode`, `soundKind`.
 - A committed `pre-commit` hook (`.githooks/pre-commit`) bumps the patch version in
   `package.json` on every commit. Enable per clone: `git config core.hooksPath .githooks`.
 - Win celebration fires from a `useEffect` in `Game` on a newly completed line. Track the
