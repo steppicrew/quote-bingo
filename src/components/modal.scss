@@ -43,6 +43,51 @@
   padding: 8px;
 }
 
+.qr-pager {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  button {
+    width: 44px;
+    height: 44px;
+    flex: 0 0 auto;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    svg {
+      width: 20px;
+      height: 20px;
+    }
+    &.hidden {
+      visibility: hidden;
+    }
+  }
+  .qr-page {
+    min-width: 6ch;
+    text-align: center;
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+.qr-dots {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: v.$primary-dim;
+    opacity: 0.4;
+    &.active {
+      opacity: 1;
+      background: v.$primary;
+    }
+  }
+}
+
 .qr-scan-region {
   width: 100%;
   border-radius: v.$radius-sm;

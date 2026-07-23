@@ -93,6 +93,84 @@ export async function decodeList(code: string): Promise<QuoteListExport> {
   return parseExport(JSON.parse(json))
 }
 
+// ---- multi-QR chunking ----------------------------------------------------
+//
+// A single encoded list can exceed what one QR reliably scans (QR_MAX_CHARS).
+// Split it into an ordered set of QR payloads, each wrapped in a tiny envelope
+// so the scanner can group and reassemble them in any order:
+//
+//   QB1.<group>.<idx>.<total>.<chunk>
+//
+// The prefix is plain text (not gzipped) so the scanner reads it raw. '.' is
+// safe as a separator: it never appears in a base64url body. A single-chunk
+// list is returned bare (no envelope) so old scanners stay compatible.
+
+const CHUNK_PREFIX = 'QB1'
+/** Envelope overhead worst case: "QB1." + group(4) + "." + idx + "." + total + "." */
+const ENVELOPE_MAX = CHUNK_PREFIX.length + 1 + 4 + 1 + 3 + 1 + 3 + 1
+/** Body budget per chunk, leaving room for the envelope inside QR_MAX_CHARS. */
+const CHUNK_BODY_MAX = QR_MAX_CHARS - ENVELOPE_MAX
+
+const groupId = (): string =>
+  Math.floor(Math.random() * 36 ** 4)
+    .toString(36)
+    .padStart(4, '0')
+
+/**
+ * Split an encoded code into scannable QR payloads. Short codes come back as a
+ * single bare string (back-compatible); longer codes are wrapped in numbered
+ * `QB1.<group>.<idx>.<total>.<chunk>` envelopes.
+ */
+export function chunkCode(code: string): string[] {
+  if (code.length <= QR_MAX_CHARS) return [code]
+  const total = Math.ceil(code.length / CHUNK_BODY_MAX)
+  const group = groupId()
+  const parts: string[] = []
+  for (let i = 0; i < total; i++) {
+    const body = code.slice(i * CHUNK_BODY_MAX, (i + 1) * CHUNK_BODY_MAX)
+    parts.push(`${CHUNK_PREFIX}.${group}.${i}.${total}.${body}`)
+  }
+  return parts
+}
+
+export interface ChunkInfo {
+  group: string
+  idx: number
+  total: number
+  body: string
+}
+
+/** Parse one scanned payload. Returns null if it is not a chunk envelope. */
+export function parseChunk(text: string): ChunkInfo | null {
+  const t = text.trim()
+  if (!t.startsWith(CHUNK_PREFIX + '.')) return null
+  // Split only the 4 header fields; the body may itself be arbitrary base64url.
+  const rest = t.slice(CHUNK_PREFIX.length + 1)
+  const m = /^([0-9a-z]+)\.(\d+)\.(\d+)\.(.*)$/s.exec(rest)
+  if (!m) return null
+  const idx = Number(m[2])
+  const total = Number(m[3])
+  if (!Number.isInteger(idx) || !Number.isInteger(total) || total < 1 || idx >= total) {
+    return null
+  }
+  return { group: m[1]!, idx, total, body: m[4]! }
+}
+
+/**
+ * Reassemble a full code from collected chunk bodies (keyed by idx). Returns
+ * null until every index [0, total) is present.
+ */
+export function joinChunks(bodies: ReadonlyMap<number, string>, total: number): string | null {
+  if (bodies.size < total) return null
+  const ordered: string[] = []
+  for (let i = 0; i < total; i++) {
+    const b = bodies.get(i)
+    if (b === undefined) return null
+    ordered.push(b)
+  }
+  return ordered.join('')
+}
+
 // ---- plain JSON file IO --------------------------------------------------
 
 function downloadJson(json: string, filename: string): void {

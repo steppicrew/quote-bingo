@@ -83,3 +83,36 @@ export function SoundOffIcon(): ReactNode {
     </svg>
   )
 }
+
+export function ChevronLeftIcon(): ReactNode {
+  return (
+    <svg {...base}>
+      <polyline points="15 18 9 12 15 6" />
+    </svg>
+  )
+}
+
+export function ChevronRightIcon(): ReactNode {
+  return (
+    <svg {...base}>
+      <polyline points="9 18 15 12 9 6" />
+    </svg>
+  )
+}
+
+export function PlayIcon(): ReactNode {
+  return (
+    <svg {...base} fill="currentColor" stroke="none">
+      <polygon points="7 5 19 12 7 19 7 5" />
+    </svg>
+  )
+}
+
+export function PauseIcon(): ReactNode {
+  return (
+    <svg {...base} fill="currentColor" stroke="none">
+      <rect x="6" y="5" width="4" height="14" rx="1" />
+      <rect x="14" y="5" width="4" height="14" rx="1" />
+    </svg>
+  )
+}
