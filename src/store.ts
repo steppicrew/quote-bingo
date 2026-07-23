@@ -20,6 +20,7 @@ import {
 import { idbStorage } from './lib/db'
 import { generateCard } from './lib/card'
 import { mergeQuotes } from './lib/share'
+import { uid } from './lib/id'
 
 /** Largest offered size whose quota fits the pool, preferring DEFAULT_SIZE. */
 function bestSize(poolCount: number): number {
@@ -27,11 +28,6 @@ function bestSize(poolCount: number): number {
   const fits = SIZES.filter((s) => poolCount >= quotesNeeded(s))
   return fits.length ? Math.max(...fits) : SIZES[0]!
 }
-
-const uid = (): Id =>
-  typeof crypto.randomUUID === 'function'
-    ? crypto.randomUUID()
-    : `${Date.now()}-${Math.random().toString(36).slice(2)}`
 
 // Re-exported for existing imports (`ThemeToggle`, `LanguageToggle`, …).
 export type { Theme, Locale, SoundMode, SoundKind } from './types'
@@ -292,7 +288,7 @@ export const useStore = create<State & Actions>()(
     }),
     {
       name: 'quote-bingo-state',
-      version: 2,
+      version: 3,
       storage: createJSONStorage(() => idbStorage),
       partialize: (s) => ({
         persons: s.persons,
@@ -320,6 +316,25 @@ export const useStore = create<State & Actions>()(
         if (p && version < 2 && p.cards) {
           for (const card of Object.values(p.cards)) {
             if (typeof card.joker !== 'boolean') card.joker = true
+          }
+        }
+        // v2 quotes used full UUIDs, which bloat the QR share payload and
+        // defeat gzip. Remint every quote id to a short base36 id, rewriting the
+        // matching card cells through the same map so cards stay valid. Done
+        // in-place, one pass; checked[] is index-aligned so it is untouched.
+        if (p && version < 3 && Array.isArray(p.quotes)) {
+          const remap = new Map<Id, Id>()
+          for (const q of p.quotes) {
+            if (!q || typeof q.id !== 'string') continue
+            const next = uid()
+            remap.set(q.id, next)
+            q.id = next
+          }
+          if (p.cards) {
+            for (const card of Object.values(p.cards)) {
+              if (!Array.isArray(card.cells)) continue
+              card.cells = card.cells.map((c) => (c === null ? c : (remap.get(c) ?? c)))
+            }
           }
         }
         return persisted

@@ -8,11 +8,7 @@ import {
   type Quote,
   type QuoteListExport,
 } from '../types'
-
-const uid = (): string =>
-  typeof crypto.randomUUID === 'function'
-    ? crypto.randomUUID()
-    : `${Date.now()}-${Math.random().toString(36).slice(2)}`
+import { uid } from './id'
 
 /** Practical char budget for a QR payload that mid-tier phones can still scan. */
 export const QR_MAX_CHARS = 800
