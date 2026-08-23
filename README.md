@@ -12,6 +12,8 @@ merge quote lists with friends via **QR code** or **JSON file**.
 - 📴 **Fully offline** — installable PWA, data stored in IndexedDB.
 - 👥 **Per-person quote pools** — one bingo card per person, persistent across sessions.
 - 🎨 **Per-person accent colour** — pick from a preset palette; the person's board recolours.
+- 👉 **Swipe to switch person** — swipe left or right on the board to step through the
+  people (wrapping at both ends); the new board slides in from the side you swiped.
 - 🎯 **Configurable card size** — 3×3 up to 7×7 (odd sizes can have a free centre).
 - 🃏 **Optional joker** — toggle the free centre per card (needs one more quote when off).
 - 🔀 **Reshuffle** cards on demand; checked cells and progress are saved.
