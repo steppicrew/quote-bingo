@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, type ReactNode } from 'react'
+import clsx from 'clsx'
 import { useTranslation } from 'react-i18next'
 import { type Card, centerIndex } from '../types'
 import { winningCells } from '../lib/card'
@@ -13,6 +14,12 @@ interface Props {
   shakeKey?: number
   /** Cells to pulse during the current celebration (lines the last tap made). */
   pulseCells?: ReadonlySet<number>
+  /**
+   * Direction of the person swipe that produced this board: 1 = swiped left
+   * (next person, slides in from the right), -1 = swiped right. `null` for a
+   * plain render, which gets no slide animation.
+   */
+  slideFrom?: -1 | 1 | null
 }
 
 export function BingoBoard({
@@ -21,6 +28,7 @@ export function BingoBoard({
   onToggle,
   shakeKey = 0,
   pulseCells,
+  slideFrom = null,
 }: Props): ReactNode {
   const { t } = useTranslation()
   const winners = useMemo(() => winningCells(card.size, card.checked), [card.size, card.checked])
@@ -66,7 +74,7 @@ export function BingoBoard({
   return (
     <div
       ref={boardRef}
-      className="board"
+      className={clsx('board', slideFrom === 1 && 'slide-next', slideFrom === -1 && 'slide-prev')}
       style={{
         // minmax(0, 1fr) — not plain 1fr — so a cell with tall wrapped text
         // can't force its row's min track size to the content height. Plain

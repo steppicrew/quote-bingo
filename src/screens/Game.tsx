@@ -8,6 +8,7 @@ import { completedLineCount, isFullCard, winningCellsThrough } from '../lib/card
 import { accentStyle } from '../lib/accents'
 import { confetti } from '../lib/confetti'
 import { playFanfare } from '../lib/fanfare'
+import { useSwipe } from '../lib/useSwipe'
 import { PersonSwitcher } from '../components/PersonSwitcher'
 import { BingoBoard } from '../components/BingoBoard'
 import { WinBanner } from '../components/WinBanner'
@@ -49,6 +50,21 @@ export function Game(): ReactNode {
   useEffect(() => {
     if (active && active.id !== activePersonId) setActivePerson(active.id)
   }, [active, activePersonId, setActivePerson])
+
+  // Swipe left/right on the board to step through the person list. The board
+  // slides in from the side it came from, so the direction of travel is
+  // visible; `slideKey` restarts the animation on every switch.
+  const [slide, setSlide] = useState<{ dir: -1 | 1; key: number } | null>(null)
+  const swipePerson = (dir: -1 | 1): void => {
+    if (!active || persons.length < 2) return
+    const i = persons.findIndex((p) => p.id === active.id)
+    if (i < 0) return
+    const next = persons[(i + dir + persons.length) % persons.length]
+    if (!next || next.id === active.id) return
+    setSlide((s) => ({ dir, key: (s?.key ?? 0) + 1 }))
+    setActivePerson(next.id)
+  }
+  const swipe = useSwipe(swipePerson)
 
   const poolCount = active ? quotes.filter((q) => q.personId === active.id).length : 0
   const ready = poolCount >= MIN_POOL
@@ -154,16 +170,28 @@ export function Game(): ReactNode {
 
       {active && ready && card && (
         <>
-          <BingoBoard
-            card={card}
-            quoteText={quoteText}
-            onToggle={(i) => {
-              lastToggledRef.current = i
-              toggleCell(active.id, i)
-            }}
-            shakeKey={shakeKey}
-            pulseCells={pulseCells}
-          />
+          <div
+            className="board-swipe"
+            onTouchStart={swipe.onTouchStart}
+            onTouchMove={swipe.onTouchMove}
+            onTouchEnd={swipe.onTouchEnd}
+            onClickCapture={swipe.onClickCapture}
+          >
+            <BingoBoard
+              // Remount per person so the slide-in animation replays and the
+              // cells re-measure their auto-fit text on fresh nodes.
+              key={`${active.id}-${slide?.key ?? 0}`}
+              card={card}
+              quoteText={quoteText}
+              onToggle={(i) => {
+                lastToggledRef.current = i
+                toggleCell(active.id, i)
+              }}
+              shakeKey={shakeKey}
+              pulseCells={pulseCells}
+              slideFrom={slide?.dir ?? null}
+            />
+          </div>
           <div className="row">
             <label className="dim" htmlFor="size">
               {t('game.size')}

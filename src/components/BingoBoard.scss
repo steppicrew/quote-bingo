@@ -1,5 +1,13 @@
 @use '../styles/vars' as v;
 
+// Swipe area around the board: clips the slide-in so the incoming card
+// appears from the edge instead of overflowing the page. `pan-y` keeps
+// vertical scrolling to the browser while horizontal drags reach our handlers.
+.board-swipe {
+  overflow: hidden;
+  touch-action: pan-y;
+}
+
 .board {
   display: grid;
   gap: 6px;
@@ -11,6 +19,37 @@
 
   &.shake {
     animation: board-shake 0.5s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+  }
+
+  // Slide the new person's board in from the side the swipe came from.
+  &.slide-next {
+    animation: board-slide-next 0.22s ease-out both;
+  }
+
+  &.slide-prev {
+    animation: board-slide-prev 0.22s ease-out both;
+  }
+}
+
+@keyframes board-slide-next {
+  from {
+    transform: translateX(100%);
+    opacity: 0.4;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes board-slide-prev {
+  from {
+    transform: translateX(-100%);
+    opacity: 0.4;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
   }
 }
 
@@ -117,6 +156,8 @@
 
 @media (prefers-reduced-motion: reduce) {
   .board.shake,
+  .board.slide-next,
+  .board.slide-prev,
   .board.celebrate .cell.pulse {
     animation: none;
   }
