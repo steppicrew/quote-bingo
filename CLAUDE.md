@@ -103,6 +103,20 @@ localized (de/en/fr/es/it/pt/zh/ja/ko) via react-i18next; the German build name 
   Both export buttons ("Export file" in `PersonEditor`, "Export all" in `Settings`) fire a
   confirmation toast — the browser's own download notification is too subtle and users
   double-tapped.
+- **Swipe to switch person** (`src/lib/useSwipe.ts`, used by `Game`): a horizontal
+  swipe on the board steps through `persons` (wrapping both ends); the incoming
+  `BingoBoard` slides in from the side it came from (`slideFrom` prop → `.slide-next`/
+  `.slide-prev`, honouring `prefers-reduced-motion`) and `PersonSwitcher` scrolls the
+  active chip into view since selection now changes from outside the chip row. The
+  gesture sits on a `.board-swipe` wrapper, **not** `.content`, so the size `<select>`
+  and the chip row's own horizontal scroll are untouched. Two details matter: the cells
+  are buttons, so once travel passes the threshold the gesture latches as a swipe and
+  the trailing click is cancelled in the **capture phase** (`onClickCapture`) before it
+  reaches the cell; and `touch-action: pan-y` on the wrapper leaves vertical scrolling
+  to the browser. A drag only counts when it is past `THRESHOLD` (60px) **and**
+  `DOMINANCE` (1.4×) more horizontal than vertical, so diagonal scroll flicks don't
+  switch person. `Game`'s per-card-id `prevLines` baseline already makes a swap silent
+  (no replayed win).
 - **Install** (`src/lib/install.ts`): captures `beforeinstallprompt` at module load,
   `useInstall()` exposes `canInstall` + `promptInstall`. Hidden when already standalone.
 - **Win effects**: `confetti` (`src/lib/confetti.ts`, canvas, `{ intensity, gold }`),
