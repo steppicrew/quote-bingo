@@ -40,12 +40,37 @@ export function useAutoFitText(
       s.maxHeight = 'none'
       s.overflow = 'visible'
 
+      // A descender on the LAST line (the g of "gemacht") can paint below the
+      // line box, and `.cell-text` clamps to the cell with its own
+      // `overflow: hidden` — so the ink was sliced even when the fit was
+      // arithmetically correct. The line box is not the ink box.
+      //
+      // The stylesheet now uses a line-height with room for the descender, but
+      // read it rather than assuming: measure how far the font's ink drops
+      // past the line box at each candidate size and require that to fit too.
+      const csText = getComputedStyle(el)
+      const probe = document.createElement('canvas').getContext('2d')
+      const lineRatio = parseFloat(csText.lineHeight) / parseFloat(csText.fontSize) || 1.25
+
+      const inkOverhang = (px: number): number => {
+        if (!probe) return 1
+        probe.font = `${csText.fontWeight} ${px}px ${csText.fontFamily}`
+        const m = probe.measureText(text)
+        const lineBox = px * lineRatio
+        const halfLeading = (lineBox - (m.fontBoundingBoxAscent + m.fontBoundingBoxDescent)) / 2
+        const overhang =
+          halfLeading + m.fontBoundingBoxAscent + m.actualBoundingBoxDescent - lineBox
+        // Never negative, and always leave a hairline so rounding cannot bite.
+        return Math.max(0, overhang) + 1
+      }
+
       let lo = MIN_PX
       let hi = MAX_PX
       while (hi - lo > 0.5) {
         const mid = (lo + hi) / 2
         s.fontSize = `${mid}px`
-        const fits = el.scrollWidth <= availW + 0.5 && el.scrollHeight <= availH + 0.5
+        const fits =
+          el.scrollWidth <= availW + 0.5 && el.scrollHeight + inkOverhang(mid) <= availH
         if (fits) lo = mid
         else hi = mid
       }

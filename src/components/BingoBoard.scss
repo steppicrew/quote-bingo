@@ -111,7 +111,14 @@
     // (rather than shrink-to-fit) so the wrap width used while measuring the
     // fit matches the wrap width at render — otherwise a flex item can wrap
     // differently and overflow despite the measurement "fitting".
-    line-height: 1.1;
+    //
+    // line-height 1.1 is tighter than the font's own line box, so a descender
+    // on the last line (the g of "gemacht") painted below it and was sliced by
+    // the clamp below — the fit was correct, the box was simply too short for
+    // the ink. 1.25 leaves room for the descender at every size, and the
+    // auto-fit measures against this same value, so cells stay square and the
+    // type just settles a step smaller where it has to.
+    line-height: 1.25;
     width: 100%;
     max-height: 100%;
     overflow: hidden;
