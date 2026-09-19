@@ -1,5 +1,6 @@
 import { lazy, Suspense, useRef, useState, type ReactNode } from 'react'
 import { useStore } from '../store'
+import { navigate } from '../router'
 import { type QuoteListExport } from '../types'
 import { importAnyFile, exportBackup, importBackupFile } from '../lib/share'
 import { useInstall } from '../lib/install'
@@ -192,10 +193,18 @@ export function Settings({ onClose }: Props): ReactNode {
 
         <div className="about dim">
           <div>{t('app.title')} v{__APP_VERSION__}</div>
+          {/*
+            Not a bare href: useModalDismiss pushes a history entry on open and
+            pops it with history.back() on close, which would undo the hash
+            change and leave you exactly where you started. Close first, then
+            navigate on the next tick, once that pop has happened.
+          */}
           <a
             href="#/privacy"
-            onClick={() => {
+            onClick={(e) => {
+              e.preventDefault()
               onClose()
+              setTimeout(() => navigate({ name: 'privacy' }), 0)
             }}
           >
             {t('settings.privacy')}
