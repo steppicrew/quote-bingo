@@ -1,0 +1,11 @@
+{
+  "appId": "de.steppicrew.quotebingo",
+  "appName": "Zitate-Bingo",
+  "webDir": "dist",
+  "android": {
+    "allowMixedContent": false
+  },
+  "server": {
+    "androidScheme": "https"
+  }
+}

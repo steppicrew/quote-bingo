@@ -1,7 +1,8 @@
 {
   "name": "quote-bingo",
   "private": true,
-  "version": "1.1.33",
+  "version": "1.1.34",
+  "androidVersionCode": 1,
   "type": "module",
   "packageManager": "yarn@4.13.0",
   "scripts": {
@@ -11,6 +12,7 @@
     "lint": "eslint ."
   },
   "dependencies": {
+    "@capacitor/core": "^7",
     "clsx": "^2.1.1",
     "html5-qrcode": "^2.3.8",
     "i18next": "^26.3.6",
@@ -23,6 +25,8 @@
     "zustand": "^5.0.8"
   },
   "devDependencies": {
+    "@capacitor/android": "^7",
+    "@capacitor/cli": "^7",
     "@eslint/js": "^9.39.0",
     "@types/qrcode": "^1.5.5",
     "@types/react": "^19.2.2",
