@@ -37,7 +37,10 @@ body {
   flex-direction: column;
 }
 
-button {
+// `a.button` covers links that act as buttons (e.g. the Play Store link in
+// Settings), so they pick up the same chrome without a second rule set.
+button,
+a.button {
   font: inherit;
   color: inherit;
   cursor: pointer;
@@ -54,6 +57,12 @@ button {
     opacity: 0.45;
     cursor: not-allowed;
   }
+}
+
+a.button {
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
 }
 
 button.primary {

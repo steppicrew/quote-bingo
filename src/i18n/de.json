@@ -86,6 +86,7 @@
     "app": "App",
     "install": "Installieren",
     "installed": "Installiert / nicht verfügbar",
+    "playStore": "Play Store",
     "backup": "Alle Daten",
     "exportAll": "Alles exportieren",
     "exportedAll": "Alle Daten exportiert",

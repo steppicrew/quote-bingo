@@ -83,6 +83,7 @@
     "app": "앱",
     "install": "설치",
     "installed": "설치됨 / 사용 불가",
+    "playStore": "Play 스토어",
     "backup": "모든 데이터",
     "exportAll": "전체 내보내기",
     "exportedAll": "모든 데이터를 내보냈습니다",

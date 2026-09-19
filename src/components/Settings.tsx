@@ -3,6 +3,7 @@ import { useStore } from '../store'
 import { type QuoteListExport } from '../types'
 import { importFromFile, exportBackup, importBackupFile } from '../lib/share'
 import { useInstall } from '../lib/install'
+import { isNativeApp, PLAY_STORE_URL } from '../lib/platform'
 import { useModalDismiss } from '../lib/useModalDismiss'
 import { playFanfare, type SoundKind, type SoundMode } from '../lib/fanfare'
 import { useTranslation } from 'react-i18next'
@@ -147,13 +148,29 @@ export function Settings({ onClose }: Props): ReactNode {
 
         <div className="setting">
           <span>{t('settings.app')}</span>
-          {canInstall ? (
-            <button className="primary" onClick={() => void promptInstall()}>
-              {t('settings.install')}
-            </button>
-          ) : (
-            <span className="dim">{t('settings.installed')}</span>
-          )}
+          <div className="row">
+            {canInstall ? (
+              <button className="primary" onClick={() => void promptInstall()}>
+                {t('settings.install')}
+              </button>
+            ) : (
+              <span className="dim">{t('settings.installed')}</span>
+            )}
+            {/*
+              Pointless inside the Android app itself — it is already the
+              thing the listing installs.
+            */}
+            {!isNativeApp() && (
+              <a
+                className="button"
+                href={PLAY_STORE_URL}
+                target="_blank"
+                rel="noreferrer noopener"
+              >
+                {t('settings.playStore')}
+              </a>
+            )}
+          </div>
         </div>
 
         <div className="about dim">
