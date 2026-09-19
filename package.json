@@ -1,7 +1,7 @@
 {
   "name": "quote-bingo",
   "private": true,
-  "version": "1.1.53",
+  "version": "1.1.54",
   "androidVersionCode": 1,
   "type": "module",
   "packageManager": "yarn@4.13.0",
@@ -17,7 +17,8 @@
     "check-locales": "yarn node scripts/check-locales.mjs",
     "version:bump": "yarn node scripts/bump-version.mjs",
     "android:build": "./scripts/build-android.sh",
-    "privacy": "yarn node scripts/gen-privacy.mjs"
+    "privacy": "yarn node scripts/gen-privacy.mjs",
+    "play:publish": "yarn node scripts/play-publish.mjs"
   },
   "dependencies": {
     "@capacitor/core": "^7",
@@ -44,6 +45,7 @@
     "eslint-plugin-react-hooks": "^7.0.0",
     "eslint-plugin-react-refresh": "^0.4.24",
     "globals": "^16.5.0",
+    "googleapis": "^181.0.0",
     "playwright": "^1.63.0",
     "sass": "^1.95.0",
     "typescript": "~5.9.3",
