@@ -1,6 +1,7 @@
-import { useEffect, useRef, type ReactNode } from 'react'
+import { useEffect, useRef, type CSSProperties, type ReactNode } from 'react'
 import clsx from 'clsx'
 import { type Person } from '../types'
+import { accentSwatch } from '../lib/accents'
 import './PersonSwitcher.scss'
 
 interface Props {
@@ -24,6 +25,10 @@ export function PersonSwitcher({ persons, activeId, onSelect }: Props): ReactNod
           key={p.id}
           ref={p.id === activeId ? activeRef : undefined}
           className={clsx('chip', { active: p.id === activeId })}
+          // Each chip carries its person's own colour, so an inactive chip can
+          // show a faded version of it — otherwise you only learn someone's
+          // colour by selecting them.
+          style={{ '--chip': accentSwatch(p.accent ?? 'default') } as CSSProperties}
           onClick={() => onSelect(p.id)}
         >
           {p.name}

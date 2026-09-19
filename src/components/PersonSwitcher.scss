@@ -13,9 +13,20 @@
     padding: 8px 16px;
     flex: 0 0 auto;
 
+    // `--chip` is the person's own accent, set inline per chip. Inactive chips
+    // wear a faded version of it so the whole cast's colours are legible at a
+    // glance; mixing against the surface (rather than lowering opacity) keeps
+    // the label at full contrast on both themes.
+    background: color-mix(in srgb, var(--chip) 14%, v.$surface-2);
+    border-color: color-mix(in srgb, var(--chip) 38%, v.$border);
+
+    &:hover {
+      border-color: var(--chip);
+    }
+
     &.active {
-      background: v.$primary;
-      border-color: v.$primary;
+      background: var(--chip);
+      border-color: var(--chip);
       color: #fff;
       font-weight: 600;
     }

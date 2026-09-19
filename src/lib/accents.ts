@@ -42,3 +42,38 @@ export function accentSwatch(accent: AccentName): string {
   if (accent === 'default') return 'var(--primary)'
   return ACCENTS[accent]['--primary']
 }
+
+/**
+ * The real (non-default) presets, in the order they are handed out.
+ * Derived from ACCENTS rather than filtered from ACCENT_NAMES so the type
+ * stays non-optional under `noUncheckedIndexedAccess`.
+ */
+const PALETTE = Object.keys(ACCENTS) as Exclude<AccentName, 'default'>[]
+
+/**
+ * Pick a colour for a new person: the first preset nobody is using yet.
+ *
+ * Telling boards apart at a glance is the whole point of the accent, so a new
+ * person should not silently arrive in the same colour as an existing one.
+ * Once every preset is taken the palette wraps by usage count, which keeps the
+ * split as even as possible rather than piling everyone onto the first entry.
+ */
+export function nextAccent(existing: readonly { accent?: AccentName }[]): AccentName {
+  const used = new Map<AccentName, number>()
+  for (const person of existing) {
+    if (!person.accent || person.accent === 'default') continue
+    used.set(person.accent, (used.get(person.accent) ?? 0) + 1)
+  }
+
+  let best: AccentName = 'default'
+  let bestCount = Infinity
+  for (const name of PALETTE) {
+    const count = used.get(name) ?? 0
+    if (count === 0) return name
+    if (count < bestCount) {
+      best = name
+      bestCount = count
+    }
+  }
+  return best
+}

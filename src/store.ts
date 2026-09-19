@@ -21,6 +21,7 @@ import { idbStorage } from './lib/db'
 import { generateCard } from './lib/card'
 import { mergeQuotes } from './lib/share'
 import { uid } from './lib/id'
+import { nextAccent } from './lib/accents'
 
 /** Largest offered size whose quota fits the pool, preferring DEFAULT_SIZE. */
 function bestSize(poolCount: number): number {
@@ -110,7 +111,10 @@ export const useStore = create<State & Actions>()(
       addPerson: (name) => {
         const id = uid()
         set((s) => ({
-          persons: [...s.persons, { id, name: name.trim(), createdAt: Date.now() }],
+          persons: [
+            ...s.persons,
+            { id, name: name.trim(), accent: nextAccent(s.persons), createdAt: Date.now() },
+          ],
         }))
         return id
       },
