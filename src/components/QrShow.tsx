@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState, type ReactNode, type TouchEvent } from 'react'
 import { useTranslation } from 'react-i18next'
 import QRCode from 'qrcode'
-import { chunkCode, encodeList, QR_ERROR_CORRECTION } from '../lib/share'
+import { chunkCode, encodeList, CHUNK_BODY_STEPS, QR_ERROR_CORRECTION } from '../lib/share'
 import { useModalDismiss } from '../lib/useModalDismiss'
 import { type ExportQuote } from '../types'
 import { ChevronLeftIcon, ChevronRightIcon, PauseIcon, PlayIcon } from './icons'
@@ -19,6 +19,9 @@ export function QrShow({ name, quotes, onClose }: Props): ReactNode {
   const { t } = useTranslation()
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const [chunks, setChunks] = useState<string[] | null>(null)
+  // Index into CHUNK_BODY_STEPS: densest first, each step splitting further.
+  // The lever for a code that will not scan on the receiving phone.
+  const [step, setStep] = useState(0)
   const [page, setPage] = useState(0)
   const [playing, setPlaying] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -31,7 +34,7 @@ export function QrShow({ name, quotes, onClose }: Props): ReactNode {
       try {
         const code = await encodeList(name, quotes)
         if (cancelled) return
-        setChunks(chunkCode(code))
+        setChunks(chunkCode(code, CHUNK_BODY_STEPS[step]))
         setPage(0)
       } catch (e) {
         if (!cancelled) setError(e instanceof Error ? e.message : t('qr.showFailed'))
@@ -40,7 +43,7 @@ export function QrShow({ name, quotes, onClose }: Props): ReactNode {
     return () => {
       cancelled = true
     }
-  }, [name, quotes, t])
+  }, [name, quotes, step, t])
 
   const total = chunks?.length ?? 0
   const multi = total > 1
@@ -141,6 +144,29 @@ export function QrShow({ name, quotes, onClose }: Props): ReactNode {
             ) : (
               <p className="dim">{t('qr.scanHint')}</p>
             )}
+
+            {/*
+              Available for a single code too — one dense code that will not
+              scan is exactly when splitting helps, and by then there is no
+              pager to hang this off.
+
+              Re-splitting mints a new group id, so a half-finished scan on the
+              other phone is discarded rather than mixed in (QrScan drops its
+              buffer when the group changes, and joinChunks refuses an
+              incomplete set). That is safe but invisible, so say it here: the
+              other side has to start over.
+            */}
+            <div className="qr-split-row">
+              {step < CHUNK_BODY_STEPS.length - 1 && (
+                <button onClick={() => setStep((s) => s + 1)}>{t('qr.splitMore')}</button>
+              )}
+              {step > 0 && (
+                <button className="ghost" onClick={() => setStep(0)}>
+                  {t('qr.splitReset')}
+                </button>
+              )}
+            </div>
+            {step > 0 && <p className="dim">{t('qr.splitRestart')}</p>}
           </>
         )}
         <button className="primary" onClick={onClose}>

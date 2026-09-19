@@ -304,3 +304,12 @@ a {
 .share-url a {
   color: v.$primary;
 }
+
+// The "smaller codes" controls under the QR: centred, and side by side when
+// both are present.
+.qr-split-row {
+  display: flex;
+  gap: v.$gap;
+  justify-content: center;
+  flex-wrap: wrap;
+}

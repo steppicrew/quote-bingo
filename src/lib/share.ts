@@ -147,17 +147,47 @@ const groupId = (): string =>
  * single bare string (back-compatible); longer codes are wrapped in numbered
  * `QB1.<group>.<idx>.<total>.<chunk>` envelopes.
  */
-export function chunkCode(code: string): string[] {
-  if (code.length <= QR_MAX_CHARS) return [code]
-  const total = Math.ceil(code.length / CHUNK_BODY_MAX)
+export function chunkCode(code: string, bodyMax: number = CHUNK_BODY_MAX): string[] {
+  if (code.length <= bodyMax + ENVELOPE_MAX && code.length <= QR_MAX_CHARS) return [code]
+
+  const total = Math.ceil(code.length / bodyMax)
+
+  // Spread the payload evenly instead of filling each chunk to the brim and
+  // leaving the remainder in the last one. Greedy packing produced sets like
+  // 403 + 27: a dense code that is hard to scan next to a nearly empty one, for
+  // no benefit — the number of codes is identical either way. Even chunks are
+  // all as sparse as the set allows, so every code in it scans as easily as
+  // the easiest one would have.
+  const base = Math.floor(code.length / total)
+  const extra = code.length % total
+
   const group = groupId()
   const parts: string[] = []
+  let at = 0
   for (let i = 0; i < total; i++) {
-    const body = code.slice(i * CHUNK_BODY_MAX, (i + 1) * CHUNK_BODY_MAX)
-    parts.push(`${CHUNK_PREFIX}.${group}.${i}.${total}.${body}`)
+    // The first `extra` chunks take one more character, so the sizes differ by
+    // at most one and nothing is left over.
+    const size = base + (i < extra ? 1 : 0)
+    parts.push(`${CHUNK_PREFIX}.${group}.${i}.${total}.${code.slice(at, at + size)}`)
+    at += size
   }
   return parts
 }
+
+/**
+ * Body budgets offered by the "smaller codes" button, densest first.
+ *
+ * Splitting further is the lever a user has when a code will not scan — an
+ * older camera, a cracked screen, bad light. Each step roughly halves the
+ * payload, and the floor stops the list fragmenting into more codes than
+ * anyone would want to scan in sequence.
+ */
+export const CHUNK_BODY_STEPS: readonly number[] = [
+  CHUNK_BODY_MAX,
+  Math.floor(CHUNK_BODY_MAX / 2),
+  Math.floor(CHUNK_BODY_MAX / 3),
+  Math.floor(CHUNK_BODY_MAX / 5),
+]
 
 export interface ChunkInfo {
   group: string
