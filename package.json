@@ -1,8 +1,8 @@
 {
   "name": "quote-bingo",
   "private": true,
-  "version": "1.1.56",
-  "androidVersionCode": 1,
+  "version": "1.1.57",
+  "androidVersionCode": 2,
   "type": "module",
   "packageManager": "yarn@4.13.0",
   "scripts": {
