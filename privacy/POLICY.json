@@ -1,0 +1,277 @@
+{
+  "$comment": "Privacy policy, in every supported language. Single source for BOTH the in-app #/privacy screen and the static /privacy/ page Play Console links to — they must not drift, because the URL is the one a reviewer reads. `yarn privacy` renders the static pages. Keep claims literally true: they are enforced by the Android manifest (no INTERNET permission) and by the app storing everything in IndexedDB.",
+  "updated": "2026-09-19",
+  "contact": "google@steppicrew.de",
+  "locales": {
+    "de": {
+      "title": "Datenschutz",
+      "intro": "Zitate-Bingo sammelt keine Daten. Es gibt keine Konten, keine Werbung, kein Tracking und keine Analyse.",
+      "sections": [
+        {
+          "heading": "Was gespeichert wird",
+          "body": "Personen, Zitate, Bingo-Karten und Einstellungen liegen ausschließlich auf deinem Gerät (im Speicher des Browsers bzw. der App). Sie werden nirgendwohin übertragen und sind für uns nicht einsehbar."
+        },
+        {
+          "heading": "Keine Internetverbindung",
+          "body": "Die Android-App besitzt nicht einmal die Berechtigung, auf das Internet zuzugreifen — sie ist im Manifest entfernt. Die App kann technisch keine Daten senden, auch nicht versehentlich."
+        },
+        {
+          "heading": "Kamera",
+          "body": "Die Kamera wird ausschließlich zum Scannen eines QR-Codes verwendet, wenn du eine Zitatliste importierst. Das Bild wird direkt auf dem Gerät ausgewertet, nicht gespeichert und nicht übertragen. Ohne diese Funktion wird nie auf die Kamera zugegriffen."
+        },
+        {
+          "heading": "Teilen",
+          "body": "Wenn du eine Liste als Datei exportierst oder als QR-Code anzeigst, entscheidest du selbst, wem du sie gibst. Dabei läuft nichts über einen Server."
+        },
+        {
+          "heading": "Löschen",
+          "body": "Personen und Zitate lassen sich in der App löschen. Die App zu deinstallieren oder die Website-Daten im Browser zu löschen entfernt alles restlos."
+        },
+        {
+          "heading": "Kinder",
+          "body": "Die App erhebt von niemandem Daten, also auch nicht von Kindern."
+        }
+      ]
+    },
+    "en": {
+      "title": "Privacy",
+      "intro": "Quote Bingo collects no data. There are no accounts, no ads, no tracking and no analytics.",
+      "sections": [
+        {
+          "heading": "What is stored",
+          "body": "People, quotes, bingo cards and settings live only on your device, in the browser's or the app's own storage. Nothing is transmitted anywhere and we cannot see any of it."
+        },
+        {
+          "heading": "No internet access",
+          "body": "The Android app does not even hold permission to use the internet — it is removed in the manifest. The app is technically incapable of sending data, accidentally or otherwise."
+        },
+        {
+          "heading": "Camera",
+          "body": "The camera is used only to scan a QR code when you import a quote list. The frame is decoded on the device, never stored and never transmitted. If you do not use that feature, the camera is never accessed."
+        },
+        {
+          "heading": "Sharing",
+          "body": "When you export a list as a file or show it as a QR code, you decide who receives it. Nothing passes through a server."
+        },
+        {
+          "heading": "Deleting",
+          "body": "People and quotes can be deleted in the app. Uninstalling the app, or clearing the site data in your browser, removes everything completely."
+        },
+        {
+          "heading": "Children",
+          "body": "The app collects no data from anyone, children included."
+        }
+      ]
+    },
+    "fr": {
+      "title": "Confidentialité",
+      "intro": "Bingo des citations ne collecte aucune donnée. Pas de compte, pas de publicité, pas de suivi, pas d'analyse.",
+      "sections": [
+        {
+          "heading": "Ce qui est enregistré",
+          "body": "Les personnes, les citations, les cartes et les réglages restent uniquement sur votre appareil, dans le stockage du navigateur ou de l'application. Rien n'est transmis et nous n'y avons aucun accès."
+        },
+        {
+          "heading": "Aucun accès à Internet",
+          "body": "L'application Android n'a même pas l'autorisation d'accéder à Internet : elle est retirée du manifeste. L'application est techniquement incapable d'envoyer des données."
+        },
+        {
+          "heading": "Caméra",
+          "body": "La caméra sert uniquement à scanner un QR code lors de l'import d'une liste. L'image est décodée sur l'appareil, jamais enregistrée ni transmise. Sans cette fonction, la caméra n'est jamais utilisée."
+        },
+        {
+          "heading": "Partage",
+          "body": "Quand vous exportez une liste en fichier ou l'affichez en QR code, vous choisissez à qui la donner. Rien ne transite par un serveur."
+        },
+        {
+          "heading": "Suppression",
+          "body": "Les personnes et les citations peuvent être supprimées dans l'application. Désinstaller l'application, ou effacer les données du site dans le navigateur, supprime tout définitivement."
+        },
+        {
+          "heading": "Enfants",
+          "body": "L'application ne collecte aucune donnée, de personne, enfants compris."
+        }
+      ]
+    },
+    "es": {
+      "title": "Privacidad",
+      "intro": "Bingo de citas no recopila datos. No hay cuentas, ni anuncios, ni rastreo, ni analíticas.",
+      "sections": [
+        {
+          "heading": "Qué se guarda",
+          "body": "Las personas, las frases, los cartones y los ajustes se quedan solo en tu dispositivo, en el almacenamiento del navegador o de la aplicación. No se transmite nada y nosotros no podemos verlo."
+        },
+        {
+          "heading": "Sin acceso a internet",
+          "body": "La aplicación de Android ni siquiera tiene permiso para acceder a internet: está eliminado del manifiesto. Técnicamente no puede enviar datos, ni siquiera por error."
+        },
+        {
+          "heading": "Cámara",
+          "body": "La cámara se usa solo para escanear un código QR al importar una lista. La imagen se procesa en el dispositivo, no se guarda y no se envía. Si no usas esa función, nunca se accede a la cámara."
+        },
+        {
+          "heading": "Compartir",
+          "body": "Cuando exportas una lista como archivo o la muestras como código QR, tú decides a quién se la das. Nada pasa por un servidor."
+        },
+        {
+          "heading": "Borrado",
+          "body": "Las personas y las frases se pueden borrar en la aplicación. Desinstalarla, o borrar los datos del sitio en el navegador, lo elimina todo por completo."
+        },
+        {
+          "heading": "Menores",
+          "body": "La aplicación no recopila datos de nadie, tampoco de menores."
+        }
+      ]
+    },
+    "it": {
+      "title": "Privacy",
+      "intro": "Tombola delle Citazioni non raccoglie dati. Nessun account, nessuna pubblicità, nessun tracciamento, nessuna analisi.",
+      "sections": [
+        {
+          "heading": "Cosa viene salvato",
+          "body": "Persone, citazioni, cartelle e impostazioni restano solo sul tuo dispositivo, nella memoria del browser o dell'app. Niente viene trasmesso e noi non possiamo vederlo."
+        },
+        {
+          "heading": "Nessun accesso a internet",
+          "body": "L'app Android non ha nemmeno il permesso di accedere a internet: è rimosso dal manifest. L'app è tecnicamente incapace di inviare dati."
+        },
+        {
+          "heading": "Fotocamera",
+          "body": "La fotocamera serve solo a scansionare un codice QR quando importi una lista. L'immagine viene elaborata sul dispositivo, mai salvata e mai trasmessa. Se non usi quella funzione, la fotocamera non viene mai attivata."
+        },
+        {
+          "heading": "Condivisione",
+          "body": "Quando esporti una lista come file o la mostri come codice QR, decidi tu a chi darla. Niente passa da un server."
+        },
+        {
+          "heading": "Cancellazione",
+          "body": "Persone e citazioni si possono eliminare dall'app. Disinstallare l'app, o cancellare i dati del sito nel browser, rimuove tutto completamente."
+        },
+        {
+          "heading": "Bambini",
+          "body": "L'app non raccoglie dati da nessuno, bambini compresi."
+        }
+      ]
+    },
+    "pt": {
+      "title": "Privacidade",
+      "intro": "Bingo de Citações não recolhe dados. Não há contas, nem anúncios, nem rastreio, nem análises.",
+      "sections": [
+        {
+          "heading": "O que é guardado",
+          "body": "Pessoas, frases, cartões e definições ficam apenas no teu dispositivo, no armazenamento do navegador ou da aplicação. Nada é transmitido e nós não conseguimos ver."
+        },
+        {
+          "heading": "Sem acesso à internet",
+          "body": "A aplicação Android nem sequer tem permissão para aceder à internet: foi removida do manifesto. Tecnicamente não consegue enviar dados."
+        },
+        {
+          "heading": "Câmara",
+          "body": "A câmara serve apenas para ler um código QR quando importas uma lista. A imagem é processada no dispositivo, nunca guardada nem enviada. Sem essa função, a câmara nunca é usada."
+        },
+        {
+          "heading": "Partilha",
+          "body": "Quando exportas uma lista como ficheiro ou a mostras como código QR, és tu que decides a quem a dás. Nada passa por um servidor."
+        },
+        {
+          "heading": "Eliminação",
+          "body": "Pessoas e frases podem ser eliminadas na aplicação. Desinstalar a aplicação, ou limpar os dados do site no navegador, remove tudo."
+        },
+        {
+          "heading": "Crianças",
+          "body": "A aplicação não recolhe dados de ninguém, crianças incluídas."
+        }
+      ]
+    },
+    "zh": {
+      "title": "隐私",
+      "intro": "语录宾果不收集任何数据。没有账号，没有广告，没有跟踪，也没有分析。",
+      "sections": [
+        {
+          "heading": "保存了什么",
+          "body": "人物、语录、宾果卡和设置只保存在你的设备上，存放于浏览器或应用自己的存储空间。这些内容不会传输到任何地方，我们也无法看到。"
+        },
+        {
+          "heading": "没有网络访问",
+          "body": "这款 Android 应用甚至没有访问网络的权限——它已从清单文件中移除。应用在技术上无法发送数据。"
+        },
+        {
+          "heading": "相机",
+          "body": "相机仅在你导入语录清单、扫描二维码时使用。画面在设备上解析，不会保存，也不会上传。如果不使用该功能，应用永远不会访问相机。"
+        },
+        {
+          "heading": "分享",
+          "body": "当你把清单导出为文件或显示为二维码时，由你决定给谁。整个过程不经过任何服务器。"
+        },
+        {
+          "heading": "删除",
+          "body": "人物和语录可以在应用内删除。卸载应用，或在浏览器中清除网站数据，就会彻底删除所有内容。"
+        },
+        {
+          "heading": "儿童",
+          "body": "本应用不收集任何人的数据，儿童也不例外。"
+        }
+      ]
+    },
+    "ja": {
+      "title": "プライバシー",
+      "intro": "名言ビンゴはデータを一切収集しません。アカウントも広告もトラッキングも解析もありません。",
+      "sections": [
+        {
+          "heading": "保存されるもの",
+          "body": "人物、語録、ビンゴカード、設定は、お使いの端末の中（ブラウザまたはアプリの保存領域）だけに残ります。どこにも送信されず、こちらから見ることもできません。"
+        },
+        {
+          "heading": "インターネットに接続しません",
+          "body": "Android 版はインターネットへの権限すら持っていません。マニフェストから削除してあるため、誤ってでもデータを送ることが技術的にできません。"
+        },
+        {
+          "heading": "カメラ",
+          "body": "カメラは、語録リストを読み込むときに QR コードを読み取る用途にのみ使います。画像は端末上で解析され、保存も送信もされません。この機能を使わなければ、カメラにアクセスすることはありません。"
+        },
+        {
+          "heading": "共有",
+          "body": "リストをファイルとして書き出したり QR コードで表示したりするとき、誰に渡すかを決めるのはあなたです。サーバーを経由しません。"
+        },
+        {
+          "heading": "削除",
+          "body": "人物と語録はアプリ内で削除できます。アプリをアンインストールするか、ブラウザのサイトデータを消去すれば、すべて完全に削除されます。"
+        },
+        {
+          "heading": "お子様について",
+          "body": "本アプリは誰からもデータを収集しません。お子様についても同様です。"
+        }
+      ]
+    },
+    "ko": {
+      "title": "개인정보",
+      "intro": "명언 빙고는 데이터를 수집하지 않습니다. 계정도, 광고도, 추적도, 분석도 없습니다.",
+      "sections": [
+        {
+          "heading": "저장되는 것",
+          "body": "인물, 어록, 빙고 카드, 설정은 오직 사용자의 기기 안(브라우저 또는 앱의 저장 공간)에만 남습니다. 어디로도 전송되지 않으며 저희도 볼 수 없습니다."
+        },
+        {
+          "heading": "인터넷 접근 없음",
+          "body": "안드로이드 앱은 인터넷 접근 권한조차 갖고 있지 않습니다. 매니페스트에서 제거했기 때문에, 실수로라도 데이터를 보내는 것이 기술적으로 불가능합니다."
+        },
+        {
+          "heading": "카메라",
+          "body": "카메라는 어록 목록을 가져올 때 QR 코드를 읽는 용도로만 사용합니다. 화면은 기기에서 처리되며 저장되거나 전송되지 않습니다. 이 기능을 쓰지 않으면 카메라에 접근하지 않습니다."
+        },
+        {
+          "heading": "공유",
+          "body": "목록을 파일로 내보내거나 QR 코드로 표시할 때, 누구에게 줄지는 사용자가 정합니다. 서버를 거치지 않습니다."
+        },
+        {
+          "heading": "삭제",
+          "body": "인물과 어록은 앱에서 삭제할 수 있습니다. 앱을 제거하거나 브라우저에서 사이트 데이터를 지우면 모든 것이 완전히 사라집니다."
+        },
+        {
+          "heading": "아동",
+          "body": "이 앱은 누구의 데이터도 수집하지 않으며, 아동의 경우도 마찬가지입니다."
+        }
+      ]
+    }
+  }
+}

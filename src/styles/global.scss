@@ -264,3 +264,15 @@ a {
   word-break: break-all;
   text-align: center;
 }
+
+// The in-app privacy policy: long-form prose rather than UI, so give it
+// readable measure and spacing.
+.policy {
+  h3 {
+    margin: 1.2rem 0 0.2rem;
+    font-size: 1rem;
+  }
+  p {
+    margin: 0.2rem 0;
+  }
+}

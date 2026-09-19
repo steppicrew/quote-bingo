@@ -1,7 +1,7 @@
 {
   "name": "quote-bingo",
   "private": true,
-  "version": "1.1.52",
+  "version": "1.1.53",
   "androidVersionCode": 1,
   "type": "module",
   "packageManager": "yarn@4.13.0",
@@ -16,7 +16,8 @@
     "feature-graphic": "yarn node scripts/gen-feature-graphic.mjs",
     "check-locales": "yarn node scripts/check-locales.mjs",
     "version:bump": "yarn node scripts/bump-version.mjs",
-    "android:build": "./scripts/build-android.sh"
+    "android:build": "./scripts/build-android.sh",
+    "privacy": "yarn node scripts/gen-privacy.mjs"
   },
   "dependencies": {
     "@capacitor/core": "^7",

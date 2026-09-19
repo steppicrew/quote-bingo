@@ -4,6 +4,7 @@ import { useRoute, navigate } from './router'
 import { useStore } from './store'
 import { SUPPORTED_LNGS } from './i18n'
 import { Manage } from './screens/Manage'
+import { Privacy } from './screens/Privacy'
 import { PersonEditor } from './screens/PersonEditor'
 import { Game } from './screens/Game'
 import { ToastProvider } from './components/Toast'
@@ -143,6 +144,8 @@ export function App(): ReactNode {
           </div>
         ) : route.name === 'person' ? (
           <PersonEditor id={route.id} />
+        ) : route.name === 'privacy' ? (
+          <Privacy />
         ) : route.name === 'game' ? (
           <Game />
         ) : (

@@ -193,6 +193,14 @@ export function Settings({ onClose }: Props): ReactNode {
         <div className="about dim">
           <div>{t('app.title')} v{__APP_VERSION__}</div>
           <a
+            href="#/privacy"
+            onClick={() => {
+              onClose()
+            }}
+          >
+            {t('settings.privacy')}
+          </a>
+          <a
             href="https://github.com/steppicrew/quote-bingo"
             target="_blank"
             rel="noreferrer noopener"
