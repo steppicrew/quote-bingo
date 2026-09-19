@@ -12,6 +12,8 @@
     "lint": "eslint .",
     "assets": "yarn node scripts/gen-assets.mjs",
     "store-listing": "yarn node scripts/store-listing.mjs",
+    "screenshots": "yarn node scripts/screenshots.mjs",
+    "feature-graphic": "yarn node scripts/gen-feature-graphic.mjs",
     "check-locales": "yarn node scripts/check-locales.mjs",
     "version:bump": "yarn node scripts/bump-version.mjs",
     "android:build": "./scripts/build-android.sh"
