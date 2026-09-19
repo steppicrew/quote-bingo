@@ -10,8 +10,34 @@ import {
 } from '../types'
 import { uid } from './id'
 
-/** Practical char budget for a QR payload that mid-tier phones can still scan. */
-export const QR_MAX_CHARS = 800
+/**
+ * Practical char budget for a QR payload that mid-tier phones can still scan.
+ *
+ * 800 produced a version-18 symbol: 89x89 modules, about 3.1px per module on
+ * the old 288px canvas before the camera is even involved. That reads as a
+ * very fine grid, and people reported codes that simply would not scan.
+ *
+ * Measured across budgets at the current canvas (340px) with 25% error
+ * correction, 420 lands on version 15 — 77x77 modules, ~4.2px per module, a
+ * third more than before. Raising it to 500 costs a whole version for no
+ * fewer codes on a typical list, and dropping to 300 buys little and adds a
+ * fifth code.
+ *
+ * The cost is more chunks per list (a 31-quote list goes from 2 codes to 3),
+ * and that is the right trade: an extra code to scan is a minor annoyance, a
+ * code that will not scan is a dead end.
+ */
+export const QR_MAX_CHARS = 420
+
+/**
+ * Error correction level for the codes we render.
+ *
+ * 'M' (15%) is the library default. 'Q' (25%) survives a glare spot, a crease
+ * or a partly-obscured code, which is exactly how these get scanned — one
+ * phone held over another. It costs symbol size, which is why the payload
+ * budget above came down at the same time.
+ */
+export const QR_ERROR_CORRECTION = 'Q' as const
 
 // ---- base64url helpers (no padding) --------------------------------------
 

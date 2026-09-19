@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState, type ReactNode, type TouchEvent } from 'react'
 import { useTranslation } from 'react-i18next'
 import QRCode from 'qrcode'
-import { chunkCode, encodeList } from '../lib/share'
+import { chunkCode, encodeList, QR_ERROR_CORRECTION } from '../lib/share'
 import { useModalDismiss } from '../lib/useModalDismiss'
 import { type ExportQuote } from '../types'
 import { ChevronLeftIcon, ChevronRightIcon, PauseIcon, PlayIcon } from './icons'
@@ -51,7 +51,14 @@ export function QrShow({ name, quotes, onClose }: Props): ReactNode {
     const code = chunks[page]
     const canvas = canvasRef.current
     if (!code || !canvas) return
-    void QRCode.toCanvas(canvas, code, { width: 288, margin: 2 }).catch((e: unknown) => {
+    // Bigger canvas and 25% error correction: these are scanned by holding one
+    // phone over another, where glare and a slight tilt are the norm. See
+    // QR_MAX_CHARS for why the payload budget shrank at the same time.
+    void QRCode.toCanvas(canvas, code, {
+      width: 340,
+      margin: 2,
+      errorCorrectionLevel: QR_ERROR_CORRECTION,
+    }).catch((e: unknown) => {
       setError(e instanceof Error ? e.message : t('qr.showFailed'))
     })
   }, [chunks, page, t])

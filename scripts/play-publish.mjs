@@ -7,6 +7,7 @@
  *   yarn play:publish --dry-run                 # show what would change
  *   yarn play:publish --track internal          # upload + roll out
  *   yarn play:publish --track production
+ *   yarn play:publish --track production --draft  # REQUIRED for a first release
  *   yarn play:publish --listings-only           # metadata/images, no binary
  *   yarn play:publish --track production --rollout 0.1
  *   yarn play:publish --force                   # re-upload even if unchanged
@@ -261,11 +262,22 @@ async function main() {
       text: listings[l.code]?.short ?? '',
     }));
 
+    // An app that has never been published is a "draft app", and Play accepts
+    // only draft releases on one — a `completed` release is rejected outright
+    // with "Only releases with status draft may be created on draft app".
+    // The first release therefore has to be created as a draft and rolled out
+    // by hand from Play Console; every release after that can be completed.
+    const status = flag('draft')
+      ? 'draft'
+      : rollout > 0 && rollout < 1
+        ? 'inProgress'
+        : 'completed';
+
     const release = {
       versionCodes: [String(pkg.androidVersionCode)],
-      status: rollout > 0 && rollout < 1 ? 'inProgress' : 'completed',
+      status,
       releaseNotes,
-      ...(rollout > 0 && rollout < 1 ? { userFraction: rollout } : {}),
+      ...(status === 'inProgress' ? { userFraction: rollout } : {}),
     };
 
     if (dryRun) {
