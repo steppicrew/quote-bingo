@@ -1,7 +1,7 @@
 {
   "name": "quote-bingo",
   "private": true,
-  "version": "1.1.39",
+  "version": "1.1.47",
   "androidVersionCode": 1,
   "type": "module",
   "packageManager": "yarn@4.13.0",
@@ -18,6 +18,7 @@
   },
   "dependencies": {
     "@capacitor/core": "^7",
+    "@capacitor/status-bar": "^7",
     "clsx": "^2.1.1",
     "html5-qrcode": "^2.3.8",
     "i18next": "^26.3.6",

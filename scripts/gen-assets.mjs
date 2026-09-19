@@ -144,6 +144,42 @@ if (existsSync(androidRes)) {
     );
     console.log(`  values-${locale.code}/strings.xml  ${title}`);
   }
+
+  // Splash screens. Capacitor ships a WHITE stock splash, which flashes white
+  // before the (dark) app paints and leaves the launch theme's light
+  // status-bar icons invisible against it. Replace every density with a flat
+  // plate carrying the icon, so launch matches the app in either theme.
+  console.log('Splash screens');
+  const SPLASHES = [
+    ['drawable', 480, 320],
+    ['drawable-port-mdpi', 320, 480],
+    ['drawable-port-hdpi', 480, 800],
+    ['drawable-port-xhdpi', 720, 1280],
+    ['drawable-port-xxhdpi', 960, 1600],
+    ['drawable-port-xxxhdpi', 1280, 1920],
+    ['drawable-land-mdpi', 480, 320],
+    ['drawable-land-hdpi', 800, 480],
+    ['drawable-land-xhdpi', 1280, 720],
+    ['drawable-land-xxhdpi', 1600, 960],
+    ['drawable-land-xxxhdpi', 1920, 1280],
+  ];
+  for (const [dir, w, h] of SPLASHES) {
+    const out = resolve(androidRes, dir, 'splash.png');
+    mkdirSync(dirname(out), { recursive: true });
+    // Icon at a quarter of the shorter edge, centred on the plate.
+    const glyph = Math.round(Math.min(w, h) * 0.25);
+    execFileSync('magick', [
+      '-size', `${w}x${h}`,
+      `xc:${BG}`,
+      '(', '-background', 'none', '-density', '384', master, '-resize', `${glyph}x${glyph}`, ')',
+      '-gravity', 'center',
+      '-composite',
+      '-strip',
+      '-define', 'png:exclude-chunk=time',
+      out,
+    ]);
+  }
+  console.log(`  ${SPLASHES.length} splash images on ${BG}`);
 }
 
 // The favicon is the master itself.

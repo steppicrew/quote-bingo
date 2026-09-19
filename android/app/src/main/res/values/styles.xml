@@ -10,23 +10,26 @@
     </style>
 
     <!--
-      The app paints its own dark chrome (#1e1b4b), so the system bars must
-      draw LIGHT icons over it. `windowLightStatusBar=false` means "the bar is
-      dark, use light icons" — the values-night variant is the same here
-      because the app's default theme is dark; the light-theme override lives
-      in values-v31 only where the system can honour it.
+      Bar icon contrast is set at RUNTIME by src/lib/systemBars.ts, because the
+      theme is chosen inside the app and Android's night-mode qualifier cannot
+      know about it. These values only cover the window between the splash
+      appearing and the WebView running, so they match the splash — which is
+      dark (#1e1b4b) in both modes — and ask for light icons over it.
+
+      `windowLightStatusBar=false` reads backwards: it means "the bar is NOT
+      light, so draw light icons".
     -->
     <style name="AppTheme.NoActionBar" parent="Theme.AppCompat.DayNight.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
         <item name="android:background">@null</item>
-        <item name="android:windowLightStatusBar">false</item>
-        <item name="android:windowLightNavigationBar">false</item>
     </style>
 
 
     <style name="AppTheme.NoActionBarLaunch" parent="Theme.SplashScreen">
         <item name="android:background">@drawable/splash</item>
+        <item name="android:statusBarColor">#1e1b4b</item>
+        <item name="android:navigationBarColor">#1e1b4b</item>
         <item name="android:windowLightStatusBar">false</item>
         <item name="android:windowLightNavigationBar">false</item>
     </style>

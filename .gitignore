@@ -42,6 +42,7 @@ android/app/src/main/res/mipmap-xxhdpi/
 android/app/src/main/res/mipmap-xxxhdpi/
 android/app/src/main/res/values-*/strings.xml
 android/app/src/main/res/values/ic_launcher_background.xml
+android/app/src/main/res/drawable*/splash.png
 
 # Generated Play assets (rebuilt by `yarn assets` / `yarn feature-graphic` /
 # `yarn screenshots`)

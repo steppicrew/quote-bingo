@@ -8,6 +8,7 @@ import { PersonEditor } from './screens/PersonEditor'
 import { Game } from './screens/Game'
 import { ToastProvider } from './components/Toast'
 import { Settings } from './components/Settings'
+import { applySystemBars } from './lib/systemBars'
 import {
   BackIcon,
   CogIcon,
@@ -36,9 +37,19 @@ export function App(): ReactNode {
   const cycleSoundMode = useStore((s) => s.cycleSoundMode)
   const [settingsOpen, setSettingsOpen] = useState(false)
 
-  // Apply the selected theme to <html> (CSS custom properties switch on it).
+  // Apply the selected theme to <html> (CSS custom properties switch on it),
+  // and keep Android's system bars legible against it. On 'system' the OS can
+  // flip underneath us, so follow prefers-color-scheme for as long as that is
+  // the selection.
   useEffect(() => {
     document.documentElement.dataset.theme = theme
+    void applySystemBars(theme)
+
+    if (theme !== 'system') return
+    const mq = window.matchMedia('(prefers-color-scheme: light)')
+    const onChange = (): void => void applySystemBars(theme)
+    mq.addEventListener('change', onChange)
+    return () => mq.removeEventListener('change', onChange)
   }, [theme])
 
   // Apply the selected UI language. 'system' defers to the browser's language

@@ -125,7 +125,11 @@ a {
   display: flex;
   align-items: center;
   gap: v.$gap;
-  padding: 14px 16px;
+  // `viewport-fit=cover` lets the page draw under the system bars, which in the
+  // Android WebView put the title and buttons directly beneath the clock and
+  // battery. Add the status-bar inset to the top padding; env() is 0 in a
+  // normal browser, so the web layout is unchanged.
+  padding: calc(14px + env(safe-area-inset-top)) 16px 14px;
   border-bottom: 1px solid v.$border;
   position: sticky;
   top: 0;
@@ -158,7 +162,9 @@ a {
 
 .content {
   flex: 1;
-  padding: 16px;
+  // Keep the last row clear of the gesture bar / navigation buttons, which
+  // overlay the page for the same viewport-fit=cover reason as the topbar.
+  padding: 16px 16px calc(16px + env(safe-area-inset-bottom));
   display: flex;
   flex-direction: column;
   gap: v.$gap;
