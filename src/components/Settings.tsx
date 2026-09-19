@@ -14,6 +14,7 @@ import './Settings.scss'
 
 // html5-qrcode is large; only pull it in when the scanner is opened.
 const QrScan = lazy(() => import('./QrScan').then((m) => ({ default: m.QrScan })))
+const ShareApp = lazy(() => import('./ShareApp').then((m) => ({ default: m.ShareApp })))
 
 interface Props {
   onClose: () => void
@@ -32,6 +33,7 @@ export function Settings({ onClose }: Props): ReactNode {
   const toast = useToast()
 
   const [scanning, setScanning] = useState(false)
+  const [sharing, setSharing] = useState(false)
   const fileRef = useRef<HTMLInputElement>(null)
   const backupRef = useRef<HTMLInputElement>(null)
   useModalDismiss(onClose)
@@ -160,17 +162,21 @@ export function Settings({ onClose }: Props): ReactNode {
         <div className="setting">
           <span>{t('settings.app')}</span>
           <div className="row">
-            {canInstall ? (
-              <button className="primary" onClick={() => void promptInstall()}>
-                {t('settings.install')}
-              </button>
-            ) : (
-              <span className="dim">{t('settings.installed')}</span>
-            )}
             {/*
-              Pointless inside the Android app itself — it is already the
-              thing the listing installs.
+              The install prompt and the "installed / not available" fallback
+              only mean something on the web. In the packaged app the install
+              IS the app, so that row said nothing — it is replaced by a way to
+              pass the app on to whoever is sitting next to you.
             */}
+            {!isNativeApp() &&
+              (canInstall ? (
+                <button className="primary" onClick={() => void promptInstall()}>
+                  {t('settings.install')}
+                </button>
+              ) : (
+                <span className="dim">{t('settings.installed')}</span>
+              ))}
+            <button onClick={() => setSharing(true)}>{t('settings.shareApp')}</button>
             {!isNativeApp() && (
               <a
                 className="button"
@@ -220,6 +226,12 @@ export function Settings({ onClose }: Props): ReactNode {
             e.target.value = ''
           }}
         />
+
+        {sharing && (
+          <Suspense fallback={null}>
+            <ShareApp onClose={() => setSharing(false)} />
+          </Suspense>
+        )}
 
         {scanning && (
           <Suspense fallback={null}>

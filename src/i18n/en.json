@@ -89,6 +89,7 @@
     "install": "Install",
     "installed": "Installed / not available",
     "playStore": "Play Store",
+    "shareApp": "Share",
     "backup": "All data",
     "exportAll": "Export all",
     "exportedAll": "All data exported",
@@ -116,6 +117,12 @@
     "invalidCode": "The scanned code is not a valid quote list.",
     "cameraUnavailable": "Camera not available",
     "close": "Close"
+  },
+  "share": {
+    "title": "Share the app",
+    "play": "Play Store",
+    "web": "Website",
+    "hint": "Let someone scan this to install the app."
   },
   "theme": {
     "light": "Light",

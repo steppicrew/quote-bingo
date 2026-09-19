@@ -89,6 +89,7 @@
     "install": "Instalar",
     "installed": "Instalada / não disponível",
     "playStore": "Play Store",
+    "shareApp": "Partilhar",
     "backup": "Todos os dados",
     "exportAll": "Exportar tudo",
     "exportedAll": "Todos os dados exportados",
@@ -116,6 +117,12 @@
     "invalidCode": "O código lido não é uma lista de citações válida.",
     "cameraUnavailable": "Câmara não disponível",
     "close": "Fechar"
+  },
+  "share": {
+    "title": "Partilhar a aplicação",
+    "play": "Play Store",
+    "web": "Site",
+    "hint": "Deixa ler o código para instalar a aplicação."
   },
   "theme": {
     "light": "Claro",

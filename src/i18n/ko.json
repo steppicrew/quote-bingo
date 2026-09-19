@@ -86,6 +86,7 @@
     "install": "설치",
     "installed": "설치됨 / 사용 불가",
     "playStore": "Play 스토어",
+    "shareApp": "공유",
     "backup": "모든 데이터",
     "exportAll": "전체 내보내기",
     "exportedAll": "모든 데이터를 내보냈습니다",
@@ -113,6 +114,12 @@
     "invalidCode": "스캔한 코드는 유효한 명언 목록이 아닙니다.",
     "cameraUnavailable": "카메라를 사용할 수 없습니다",
     "close": "닫기"
+  },
+  "share": {
+    "title": "앱 공유",
+    "play": "Play 스토어",
+    "web": "웹사이트",
+    "hint": "이 코드를 스캔하면 앱을 설치할 수 있습니다."
   },
   "theme": {
     "light": "밝게",

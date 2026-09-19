@@ -89,6 +89,7 @@
     "install": "Installa",
     "installed": "Installata / non disponibile",
     "playStore": "Play Store",
+    "shareApp": "Condividi",
     "backup": "Tutti i dati",
     "exportAll": "Esporta tutto",
     "exportedAll": "Tutti i dati esportati",
@@ -116,6 +117,12 @@
     "invalidCode": "Il codice scansionato non è un elenco di citazioni valido.",
     "cameraUnavailable": "Fotocamera non disponibile",
     "close": "Chiudi"
+  },
+  "share": {
+    "title": "Condividi l'app",
+    "play": "Play Store",
+    "web": "Sito web",
+    "hint": "Fai scansionare il codice per installare l'app."
   },
   "theme": {
     "light": "Chiaro",

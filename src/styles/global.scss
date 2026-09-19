@@ -257,3 +257,10 @@ a {
   align-items: center;
   gap: 8px;
 }
+
+// The share dialog prints the URL under the QR, for anyone typing it by hand.
+.share-url {
+  font-size: 0.8rem;
+  word-break: break-all;
+  text-align: center;
+}
