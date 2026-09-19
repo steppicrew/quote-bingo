@@ -4,7 +4,7 @@ import { navigate } from '../router'
 import { type QuoteListExport } from '../types'
 import { importAnyFile, exportBackup, importBackupFile } from '../lib/share'
 import { useInstall } from '../lib/install'
-import { isNativeApp, PLAY_STORE_URL } from '../lib/platform'
+import { isNativeApp } from '../lib/platform'
 import { useModalDismiss } from '../lib/useModalDismiss'
 import { playFanfare, type SoundKind, type SoundMode } from '../lib/fanfare'
 import { useTranslation } from 'react-i18next'
@@ -177,17 +177,12 @@ export function Settings({ onClose }: Props): ReactNode {
               ) : (
                 <span className="dim">{t('settings.installed')}</span>
               ))}
+            {/*
+              No Play Store button here: Share already shows a code for the
+              listing and prints the link, which is the way to reach the store
+              from inside the app.
+            */}
             <button onClick={() => setSharing(true)}>{t('settings.shareApp')}</button>
-            {!isNativeApp() && (
-              <a
-                className="button"
-                href={PLAY_STORE_URL}
-                target="_blank"
-                rel="noreferrer noopener"
-              >
-                {t('settings.playStore')}
-              </a>
-            )}
           </div>
         </div>
 

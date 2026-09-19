@@ -1,8 +1,9 @@
 import { useEffect, useRef, useState, type ReactNode } from 'react'
+import clsx from 'clsx'
 import QRCode from 'qrcode'
 import { useTranslation } from 'react-i18next'
 import { useModalDismiss } from '../lib/useModalDismiss'
-import { PLAY_STORE_URL, isNativeApp } from '../lib/platform'
+import { PLAY_STORE_URL } from '../lib/platform'
 import './modal.scss'
 
 /** Where the web version lives, for people without Play. */
@@ -22,7 +23,10 @@ interface Props {
 export function ShareApp({ onClose }: Props): ReactNode {
   const { t } = useTranslation()
   const canvasRef = useRef<HTMLCanvasElement>(null)
-  const [target, setTarget] = useState<'play' | 'web'>(isNativeApp() ? 'play' : 'web')
+  // Play is the default everywhere: handing someone the store listing is the
+  // normal way to pass the app on, and the website is the fallback for people
+  // without Play rather than the first offer.
+  const [target, setTarget] = useState<'play' | 'web'>('play')
   const [error, setError] = useState<string | null>(null)
   useModalDismiss(onClose)
 
@@ -41,15 +45,20 @@ export function ShareApp({ onClose }: Props): ReactNode {
       <div className="modal" onClick={(e) => e.stopPropagation()}>
         <h2>{t('share.title')}</h2>
 
-        <div className="row">
+        {/*
+          `.toggle` rather than swapping primary/ghost: `primary` also sets
+          font-weight, so the selected side rendered taller than the other.
+          The class keeps both sides identical and colours only the active one.
+        */}
+        <div className="row share-targets">
           <button
-            className={target === 'play' ? 'primary' : 'ghost'}
+            className={clsx('toggle', { active: target === 'play' })}
             onClick={() => setTarget('play')}
           >
             {t('share.play')}
           </button>
           <button
-            className={target === 'web' ? 'primary' : 'ghost'}
+            className={clsx('toggle', { active: target === 'web' })}
             onClick={() => setTarget('web')}
           >
             {t('share.web')}
@@ -59,7 +68,13 @@ export function ShareApp({ onClose }: Props): ReactNode {
         {error ? <p className="dim">{t('qr.error', { error })}</p> : <canvas ref={canvasRef} />}
 
         <p className="dim">{t('share.hint')}</p>
-        <p className="dim share-url">{url}</p>
+        {/* Tappable as well as readable: on the device holding the code, this
+            is the quickest way to reach the listing yourself. */}
+        <p className="dim share-url">
+          <a href={url} target="_blank" rel="noreferrer noopener">
+            {url}
+          </a>
+        </p>
 
         <button className="primary" onClick={onClose}>
           {t('settings.close')}

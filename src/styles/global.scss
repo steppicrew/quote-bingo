@@ -37,8 +37,8 @@ body {
   flex-direction: column;
 }
 
-// `a.button` covers links that act as buttons (e.g. the Play Store link in
-// Settings), so they pick up the same chrome without a second rule set.
+// `a.button` covers links that act as buttons, so they pick up the same chrome
+// without a second rule set.
 button,
 a.button {
   font: inherit;
@@ -49,6 +49,17 @@ a.button {
   border-radius: v.$radius-sm;
   padding: 10px 14px;
   transition: background 0.15s, border-color 0.15s;
+  // Every button carries the same weight and line box, so a `primary` next to
+  // a plain one in the same row cannot come out taller — `primary` used to add
+  // font-weight: 600, which changed the text metrics and with them the height.
+  font-weight: 600;
+  line-height: 1.2;
+  // Two buttons side by side should agree even when their labels wrap
+  // differently, which is what happens once the labels are translated.
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
 
   &:hover {
     border-color: v.$primary;
@@ -61,15 +72,12 @@ a.button {
 
 a.button {
   text-decoration: none;
-  display: inline-flex;
-  align-items: center;
 }
 
 button.primary {
   background: v.$primary;
   border-color: v.$primary;
   color: #fff;
-  font-weight: 600;
   &:hover {
     background: v.$primary-dim;
   }
@@ -253,8 +261,6 @@ a {
 }
 
 .scan-btn {
-  display: inline-flex;
-  align-items: center;
   gap: 8px;
 }
 
@@ -275,4 +281,26 @@ a {
   p {
     margin: 0.2rem 0;
   }
+}
+
+// A two-way choice where both sides must keep the same metrics: `primary` also
+// changes font-weight, which made the selected side render taller than the
+// other. Only the colours differ here.
+.toggle {
+  flex: 1;
+  border-color: v.$border;
+
+  &.active {
+    background: v.$primary;
+    border-color: v.$primary;
+    color: #fff;
+  }
+}
+
+.share-targets {
+  width: 100%;
+}
+
+.share-url a {
+  color: v.$primary;
 }

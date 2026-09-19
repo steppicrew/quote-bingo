@@ -9,6 +9,26 @@
     justify-content: space-between;
     gap: v.$gap;
     flex-wrap: wrap;
+
+    // Translated labels differ in length, so one button in a pair wrapped to
+    // two lines while its neighbour stayed on one, leaving them visibly
+    // different heights ("Datei" beside "QR scannen").
+    //
+    // The row takes the full width and splits it evenly, so a pair of buttons
+    // is always the same size and the shorter label no longer sits in a box
+    // half the height of its neighbour. `min-width: 0` lets a button shrink
+    // below its text width — without it, `nowrap` pushed "Alles importieren"
+    // straight out past the edge of the panel — and `stretch` keeps the pair
+    // level if a long translation does wrap after all.
+    .row {
+      align-items: stretch;
+      flex: 1 1 100%;
+
+      > button {
+        flex: 1 1 0;
+        min-width: 0;
+      }
+    }
   }
 
   .about {
@@ -18,5 +38,15 @@
     font-size: 13px;
     border-top: 1px solid v.$border;
     padding-top: 12px;
+
+    // These are the way to the Play listing and the source, so they have to
+    // read as links: `.about` is `dim`, which was overriding the accent colour
+    // and leaving them looking like ordinary grey text.
+    a {
+      color: v.$primary;
+      text-decoration: underline;
+      // Comfortable tap target on a phone without spacing the block out.
+      padding: 2px 0;
+    }
   }
 }
