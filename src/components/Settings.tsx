@@ -1,7 +1,7 @@
 import { lazy, Suspense, useRef, useState, type ReactNode } from 'react'
 import { useStore } from '../store'
 import { type QuoteListExport } from '../types'
-import { importFromFile, exportBackup, importBackupFile } from '../lib/share'
+import { importAnyFile, exportBackup, importBackupFile } from '../lib/share'
 import { useInstall } from '../lib/install'
 import { isNativeApp, PLAY_STORE_URL } from '../lib/platform'
 import { useModalDismiss } from '../lib/useModalDismiss'
@@ -63,7 +63,18 @@ export function Settings({ onClose }: Props): ReactNode {
   const onFile = async (file: File | undefined): Promise<void> => {
     if (!file) return
     try {
-      applyImport(await importFromFile(file))
+      // Both exports are JSON and a user handed a file — from a download, a
+      // share sheet or a file manager — has no reason to know which button
+      // matches which shape. Route on the content, so picking the wrong one
+      // reads as "it just worked" instead of "Import failed".
+      const parsed = await importAnyFile(file)
+      if (parsed.kind === 'backup') {
+        if (!confirm(t('settings.restoreConfirm'))) return
+        restoreBackup(parsed.data)
+        toast(t('settings.restoreDone'))
+        return
+      }
+      applyImport(parsed.data)
     } catch (e) {
       toast(e instanceof Error ? e.message : t('settings.importFailed'))
     }

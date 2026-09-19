@@ -237,6 +237,27 @@ export async function importBackupFile(file: File): Promise<BackupData> {
   return parseBackup(JSON.parse(await file.text()))
 }
 
+/** A parsed import, tagged with which of the two JSON formats it turned out to be. */
+export type AnyImport =
+  | { kind: 'list'; data: QuoteListExport }
+  | { kind: 'backup'; data: BackupData }
+
+/**
+ * Parse either export format from one file.
+ *
+ * A quote list and a full backup are both JSON, and a file arriving from a
+ * download, a share sheet or a file manager carries no hint of which it is —
+ * so detect it here rather than making the user pick the matching button.
+ * Throws if it is neither.
+ */
+export async function importAnyFile(file: File): Promise<AnyImport> {
+  const raw: unknown = JSON.parse(await file.text())
+  if (isRecord(raw) && raw.app === 'quote-bingo-backup') {
+    return { kind: 'backup', data: parseBackup(raw) }
+  }
+  return { kind: 'list', data: parseExport(raw) }
+}
+
 // ---- merge / dedupe ------------------------------------------------------
 
 const norm = (s: string): string => s.trim().replace(/\s+/g, ' ').toLowerCase()
