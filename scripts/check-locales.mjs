@@ -93,10 +93,44 @@ if (missingListings.length) {
   console.log('✓ every locale has a store listing');
 }
 
+// --- 4. sample data for the screenshots -----------------------------------
+// The images cannot be reproduced without it, and a card needs a big enough
+// pool: 24 quotes fill the 5x5 board the screenshots use.
+const sample = JSON.parse(
+  readFileSync(resolve(root, 'store-listing/SAMPLE-DATA.json'), 'utf8'),
+);
+for (const locale of LOCALES) {
+  const entry = sample.locales[locale.code];
+  if (!entry) {
+    fail(`no sample data for ${locale.code}`);
+    continue;
+  }
+  const [first] = entry.people;
+  if (!first || first.quotes.length < 24) {
+    fail(`${locale.code}: first person needs 24+ quotes for the 5x5 screenshot`);
+  }
+  if (!first?.quotes.includes(entry.hero)) {
+    fail(`${locale.code}: hero quote is not in ${first?.name}'s pool`);
+  }
+  for (const person of entry.people) {
+    if (person.quotes.length < 8) {
+      fail(`${locale.code}/${person.name}: under 8 quotes (3x3 minimum)`);
+    }
+    if (new Set(person.quotes).size !== person.quotes.length) {
+      fail(`${locale.code}/${person.name}: duplicate quotes`);
+    }
+    // A stray word in the wrong alphabet is invisible in review but obvious
+    // in a published screenshot.
+    const cyrillic = person.quotes.find((q) => /[Ѐ-ӿ]/.test(q));
+    if (cyrillic) fail(`${locale.code}/${person.name}: Cyrillic in "${cyrillic}"`);
+  }
+}
+if (!failed) console.log('✓ every locale has usable screenshot sample data');
+
 if (failed) {
   console.error('\nAdding a language means touching src/i18n/index.ts, a');
   console.error('src/i18n/<code>.json catalogue, scripts/locales.mjs and');
-  console.error('store-listing/LISTINGS.json.');
+  console.error('store-listing/LISTINGS.json and SAMPLE-DATA.json.');
   process.exit(1);
 }
 

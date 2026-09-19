@@ -144,6 +144,16 @@
     color: v.$text-dim;
     font-weight: 700;
     letter-spacing: 1px;
+
+    // The label is one short word ("FREI"/"FREE"/"무료"), so it must never be
+    // split — the generic break-word below is there for long quotes, and it
+    // was hyphen-less-wrapping this into "FRE / I". Auto-fit shrinks the type
+    // until the whole word fits instead.
+    .cell-text {
+      word-break: normal;
+      overflow-wrap: normal;
+      hyphens: none;
+    }
   }
 }
 

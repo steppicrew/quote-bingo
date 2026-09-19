@@ -1,0 +1,632 @@
+{
+  "$comment": "Sample people and quotes used to stage the Play Store screenshots and feature graphics. COMMITTED ON PURPOSE: without it the images cannot be reproduced, and a rerun with different data would change every screenshot in the listing. Edit here, then rerun `yarn screenshots` and `yarn feature-graphic`.",
+  "$rules": [
+    "Names are roles or very common first names for that locale — never a real, identifiable person.",
+    "Quotes are affectionate clichés: the things a parent/boss/colleague says on repeat. Nothing insulting, political, sexual or targeted at a real group.",
+    "`hero` is the quote shown in the feature-graphic speech bubble; keep it short enough to read at 1024x500 (roughly <= 40 chars, fewer for CJK).",
+    "Each person needs at least 8 quotes: that is the minimum pool for the smallest (3x3) card. The 5x5 screenshot card needs 24."
+  ],
+  "locales": {
+    "de": {
+      "hero": "Das haben wir schon immer so gemacht",
+      "people": [
+        {
+          "name": "Papa",
+          "accent": "amber",
+          "quotes": [
+            "Das haben wir schon immer so gemacht",
+            "Früher war das alles Wald hier",
+            "Wer hat denn hier das Licht angelassen?",
+            "Mach mal das Fenster zu, es zieht",
+            "Da hätte ich auch selbst hinfahren können",
+            "Zu meiner Zeit gab es das nicht",
+            "Ich sag ja nur",
+            "Das Navi kennt die Abkürzung nicht",
+            "Steht doch alles in der Anleitung",
+            "Wir sind gut durchgekommen",
+            "Ein bisschen frische Luft schadet nie",
+            "Kannst du mal kurz halten?",
+            "Das ist doch kein Wetter zum Fahren",
+            "Wo ist eigentlich die Fernbedienung?",
+            "Früher hat man das noch selbst repariert",
+            "Einmal quer durch und dann links",
+            "Hast du auch alles eingepackt?",
+            "Ich hab das schon geregelt",
+            "Das war ein Schnäppchen",
+            "Nur noch fünf Minuten",
+            "Da war doch mal eine Tankstelle",
+            "So teuer war das früher nicht",
+            "Wer zuletzt geht, macht das Licht aus",
+            "Dafür braucht man kein Handy"
+          ]
+        },
+        {
+          "name": "Sabine",
+          "accent": "rose",
+          "quotes": [
+            "Ich will ja nichts sagen, aber…",
+            "Kurz zusammengefasst",
+            "Ganz ehrlich?",
+            "Das muss man auch mal sagen dürfen",
+            "Ich hab da mal was vorbereitet",
+            "Nur ganz kurz noch",
+            "Das sprengt jetzt den Rahmen",
+            "Da bin ich ganz bei dir",
+            "Können wir das offline klären?",
+            "Ich schick dir das nachher",
+            "Lass uns das mal parken",
+            "Nicht dass ich wüsste"
+          ]
+        },
+        {
+          "name": "Chef",
+          "accent": "sky",
+          "quotes": [
+            "Wir müssen agiler werden",
+            "Das nehmen wir mit",
+            "Kurzer Sync dazu?",
+            "Wer macht das Protokoll?",
+            "Das ist ein Quick Win",
+            "Haben wir dazu Zahlen?",
+            "Lass uns das priorisieren",
+            "Gutes Thema, aber nicht heute",
+            "Das schauen wir uns im Detail an",
+            "Wir sind da schon dran"
+          ]
+        }
+      ]
+    },
+    "en": {
+      "hero": "We've always done it this way",
+      "people": [
+        {
+          "name": "Dad",
+          "accent": "amber",
+          "quotes": [
+            "We've always done it this way",
+            "Were you born in a barn?",
+            "I'm not sleeping, I'm resting my eyes",
+            "Who left all these lights on?",
+            "Back in my day…",
+            "We're making good time",
+            "I know a shortcut",
+            "It's all fields round here really",
+            "Did you check the oil?",
+            "That's not a real word",
+            "Ask your mother",
+            "I'm not made of money",
+            "Shut the door, we're not heating the garden",
+            "It was on offer",
+            "I'll just rest my eyes for five minutes",
+            "This is the good stuff",
+            "You don't need an app for that",
+            "Read the manual",
+            "Have you got everything?",
+            "Where's the remote gone?",
+            "Nearly there now",
+            "Bit of fresh air never hurt anyone",
+            "They don't make them like they used to",
+            "Last one out gets the lights"
+          ]
+        },
+        {
+          "name": "Karen",
+          "accent": "rose",
+          "quotes": [
+            "Not to be that person, but…",
+            "Just to circle back on this",
+            "Honestly?",
+            "I'm just saying",
+            "Let's take this offline",
+            "Sorry, one more thing",
+            "Quick question",
+            "I did a bit of digging",
+            "No shade, but…",
+            "I'll send it over later",
+            "Let's park that for now",
+            "Not that I know of"
+          ]
+        },
+        {
+          "name": "The Boss",
+          "accent": "sky",
+          "quotes": [
+            "Let's touch base",
+            "We need to be more agile",
+            "Good idea, put it in the backlog",
+            "Who's taking notes?",
+            "That's a quick win",
+            "Do we have data on that?",
+            "Let's align on priorities",
+            "Great point, let's not go down that rabbit hole",
+            "We're already on it",
+            "Circle back next sprint"
+          ]
+        }
+      ]
+    },
+    "fr": {
+      "hero": "On a toujours fait comme ça",
+      "people": [
+        {
+          "name": "Papa",
+          "accent": "amber",
+          "quotes": [
+            "On a toujours fait comme ça",
+            "Ferme la porte, on chauffe pas dehors",
+            "De mon temps, ça n'existait pas",
+            "Je connais un raccourci",
+            "On a bien roulé",
+            "Qui a laissé la lumière allumée ?",
+            "Je ne dors pas, je me repose les yeux",
+            "Tu as vérifié l'huile ?",
+            "C'était une affaire",
+            "Demande à ta mère",
+            "L'argent ne pousse pas sur les arbres",
+            "Tout est dans la notice",
+            "Un peu d'air frais n'a jamais tué personne",
+            "Où est passée la télécommande ?",
+            "On y est presque",
+            "Avant, on réparait soi-même",
+            "Tu as pensé à tout prendre ?",
+            "Pas besoin d'une application pour ça",
+            "Encore cinq minutes",
+            "C'est plus ce que c'était",
+            "Je m'en suis déjà occupé",
+            "Le dernier éteint la lumière",
+            "Il y avait une station-service par ici",
+            "Ce n'est pas un temps à rouler"
+          ]
+        },
+        {
+          "name": "Sophie",
+          "accent": "rose",
+          "quotes": [
+            "Je dis ça, je dis rien",
+            "Pour résumer",
+            "Franchement ?",
+            "Juste une petite chose",
+            "On peut en parler après ?",
+            "J'ai préparé un truc",
+            "Ça dépasse le cadre",
+            "Je suis complètement d'accord",
+            "Je te l'envoie plus tard",
+            "On met ça de côté",
+            "Pas que je sache",
+            "Deux secondes"
+          ]
+        },
+        {
+          "name": "Le chef",
+          "accent": "sky",
+          "quotes": [
+            "Il faut être plus agile",
+            "On note et on revient dessus",
+            "Un point rapide là-dessus ?",
+            "Qui prend des notes ?",
+            "C'est un gain rapide",
+            "On a des chiffres ?",
+            "Priorisons",
+            "Bon sujet, mais pas aujourd'hui",
+            "On regarde ça en détail",
+            "On est déjà dessus"
+          ]
+        }
+      ]
+    },
+    "es": {
+      "hero": "Siempre lo hemos hecho así",
+      "people": [
+        {
+          "name": "Papá",
+          "accent": "amber",
+          "quotes": [
+            "Siempre lo hemos hecho así",
+            "Cierra la puerta, que no calentamos la calle",
+            "En mis tiempos no había eso",
+            "Yo me sé un atajo",
+            "Hemos hecho buen tiempo",
+            "¿Quién ha dejado la luz encendida?",
+            "No duermo, descanso la vista",
+            "¿Has mirado el aceite?",
+            "Estaba de oferta",
+            "Pregúntale a tu madre",
+            "El dinero no crece en los árboles",
+            "Viene todo en el manual",
+            "Un poco de aire fresco no mata a nadie",
+            "¿Dónde está el mando?",
+            "Ya casi llegamos",
+            "Antes esto se arreglaba en casa",
+            "¿Lo has cogido todo?",
+            "Para eso no hace falta una aplicación",
+            "Cinco minutos más",
+            "Ya no los hacen como antes",
+            "De eso ya me he encargado yo",
+            "El último apaga la luz",
+            "Por aquí había una gasolinera",
+            "No es tiempo para conducir"
+          ]
+        },
+        {
+          "name": "Marta",
+          "accent": "rose",
+          "quotes": [
+            "No es por nada, pero…",
+            "Resumiendo",
+            "¿Sinceramente?",
+            "Solo una cosita más",
+            "¿Lo hablamos luego?",
+            "He preparado una cosa",
+            "Eso da para otra reunión",
+            "Totalmente de acuerdo",
+            "Te lo mando después",
+            "Vamos a dejarlo aparcado",
+            "Que yo sepa no",
+            "Un segundito"
+          ]
+        },
+        {
+          "name": "El jefe",
+          "accent": "sky",
+          "quotes": [
+            "Tenemos que ser más ágiles",
+            "Lo anotamos y lo vemos",
+            "¿Hacemos un repaso rápido?",
+            "¿Quién toma acta?",
+            "Eso es una victoria rápida",
+            "¿Tenemos datos de eso?",
+            "Vamos a priorizar",
+            "Buen tema, pero hoy no",
+            "Lo miramos en detalle",
+            "Ya estamos en ello"
+          ]
+        }
+      ]
+    },
+    "it": {
+      "hero": "Si è sempre fatto così",
+      "people": [
+        {
+          "name": "Papà",
+          "accent": "amber",
+          "quotes": [
+            "Si è sempre fatto così",
+            "Chiudi la porta, non scaldiamo fuori",
+            "Ai miei tempi non c'era",
+            "Conosco una scorciatoia",
+            "Abbiamo fatto buon tempo",
+            "Chi ha lasciato la luce accesa?",
+            "Non dormo, riposo gli occhi",
+            "Hai controllato l'olio?",
+            "Era in offerta",
+            "Chiedi a tua madre",
+            "I soldi non crescono sugli alberi",
+            "C'è scritto tutto nelle istruzioni",
+            "Un po' d'aria fresca non ha mai ucciso nessuno",
+            "Dov'è finito il telecomando?",
+            "Siamo quasi arrivati",
+            "Una volta si riparava da soli",
+            "Hai preso tutto?",
+            "Non serve un'app per questo",
+            "Ancora cinque minuti",
+            "Non li fanno più come una volta",
+            "Me ne sono già occupato io",
+            "L'ultimo spegne la luce",
+            "Qui c'era un distributore",
+            "Non è tempo da mettersi in viaggio"
+          ]
+        },
+        {
+          "name": "Giulia",
+          "accent": "rose",
+          "quotes": [
+            "Non per dire, però…",
+            "Riassumendo",
+            "Sinceramente?",
+            "Solo un'ultima cosa",
+            "Ne parliamo dopo?",
+            "Ho preparato una cosa",
+            "Questo apre un altro discorso",
+            "Sono assolutamente d'accordo",
+            "Te lo mando più tardi",
+            "Mettiamolo da parte",
+            "Non che io sappia",
+            "Due secondi"
+          ]
+        },
+        {
+          "name": "Il capo",
+          "accent": "sky",
+          "quotes": [
+            "Dobbiamo essere più agili",
+            "Ce lo segniamo",
+            "Facciamo un punto veloce?",
+            "Chi scrive il verbale?",
+            "Questa è una vittoria facile",
+            "Abbiamo dei dati?",
+            "Diamo delle priorità",
+            "Bel tema, ma non oggi",
+            "Lo vediamo nel dettaglio",
+            "Ci stiamo già lavorando"
+          ]
+        }
+      ]
+    },
+    "pt": {
+      "hero": "Sempre se fez assim",
+      "people": [
+        {
+          "name": "Pai",
+          "accent": "amber",
+          "quotes": [
+            "Sempre se fez assim",
+            "Fecha a porta, não estamos a aquecer a rua",
+            "No meu tempo não havia isso",
+            "Eu sei um atalho",
+            "Fizemos bom tempo",
+            "Quem deixou a luz acesa?",
+            "Não estou a dormir, estou a descansar os olhos",
+            "Já viste o óleo?",
+            "Estava em promoção",
+            "Pergunta à tua mãe",
+            "O dinheiro não cai do céu",
+            "Está tudo no manual",
+            "Um pouco de ar fresco nunca matou ninguém",
+            "Onde está o comando?",
+            "Estamos quase a chegar",
+            "Antigamente arranjava-se em casa",
+            "Levaste tudo?",
+            "Para isso não é preciso uma aplicação",
+            "Mais cinco minutos",
+            "Já não se fazem como antigamente",
+            "Disso já tratei eu",
+            "O último apaga a luz",
+            "Aqui havia uma bomba de gasolina",
+            "Não está tempo para viajar"
+          ]
+        },
+        {
+          "name": "Rita",
+          "accent": "rose",
+          "quotes": [
+            "Não é por nada, mas…",
+            "Resumindo",
+            "Sinceramente?",
+            "Só mais uma coisa",
+            "Falamos disso depois?",
+            "Preparei uma coisa",
+            "Isso dá pano para mangas",
+            "Concordo plenamente",
+            "Envio-te mais tarde",
+            "Vamos deixar isso de lado",
+            "Que eu saiba não",
+            "Só um segundo"
+          ]
+        },
+        {
+          "name": "O chefe",
+          "accent": "sky",
+          "quotes": [
+            "Temos de ser mais ágeis",
+            "Fica anotado",
+            "Fazemos um ponto rápido?",
+            "Quem faz a ata?",
+            "Isso é uma vitória rápida",
+            "Temos dados sobre isso?",
+            "Vamos priorizar",
+            "Bom tema, mas hoje não",
+            "Vemos isso em detalhe",
+            "Já estamos a tratar disso"
+          ]
+        }
+      ]
+    },
+    "zh": {
+      "hero": "我们一直都是这么做的",
+      "people": [
+        {
+          "name": "老爸",
+          "accent": "amber",
+          "quotes": [
+            "我们一直都是这么做的",
+            "我没睡，我在闭目养神",
+            "我知道一条近路",
+            "谁把灯开着没关？",
+            "我们那时候可没有这些",
+            "关门，外面冷",
+            "多穿一件",
+            "这个当年是特价买的",
+            "问你妈去",
+            "钱不是大风刮来的",
+            "说明书上都写着呢",
+            "出去透透气对身体好",
+            "遥控器又跑哪去了",
+            "马上就到了",
+            "以前都是自己修的",
+            "东西都带齐了吗？",
+            "这个哪用得着手机",
+            "再等五分钟",
+            "现在的东西不如从前结实",
+            "这事我早就办好了",
+            "最后走的人关灯",
+            "这附近以前有个加油站",
+            "这种天气不适合开车",
+            "少玩会儿手机"
+          ]
+        },
+        {
+          "name": "小美",
+          "accent": "rose",
+          "quotes": [
+            "我不是针对谁，但是…",
+            "简单来说",
+            "说实话？",
+            "最后再说一句",
+            "这个我们私下聊？",
+            "我准备了一点东西",
+            "这就扯远了",
+            "我完全同意",
+            "我待会发给你",
+            "这个先放一放",
+            "据我所知没有",
+            "稍等一下"
+          ]
+        },
+        {
+          "name": "老板",
+          "accent": "sky",
+          "quotes": [
+            "我们要更敏捷一些",
+            "这个我们记下来",
+            "快速同步一下？",
+            "谁来做会议记录？",
+            "这是个快速见效的事",
+            "有数据支持吗？",
+            "我们排一下优先级",
+            "好想法，但今天先不展开",
+            "这个我们细看一下",
+            "我们已经在做了"
+          ]
+        }
+      ]
+    },
+    "ja": {
+      "hero": "昔からこうやってるから",
+      "people": [
+        {
+          "name": "お父さん",
+          "accent": "amber",
+          "quotes": [
+            "昔からこうやってるから",
+            "寝てない、目を休めてるだけ",
+            "近道知ってるから",
+            "電気つけっぱなしは誰だ",
+            "父さんの若い頃はなあ",
+            "ドア閉めて、寒いだろ",
+            "もう一枚着ていきなさい",
+            "これ、安かったんだぞ",
+            "母さんに聞きなさい",
+            "金は天から降ってこない",
+            "説明書に全部書いてある",
+            "たまには外の空気を吸え",
+            "リモコンどこいった",
+            "もうすぐ着くから",
+            "昔は自分で直したもんだ",
+            "忘れ物ないか",
+            "そんなのアプリじゃなくても",
+            "あと五分だけ",
+            "最近のはすぐ壊れる",
+            "それはもう済ませた",
+            "最後の人が電気消して",
+            "この辺にガソリンスタンドあったよな",
+            "こんな天気に出るもんじゃない",
+            "スマホばっかり見るな"
+          ]
+        },
+        {
+          "name": "ゆきさん",
+          "accent": "rose",
+          "quotes": [
+            "言うつもりはないけど…",
+            "まとめると",
+            "正直に言うと？",
+            "最後にもう一つだけ",
+            "それは後で話しませんか",
+            "ちょっと用意してきました",
+            "話が広がりすぎますね",
+            "まったく同感です",
+            "あとで送りますね",
+            "それは一旦置いておきましょう",
+            "私の知る限りでは",
+            "少々お待ちを"
+          ]
+        },
+        {
+          "name": "部長",
+          "accent": "sky",
+          "quotes": [
+            "もっとアジャイルにいこう",
+            "それは持ち帰ります",
+            "軽く共有しようか",
+            "議事録は誰が取る？",
+            "それはすぐ効果が出るね",
+            "その数字はあるの？",
+            "優先順位をつけよう",
+            "いい話だけど今日は置いておこう",
+            "詳しくは別途見よう",
+            "それはもう着手してる"
+          ]
+        }
+      ]
+    },
+    "ko": {
+      "hero": "원래 이렇게 해 왔어",
+      "people": [
+        {
+          "name": "아빠",
+          "accent": "amber",
+          "quotes": [
+            "원래 이렇게 해 왔어",
+            "자는 거 아니야, 눈만 감고 있는 거야",
+            "내가 지름길 알아",
+            "불 켜놓은 사람 누구야",
+            "내가 젊었을 때는 말이야",
+            "문 닫아라, 춥다",
+            "하나 더 걸치고 나가",
+            "이거 그때 싸게 산 거야",
+            "엄마한테 물어봐",
+            "돈이 하늘에서 떨어지니",
+            "설명서에 다 나와 있어",
+            "바람 좀 쐬는 게 좋아",
+            "리모컨 어디 갔어",
+            "거의 다 왔어",
+            "예전엔 다 직접 고쳤지",
+            "빠뜨린 거 없지?",
+            "그런 건 앱 없어도 돼",
+            "딱 오 분만 더",
+            "요즘 물건은 금방 망가져",
+            "그건 내가 벌써 해놨어",
+            "마지막에 나가는 사람이 불 꺼",
+            "여기 주유소 있었는데",
+            "이런 날씨에 어딜 나가",
+            "휴대폰 그만 봐라"
+          ]
+        },
+        {
+          "name": "지은",
+          "accent": "rose",
+          "quotes": [
+            "뭐라고 하려는 건 아닌데…",
+            "정리하자면",
+            "솔직히 말하면?",
+            "마지막으로 하나만 더",
+            "그건 따로 얘기할까요?",
+            "제가 준비한 게 있어요",
+            "얘기가 길어지겠네요",
+            "전적으로 동의합니다",
+            "이따 보내드릴게요",
+            "그건 일단 보류하죠",
+            "제가 알기로는 없어요",
+            "잠깐만요"
+          ]
+        },
+        {
+          "name": "부장님",
+          "accent": "sky",
+          "quotes": [
+            "좀 더 애자일하게 갑시다",
+            "그건 적어두죠",
+            "간단히 공유할까요?",
+            "회의록은 누가 쓰나요?",
+            "그건 금방 효과 나겠네요",
+            "관련 수치 있나요?",
+            "우선순위를 정합시다",
+            "좋은 얘긴데 오늘은 넘어가죠",
+            "자세한 건 따로 봅시다",
+            "그건 이미 진행 중입니다"
+          ]
+        }
+      ]
+    }
+  }
+}
