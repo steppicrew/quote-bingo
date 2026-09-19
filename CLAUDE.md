@@ -26,6 +26,65 @@ localized (de/en/fr/es/it/pt/zh/ja/ko) via react-i18next; the German build name 
 - `yarn lint` — ESLint (flat config, type-checked rules). Must be clean before commit.
 - `yarn preview` — serve the production build locally (test PWA/offline here).
 - `./deploy.sh` — build + rsync `dist/` to the web host. **Not committed** (gitignored).
+- `yarn assets` — icons, splashes and localised launcher labels from one SVG.
+- `yarn store-listing` / `yarn check-locales` — validate + export the Play listing.
+- `yarn screenshots` / `yarn feature-graphic` / `yarn privacy` — generate store art and the policy page.
+- `yarn version:bump` — move `androidVersionCode` (the pre-commit hook does NOT).
+- `yarn android:build [apk|debug]` — signed `.aab`/`.apk` into `build-output/`.
+- `yarn play:publish --dry-run | --track production` — upload to Play.
+
+## Android / Google Play
+
+Shipped as `de.steppicrew.quotebingo`; Capacitor 7 packages the same `dist/` the
+website uses, so there is no second codebase.
+
+- **Toolchain.** API 37 needs **AGP 8.13 + Gradle 8.13**: the SDK installs the
+  platform as `android-37.0` (sdk_full naming) and AGP 8.7 — Capacitor's default
+  — resolves neither `android-37` nor `"android-37.0"`, failing in a way that
+  reads as a missing SDK. `build-android.sh` also pins a JDK 17/21 because the
+  system default here is 8.
+- **Permissions.** `CAMERA` only, for QR scanning. `INTERNET` is stripped with
+  `tools:node="remove"`, so "works offline, no tracking" is enforced by the
+  platform rather than promised in the listing.
+- **No service worker in the native build.** `VITE_NATIVE=1` drops
+  vite-plugin-pwa from the config entirely, so the APK carries no `sw.js`,
+  workbox chunk or manifest — updates ship through Play, and a stale
+  registration has nothing to find.
+- **System bars** (`src/lib/systemBars.ts` + `SystemBarsPlugin.java`). From
+  Android 15 edge-to-edge is mandatory and `navigationBarColor` is ignored, so
+  bar-icon contrast must be set at runtime from the in-app theme — no resource
+  qualifier can see a theme chosen inside the app. `@capacitor/status-bar` has
+  no navigation-bar API, hence the local plugin. The layout consumes
+  `env(safe-area-inset-*)`; without it the WebView draws under the status bar.
+- **Versioning.** `package.json` owns both numbers and Gradle reads them. The
+  pre-commit hook bumps the *semver* on every commit; `androidVersionCode` only
+  moves via `yarn version:bump`, and Play rejects anything not strictly greater.
+  Build last — committing after a build leaves the `.aab` filename stale.
+- **Publishing.** One edit, committed at the end, abandoned on failure. Unchanged
+  images (sha256) and listings are skipped. A **first** release must be
+  `--draft`; Play refuses a `completed` release on a never-published app. Do not
+  leave Play Console open on an editing screen while it runs — the edit is
+  optimistic-locked.
+
+## Store assets
+
+Generated from committed sources in all nine languages; `yarn check-locales`
+fails when they drift.
+
+- `store-listing/LISTINGS.json` — title/short/full per locale.
+- `store-listing/SAMPLE-DATA.json` — **committed on purpose**: the people and
+  quotes staged in the screenshots. Without it a rerun deals a different board
+  and silently changes every image in the listing. Quotes are written per
+  locale, not translated — the joke only lands if they are things that culture
+  actually says on repeat.
+- `privacy/POLICY.json` — one source for the in-app `#/privacy` screen and the
+  static `/privacy/` page Play links to, so the two cannot drift.
+- All PNGs are written with `-strip -define png:exclude-chunk=time`; without it
+  an unchanged master re-renders under a new sha256 and the publisher
+  re-uploads everything.
+- The win screenshot **cannot be seeded**: `Game.tsx` baselines its
+  completed-line count per card on entry, so a pre-completed line renders gold
+  cells with no banner. It is seeded one tap short and then tapped.
 
 ## Architecture
 
@@ -51,6 +110,14 @@ localized (de/en/fr/es/it/pt/zh/ja/ko) via react-i18next; the German build name 
   binary-searches the largest font that fits, measuring at that same wrap width with
   `max-height`/`overflow` lifted so `scrollHeight` reports true overflow (else it clamps).
   Retries across frames for slow standalone-PWA cold starts; refits on RO + `fonts.ready`.
+  **The line box is not the ink box.** `line-height` tighter than the font's own
+  line box leaves a last-line descender painting below what `scrollHeight`
+  reports, and `.cell-text` clamps with `overflow: hidden` — which sliced the g
+  in "gemacht" on every odd-sized card. `line-height: 1.25` gives the ink room;
+  the fit reads that value from computed style and asks the font for its real
+  ink descent, so changing it in the stylesheet cannot desynchronise the
+  measurement. Tuning the search instead of the box is the wrong fix (tried
+  twice).
 - **i18n** (`src/i18n/index.ts` + `{de,en,fr,es,it,pt,zh,ja,ko}.json`): `de` is the source
   of truth. Store `locale` ('system'|de|en|fr|es|it|pt|zh|ja|ko) drives
   `i18n.changeLanguage` from `App`; 'system' follows `navigator.language`, **falling back to
