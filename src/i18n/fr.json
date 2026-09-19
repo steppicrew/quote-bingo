@@ -35,7 +35,9 @@
     "quoteCount_one": "{{count}} citation",
     "quoteCount_other": "{{count}} citations",
     "upTo": "jusqu'à {{size}}×{{size}}",
-    "remaining": "encore {{count}}"
+    "remaining": "encore {{count}}",
+    "scanQr": "Scanner un QR",
+    "scanHint": "Scannez une liste depuis un autre appareil – ajoute une personne ou complète une existante."
   },
   "editor": {
     "notFound": "Personne introuvable.",

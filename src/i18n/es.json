@@ -35,7 +35,9 @@
     "quoteCount_one": "{{count}} cita",
     "quoteCount_other": "{{count}} citas",
     "upTo": "hasta {{size}}×{{size}}",
-    "remaining": "faltan {{count}}"
+    "remaining": "faltan {{count}}",
+    "scanQr": "Escanear QR",
+    "scanHint": "Escanea una lista desde otro dispositivo: añade una persona o actualiza una existente."
   },
   "editor": {
     "notFound": "Persona no encontrada.",

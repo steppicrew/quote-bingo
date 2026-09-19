@@ -236,3 +236,24 @@ a {
     box-shadow: 0 0 0 2px v.$primary;
   }
 }
+
+// Explains the Scan button on Verwalten; sits directly under it, so pull it
+// up against the button rather than taking the full content gap.
+.manage-hint {
+  text-align: center;
+  margin: -4px 0 0;
+  font-size: 0.85rem;
+}
+
+// The Scan button sits on its own below the people list, centred, since it
+// acts on the list as a whole rather than on any one row.
+.scan-row {
+  display: flex;
+  justify-content: center;
+}
+
+.scan-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}

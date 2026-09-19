@@ -34,7 +34,9 @@
     "empty": "还没有人。添加成员并填充语录库。",
     "quoteCount_other": "{{count}} 条语录",
     "upTo": "最多 {{size}}×{{size}}",
-    "remaining": "还差 {{count}} 条"
+    "remaining": "还差 {{count}} 条",
+    "scanQr": "扫描二维码",
+    "scanHint": "从其他设备扫描语录清单——可新增一个人，也可补充已有的人。"
   },
   "editor": {
     "notFound": "未找到该成员。",

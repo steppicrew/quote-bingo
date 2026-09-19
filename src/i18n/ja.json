@@ -34,7 +34,9 @@
     "empty": "まだ誰もいません。誰かを追加して名言プールを埋めましょう。",
     "quoteCount_other": "名言 {{count}} 件",
     "upTo": "最大 {{size}}×{{size}}",
-    "remaining": "あと {{count}} 件"
+    "remaining": "あと {{count}} 件",
+    "scanQr": "QRを読み取る",
+    "scanHint": "他の端末から語録リストを読み取ります。新しい人を追加するか、既存の人に追加します。"
   },
   "editor": {
     "notFound": "その人が見つかりません。",
