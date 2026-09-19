@@ -45,6 +45,13 @@ const targets = only ? LOCALES.filter((l) => only.has(l.code)) : LOCALES;
 const personId = (i) => `p${i + 1}`;
 const quoteId = (p, q) => `p${p + 1}q${q + 1}`;
 
+/**
+ * Board size per person, so the set of screenshots shows the range the app
+ * supports rather than three identical 5x5 grids. Index matches SAMPLE-DATA's
+ * `people` order, and each size needs a pool to fill it: 24 / 16 / 8.
+ */
+const CARD_SIZES = [5, 4, 3];
+
 /** The persisted slice, exactly as src/store.ts partializes it. */
 function buildState(code, { checkedCells, activeIndex = 0, theme }) {
   const entry = SAMPLE.locales[code];
@@ -66,11 +73,13 @@ function buildState(code, { checkedCells, activeIndex = 0, theme }) {
     })),
   );
 
-  // A 5x5 card with the joker centre: 24 quotes plus the free middle.
-  const size = 5;
-  const centre = Math.floor((size * size) / 2);
   const cards = {};
   entry.people.forEach((p, i) => {
+    const size = CARD_SIZES[i] ?? 5;
+    // Only odd sizes can hold the free centre; 4x4 fills every cell.
+    const joker = size % 2 === 1;
+    const centre = joker ? Math.floor((size * size) / 2) : -1;
+
     const cells = [];
     for (let c = 0, q = 0; c < size * size; c += 1) {
       if (c === centre) cells.push(null);
@@ -78,10 +87,11 @@ function buildState(code, { checkedCells, activeIndex = 0, theme }) {
     }
     const checked = cells.map((_, c) => c === centre);
     if (i === activeIndex) for (const c of checkedCells) checked[c] = true;
+
     cards[personId(i)] = {
       personId: personId(i),
       size,
-      joker: true,
+      joker,
       cells,
       checked,
       createdAt: now,
@@ -129,7 +139,22 @@ const SCENES = [
     },
   },
   {
-    file: '03-people',
+    // Person 2 on a 4x4 in their own colour: shows both the even board (no
+    // free centre) and that each person's board recolours.
+    file: '03-card-4x4',
+    theme: 'dark',
+    state: (code) =>
+      buildState(code, { checkedCells: [0, 2, 5, 9, 10, 15], activeIndex: 1, theme: 'dark' }),
+  },
+  {
+    // Person 3 on a 3x3, light theme, a third accent.
+    file: '04-card-3x3',
+    theme: 'light',
+    state: (code) =>
+      buildState(code, { checkedCells: [0, 2, 6], activeIndex: 2, theme: 'light' }),
+  },
+  {
+    file: '05-people',
     theme: 'light',
     state: (code) => buildState(code, { checkedCells: [1, 5, 12, 18], theme: 'light' }),
     async after(page) {
@@ -139,7 +164,7 @@ const SCENES = [
     },
   },
   {
-    file: '04-quotes',
+    file: '06-quotes',
     theme: 'light',
     state: (code) => buildState(code, { checkedCells: [0, 7, 11], theme: 'light' }),
     async after(page) {
