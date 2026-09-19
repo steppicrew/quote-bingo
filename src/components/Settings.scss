@@ -7,7 +7,9 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: v.$gap;
+    // Tighter than the modal's own gap: with a label above each button row,
+    // the default spacing pushed the panel past the bottom of a small phone.
+    gap: 6px;
     flex-wrap: wrap;
 
     // Translated labels differ in length, so one button in a pair wrapped to
@@ -23,9 +25,20 @@
     .row {
       align-items: stretch;
       flex: 1 1 100%;
+      flex-wrap: wrap;
 
       > button {
         flex: 1 1 0;
+        min-width: 0;
+      }
+
+      // The install state shares its row with the Share button. It is a status
+      // line, not a control, so it takes the whole width and the button sits
+      // on the line below — side by side, the long German string
+      // ("Installiert / nicht verfügbar") either ran under the button or
+      // squeezed it off the edge of the panel.
+      > .dim {
+        flex: 1 1 100%;
         min-width: 0;
       }
     }
@@ -34,10 +47,10 @@
   .about {
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    gap: 2px;
     font-size: 13px;
     border-top: 1px solid v.$border;
-    padding-top: 12px;
+    padding-top: 8px;
 
     // These are the way to the Play listing and the source, so they have to
     // read as links: `.about` is `dim`, which was overriding the accent colour

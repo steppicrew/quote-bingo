@@ -20,9 +20,18 @@
   max-width: 360px;
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 10px;
   align-items: center;
   box-shadow: v.$shadow;
+
+  // A modal can outgrow the screen — Settings on a small phone, or the QR
+  // panel once the extra controls appear — and without these it simply ran off
+  // the bottom with the Close button out of reach. Cap it to the viewport
+  // (minus the backdrop's padding and the system bars) and scroll inside.
+  max-height: calc(100dvh - 32px - env(safe-area-inset-top) - env(safe-area-inset-bottom));
+  overflow-y: auto;
+  // Keep momentum scrolling from dragging the page behind the modal.
+  overscroll-behavior: contain;
 
   h2 {
     margin: 0;
