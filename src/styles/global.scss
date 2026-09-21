@@ -261,10 +261,35 @@ a {
 // Explains the long-press magnifier, directly under the board. Pulled up
 // against it like .manage-hint so it reads as a note on the board rather than
 // a peer of the controls below.
+// Explains the long-press magnifier, directly under the board.
+//
+// Deliberately NOT `.dim` and not small: it is the one line on the screen that
+// tells someone what to do about text they are struggling to read, so setting
+// it smaller and fainter than body text — as it first was — defeated its own
+// purpose. Full-contrast text at 1rem, on a tinted panel so it reads as a
+// notice rather than a caption.
 .board-hint {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin: 0;
+  padding: 10px 14px;
+  border-radius: v.$radius-sm;
+  background: color-mix(in srgb, var(--primary) 12%, v.$surface);
+  border: 1px solid color-mix(in srgb, var(--primary) 35%, v.$border);
+  color: v.$text;
+  font-size: 1rem;
+  line-height: 1.35;
   text-align: center;
-  margin: -4px 0 0;
-  font-size: 0.85rem;
+}
+
+// The finger-press glyph next to the hint: a visual for the gesture, so the
+// line reads at a glance even before the words do.
+.board-hint-icon {
+  flex: 0 0 auto;
+  font-size: 1.25rem;
+  line-height: 1;
 }
 
 // Explains the Scan button on Verwalten; sits directly under it, so pull it

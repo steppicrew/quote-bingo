@@ -281,7 +281,14 @@ export function Game(): ReactNode {
                 onFitMeasured={onFitMeasured}
               />
             </div>
-            {showMagnifyHint && <p className="dim board-hint">{t('game.magnifyHint')}</p>}
+            {showMagnifyHint && (
+              <p className="board-hint">
+                <span className="board-hint-icon" aria-hidden="true">
+                  👆
+                </span>
+                {t('game.magnifyHint')}
+              </p>
+            )}
             {DEBUG_FIT && <FitDebug />}
             <div className="row">
               <label className="dim" htmlFor="size">
