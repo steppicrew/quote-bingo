@@ -102,6 +102,27 @@ export function useCellMagnifier(
     return () => el.removeEventListener('touchmove', block)
   }, [open, hostRef])
 
+  // Suppress the platform's own long-press.
+  //
+  // Android Chrome runs a ~500ms press of its own that selects the text under
+  // the finger and raises the copy/cut/select-all bar. That bar covers the
+  // bubble, and the selection cancels the pointer stream driving it, so the
+  // magnifier flashed up and died. `user-select: none` on the cells stops the
+  // selection but not the contextmenu event, which fires on long-press on
+  // Android and on right-click elsewhere, so it is cancelled here.
+  //
+  // Bound for the whole life of the board rather than only while the bubble is
+  // open: the platform gesture and ours run on near-identical timers, and
+  // arming this at 450ms would be a race against an event that may already
+  // have fired.
+  useEffect(() => {
+    const el = hostRef.current
+    if (!el) return
+    const block = (e: Event): void => e.preventDefault()
+    el.addEventListener('contextmenu', block)
+    return () => el.removeEventListener('contextmenu', block)
+  }, [hostRef])
+
   const onPointerDown = useCallback(
     (e: ReactPointerEvent): void => {
       if (!enabled || !e.isPrimary) return

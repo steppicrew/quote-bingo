@@ -107,6 +107,14 @@
   justify-content: center;
   text-align: center;
   overflow: hidden;
+  // A cell is a control, not prose. Without this Android runs its own
+  // long-press at ~500ms, selects the cell text and raises the
+  // copy/cut/select-all bar — which both covers the magnifier bubble and
+  // cancels the pointer stream that was driving it. `-webkit-touch-callout`
+  // is the separate iOS/WebKit path for the same gesture.
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
   // Grid items default to min-width/height:auto, letting content force the
   // track larger. Pin to 0 so every cell stays exactly one 1fr track — text
   // is scaled to the cell, never the other way round.
