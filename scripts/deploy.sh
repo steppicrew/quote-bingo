@@ -60,6 +60,16 @@ if [ ! -f dist/privacy/index.html ]; then
   echo "dist/privacy/index.html is missing — run 'yarn privacy' and rebuild." >&2
   exit 1
 fi
+# index.html alone is not enough: it is the entry locale (en) and is present
+# even when every other locale is missing. Since the rsync below uses --delete,
+# a dist/ built without `yarn privacy` would REMOVE the live localized policy
+# pages — the URLs Google Play links to. 9 locales = 8 subdirs + index.html.
+privacy_dirs=$(find dist/privacy -mindepth 1 -maxdepth 1 -type d | wc -l)
+if [ "$privacy_dirs" -lt 8 ]; then
+  echo "dist/privacy has $privacy_dirs locale dirs, expected 8 (+ index.html)." >&2
+  echo "Refusing to sync — --delete would strip the live policy pages." >&2
+  exit 1
+fi
 
 # --- upload ----------------------------------------------------------------
 ssh_cmd="ssh"
