@@ -85,6 +85,19 @@ fails when they drift.
 - The win screenshot **cannot be seeded**: `Game.tsx` baselines its
   completed-line count per card on entry, so a pre-completed line renders gold
   cells with no banner. It is seeded one tap short and then tapped.
+- **Which generated images are committed.** Launcher icons, splash, the Play
+  icon and the feature graphics are **in the repo** (~1.9M). They are
+  deterministic — the `-strip` above means a rerun on an unchanged master is a
+  no-op in `git status` — and resource linking needs them, so leaving them out
+  made `yarn android:build` hard-fail on any machine without ImageMagick 7.
+  `build-android.sh` now regenerates them only when `magick -version` actually
+  runs, and otherwise builds from the committed PNGs; only an
+  `assets/icon/icon.svg` edit needs IM, on a machine that has it.
+- **Screenshots stay ignored** (`assets/screenshots/`, 32M). `yarn screenshots`
+  drives a real browser and the win shot is tapped live, so its confetti frame
+  differs every run — 10 of 12 are pixel-stable, `02-bingo` is not. Run
+  `yarn screenshots` before publishing listing images; `play-publish` skips the
+  slot when the directory is absent.
 
 ## Architecture
 
