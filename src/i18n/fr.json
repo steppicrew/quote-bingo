@@ -26,7 +26,8 @@
     "poolTooSmall": "« {{name}} » a {{count}} citations – la plus petite carte (3×3) en nécessite {{min}}.",
     "addQuotes": "Ajouter des citations",
     "size": "Taille",
-    "reshuffle": "Remélanger"
+    "reshuffle": "Remélanger",
+    "magnifyHint": "Maintenez une case pour l’agrandir"
   },
   "manage": {
     "newPersonPlaceholder": "Nom de la nouvelle personne",

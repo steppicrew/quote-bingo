@@ -22,6 +22,13 @@ interface Props {
    * plain render, which gets no slide animation.
    */
   slideFrom?: -1 | 1 | null
+  /**
+   * Called whenever the magnifier opens or closes. The swipe handler lives a
+   * level up and must not switch person while a cell is being read — sliding
+   * across the board to read on is a long horizontal drag, which is exactly
+   * the shape of a person swipe.
+   */
+  onMagnifyChange?: (open: boolean) => void
 }
 
 export function BingoBoard({
@@ -31,6 +38,7 @@ export function BingoBoard({
   shakeKey = 0,
   pulseCells,
   slideFrom = null,
+  onMagnifyChange,
 }: Props): ReactNode {
   const { t } = useTranslation()
   const winners = useMemo(() => winningCells(card.size, card.checked), [card.size, card.checked])
@@ -103,6 +111,14 @@ export function BingoBoard({
   }, [])
 
   const magnifier = useCellMagnifier(cellAt, boardRef)
+
+  // Report open/close upward so the swipe handler can stand down. Also report
+  // closed on unmount: the board is remounted on every person switch and
+  // reshuffle, and a flag left set would disable swiping for good.
+  useEffect(() => {
+    onMagnifyChange?.(magnifier.open)
+  }, [magnifier.open, onMagnifyChange])
+  useEffect(() => () => onMagnifyChange?.(false), [onMagnifyChange])
 
   const magnified = magnifier.target
 

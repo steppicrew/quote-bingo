@@ -26,7 +26,8 @@
     "poolTooSmall": "“{{name}}” ha {{count}} citazioni – la cartella più piccola (3×3) ne richiede {{min}}.",
     "addQuotes": "Aggiungi citazioni",
     "size": "Dimensione",
-    "reshuffle": "Rimescola"
+    "reshuffle": "Rimescola",
+    "magnifyHint": "Tieni premuta una casella per ingrandirla"
   },
   "manage": {
     "newPersonPlaceholder": "Nome della nuova persona",

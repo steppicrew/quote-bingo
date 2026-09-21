@@ -26,7 +26,8 @@
     "poolTooSmall": "「{{name}}」には名言が {{count}} 件あります。最小のカード（3×3）には {{min}} 件必要です。",
     "addQuotes": "名言を追加",
     "size": "サイズ",
-    "reshuffle": "引き直す"
+    "reshuffle": "引き直す",
+    "magnifyHint": "マスを長押しすると拡大します"
   },
   "manage": {
     "newPersonPlaceholder": "新しい人の名前",

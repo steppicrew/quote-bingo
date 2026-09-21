@@ -26,7 +26,8 @@
     "poolTooSmall": "«{{name}}» tiene {{count}} citas; el cartón más pequeño (3×3) necesita {{min}}.",
     "addQuotes": "Añadir citas",
     "size": "Tamaño",
-    "reshuffle": "Rebarajar"
+    "reshuffle": "Rebarajar",
+    "magnifyHint": "Mantén pulsada una casilla para ampliarla"
   },
   "manage": {
     "newPersonPlaceholder": "Nombre de la nueva persona",

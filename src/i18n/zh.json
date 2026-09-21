@@ -26,7 +26,8 @@
     "poolTooSmall": "“{{name}}”有 {{count}} 条语录——最小的卡片（3×3）需要 {{min}} 条。",
     "addQuotes": "添加语录",
     "size": "尺寸",
-    "reshuffle": "重新洗牌"
+    "reshuffle": "重新洗牌",
+    "magnifyHint": "长按格子可放大"
   },
   "manage": {
     "newPersonPlaceholder": "新成员的名字",

@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import { type TFunction } from 'i18next'
 import { useStore } from '../store'
@@ -14,6 +14,17 @@ import { BingoBoard } from '../components/BingoBoard'
 import { WinBanner } from '../components/WinBanner'
 
 const MIN_POOL = quotesNeeded(SIZES[0]!) // smallest card's requirement (3x3 -> 8)
+
+/**
+ * Board size from which the magnifier hint is worth showing.
+ *
+ * Measured on a 390px phone: a 5x5 fits its text at a median 14px, which reads
+ * fine, but a 6x6 drops to 12px and a 7x7 to 9px with two thirds of the cells
+ * under 10px. Below 6 the gesture exists but nobody needs telling about it.
+ */
+const HINT_FROM_SIZE = 6
+/** Times to show the hint before assuming it has been read. */
+const MAGNIFY_HINT_LIMIT = 3
 
 /** Banner text for a win of `combo` lines completed by one tap. */
 function winLabel(t: TFunction, combo: number): string {
@@ -35,6 +46,8 @@ export function Game(): ReactNode {
   const toggleCell = useStore((s) => s.toggleCell)
   const soundMode = useStore((s) => s.soundMode)
   const soundKind = useStore((s) => s.soundKind)
+  const magnifyHintsSeen = useStore((s) => s.magnifyHintsSeen)
+  const noteMagnifyHintSeen = useStore((s) => s.noteMagnifyHintSeen)
 
   // Win presentation: banner text + a bump key that retriggers the board shake.
   const [winBanner, setWinBanner] = useState<{ text: string; big: boolean } | null>(null)
@@ -64,7 +77,14 @@ export function Game(): ReactNode {
     setSlide((s) => ({ dir, key: (s?.key ?? 0) + 1 }))
     setActivePerson(next.id)
   }
-  const swipe = useSwipe(swipePerson)
+  // Set while a cell is magnified. A ref, not state: the swipe handler reads
+  // it during a touch, and re-rendering the board mid-gesture to carry a flag
+  // would remount the cells being read.
+  const magnifyingRef = useRef(false)
+  const onMagnifyChange = useCallback((open: boolean) => {
+    magnifyingRef.current = open
+  }, [])
+  const swipe = useSwipe(swipePerson, () => magnifyingRef.current)
 
   const poolCount = active ? quotes.filter((q) => q.personId === active.id).length : 0
   const ready = poolCount >= MIN_POOL
@@ -132,6 +152,28 @@ export function Game(): ReactNode {
     prevLines.current = { cardId: card.personId, lines }
   }, [card, t, soundMode, soundKind])
 
+  // The magnifier hint: only on a board dense enough to need it, only until it
+  // has been seen a few times, and not on a device driven by a mouse — the
+  // gesture works there but nobody goes looking for it, so it would be noise.
+  const coarsePointer =
+    typeof window !== 'undefined' && window.matchMedia('(hover: none)').matches
+  const showMagnifyHint =
+    coarsePointer &&
+    !!card &&
+    card.size >= HINT_FROM_SIZE &&
+    magnifyHintsSeen < MAGNIFY_HINT_LIMIT
+
+  // Count one showing per board that displays it, not per render. Keyed on the
+  // card id so switching person or resizing counts again, while a win, a tap
+  // or a re-render of the same board does not.
+  const hintedCard = useRef<string | null>(null)
+  useEffect(() => {
+    if (!showMagnifyHint || !card) return
+    if (hintedCard.current === card.personId) return
+    hintedCard.current = card.personId
+    noteMagnifyHintSeen()
+  }, [showMagnifyHint, card, noteMagnifyHintSeen])
+
   const reshuffle = (): void => {
     if (active && confirm(t('game.reshuffleConfirm'))) {
       regenerateCard(active.id)
@@ -196,8 +238,10 @@ export function Game(): ReactNode {
                 shakeKey={shakeKey}
                 pulseCells={pulseCells}
                 slideFrom={slide?.dir ?? null}
+                onMagnifyChange={onMagnifyChange}
               />
             </div>
+            {showMagnifyHint && <p className="dim board-hint">{t('game.magnifyHint')}</p>}
             <div className="row">
               <label className="dim" htmlFor="size">
                 {t('game.size')}

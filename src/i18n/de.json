@@ -26,7 +26,8 @@
     "poolTooSmall": "„{{name}}“ hat {{count}} Zitate – für die kleinste Karte (3×3) werden {{min}} benötigt.",
     "addQuotes": "Zitate hinzufügen",
     "size": "Größe",
-    "reshuffle": "Neu mischen"
+    "reshuffle": "Neu mischen",
+    "magnifyHint": "Feld gedrückt halten zum Vergrößern"
   },
   "manage": {
     "newPersonPlaceholder": "Name der neuen Person",

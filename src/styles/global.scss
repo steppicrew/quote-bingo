@@ -258,6 +258,15 @@ a {
   }
 }
 
+// Explains the long-press magnifier, directly under the board. Pulled up
+// against it like .manage-hint so it reads as a note on the board rather than
+// a peer of the controls below.
+.board-hint {
+  text-align: center;
+  margin: -4px 0 0;
+  font-size: 0.85rem;
+}
+
 // Explains the Scan button on Verwalten; sits directly under it, so pull it
 // up against the button rather than taking the full content gap.
 .manage-hint {

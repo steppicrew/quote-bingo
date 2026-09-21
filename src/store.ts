@@ -52,6 +52,13 @@ interface State {
   locale: Locale
   soundMode: SoundMode
   soundKind: SoundKind
+  /**
+   * How many times the "hold a cell to magnify it" hint has been shown.
+   * The gesture is not discoverable on its own, but it only matters on a
+   * board dense enough to be hard to read, and a permanent line under every
+   * board would be clutter — so it retires itself after MAGNIFY_HINT_LIMIT.
+   */
+  magnifyHintsSeen: number
   hydrated: boolean
 }
 
@@ -87,6 +94,8 @@ interface Actions {
   setSoundKind: (soundKind: SoundKind) => void
   /** Cycle the nav-bar sound toggle: on → vibrate → off → on. */
   cycleSoundMode: () => void
+  /** Count one showing of the magnifier hint, so it eventually stops. */
+  noteMagnifyHintSeen: () => void
 
   /** The full persisted state for an "export all data" backup. */
   backupData: () => BackupData
@@ -106,6 +115,7 @@ export const useStore = create<State & Actions>()(
       locale: 'system',
       soundMode: 'on',
       soundKind: 'tadaa',
+      magnifyHintsSeen: 0,
       hydrated: false,
 
       addPerson: (name) => {
@@ -262,6 +272,8 @@ export const useStore = create<State & Actions>()(
           return { soundMode: next[s.soundMode] }
         }),
 
+      noteMagnifyHintSeen: () => set((s) => ({ magnifyHintsSeen: s.magnifyHintsSeen + 1 })),
+
       backupData: () => {
         const s = get()
         return {
@@ -303,6 +315,11 @@ export const useStore = create<State & Actions>()(
         locale: s.locale,
         soundMode: s.soundMode,
         soundKind: s.soundKind,
+        // Persisted so the hint retires across sessions, but deliberately NOT
+        // part of backupData: it is UI bookkeeping, not the user's data, and
+        // restoring a backup on a new device should not suppress a hint that
+        // device has never shown.
+        magnifyHintsSeen: s.magnifyHintsSeen,
       }),
       migrate: (persisted, version) => {
         const p = persisted as Partial<State> | undefined

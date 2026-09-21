@@ -26,7 +26,8 @@
     "poolTooSmall": "“{{name}}” has {{count}} quotes – the smallest card (3×3) needs {{min}}.",
     "addQuotes": "Add quotes",
     "size": "Size",
-    "reshuffle": "Reshuffle"
+    "reshuffle": "Reshuffle",
+    "magnifyHint": "Hold a cell to magnify it"
   },
   "manage": {
     "newPersonPlaceholder": "Name of the new person",

@@ -26,7 +26,8 @@
     "poolTooSmall": "“{{name}}” tem {{count}} citações – a cartela mais pequena (3×3) precisa de {{min}}.",
     "addQuotes": "Adicionar citações",
     "size": "Tamanho",
-    "reshuffle": "Baralhar"
+    "reshuffle": "Baralhar",
+    "magnifyHint": "Mantenha uma casa premida para ampliar"
   },
   "manage": {
     "newPersonPlaceholder": "Nome da nova pessoa",
