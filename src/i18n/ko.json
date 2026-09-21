@@ -61,12 +61,11 @@
   },
   "accent": {
     "default": "기본",
-    "indigo": "인디고",
-    "rose": "로즈",
-    "emerald": "에메랄드",
     "amber": "앰버",
     "sky": "스카이",
-    "violet": "바이올렛"
+    "rose": "로즈",
+    "emerald": "에메랄드",
+    "purple": "바이올렛"
   },
   "settings": {
     "title": "설정",

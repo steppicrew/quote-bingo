@@ -64,12 +64,11 @@
   },
   "accent": {
     "default": "Default",
-    "indigo": "Indigo",
-    "rose": "Rose",
-    "emerald": "Emerald",
     "amber": "Amber",
     "sky": "Sky",
-    "violet": "Violet"
+    "rose": "Rose",
+    "emerald": "Emerald",
+    "purple": "Violet"
   },
   "settings": {
     "title": "Settings",

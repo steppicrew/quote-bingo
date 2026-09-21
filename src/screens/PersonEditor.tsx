@@ -4,7 +4,7 @@ import clsx from 'clsx'
 import { useStore } from '../store'
 import { replaceRoute } from '../router'
 import { SIZES, quotesNeeded } from '../types'
-import { ACCENT_NAMES, accentSwatch } from '../lib/accents'
+import { ACCENT_NAMES, accentSwatch, normalizeAccent } from '../lib/accents'
 import { exportToFile } from '../lib/share'
 import { useToast } from '../components/toast-context'
 
@@ -76,18 +76,23 @@ export function PersonEditor({ id }: { id: string }): ReactNode {
 
       <div className="row accent-row">
         <span className="dim">{t('editor.accent')}</span>
-        {ACCENT_NAMES.map((name) => (
-          <button
-            key={name}
-            type="button"
-            className={clsx('accent-swatch', { active: (person.accent ?? 'default') === name })}
-            style={{ background: accentSwatch(name) }}
-            aria-label={t(`accent.${name}`)}
-            aria-pressed={(person.accent ?? 'default') === name}
-            title={t(`accent.${name}`)}
-            onClick={() => setAccent(id, name)}
-          />
-        ))}
+        {ACCENT_NAMES.map((name) => {
+          // Compare normalised, so a person still stored with a retired accent
+          // shows the preset it maps to as selected instead of nothing at all.
+          const selected = normalizeAccent(person.accent) === name
+          return (
+            <button
+              key={name}
+              type="button"
+              className={clsx('accent-swatch', { active: selected })}
+              style={{ background: accentSwatch(name) }}
+              aria-label={t(`accent.${name}`)}
+              aria-pressed={selected}
+              title={t(`accent.${name}`)}
+              onClick={() => setAccent(id, name)}
+            />
+          )
+        })}
       </div>
 
       <div className="row">

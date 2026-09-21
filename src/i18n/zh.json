@@ -61,12 +61,11 @@
   },
   "accent": {
     "default": "默认",
-    "indigo": "靛蓝",
-    "rose": "玫红",
-    "emerald": "翠绿",
     "amber": "琥珀",
     "sky": "天蓝",
-    "violet": "紫罗兰"
+    "rose": "玫红",
+    "emerald": "翠绿",
+    "purple": "紫罗兰"
   },
   "settings": {
     "title": "设置",

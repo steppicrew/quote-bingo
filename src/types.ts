@@ -1,7 +1,16 @@
 export type Id = string
 
 /** Named accent presets a person's board can use (else the default theme). */
-export type AccentName = 'default' | 'indigo' | 'rose' | 'emerald' | 'amber' | 'sky' | 'violet'
+export type AccentName = 'default' | 'amber' | 'sky' | 'rose' | 'emerald' | 'purple'
+
+/**
+ * Accents that existed before the palette was spread out, mapped to their
+ * closest surviving hue. Both were purples too near the theme colour to tell
+ * apart (see ACCENTS in lib/accents.ts). Persisted state and imported backups
+ * can still carry them, and `accentSwatch` indexes ACCENTS directly, so they
+ * are normalised on the way in rather than left to resolve to undefined.
+ */
+export type LegacyAccentName = 'indigo' | 'violet'
 
 export interface Person {
   id: Id

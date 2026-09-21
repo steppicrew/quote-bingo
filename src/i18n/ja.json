@@ -61,12 +61,11 @@
   },
   "accent": {
     "default": "デフォルト",
-    "indigo": "インディゴ",
-    "rose": "ローズ",
-    "emerald": "エメラルド",
     "amber": "アンバー",
     "sky": "スカイ",
-    "violet": "バイオレット"
+    "rose": "ローズ",
+    "emerald": "エメラルド",
+    "purple": "バイオレット"
   },
   "settings": {
     "title": "設定",
