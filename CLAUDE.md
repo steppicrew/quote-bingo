@@ -25,7 +25,8 @@ localized (de/en/fr/es/it/pt/zh/ja/ko) via react-i18next; the German build name 
 - `yarn build` — `tsc -b` typecheck + `vite build` → `dist/`.
 - `yarn lint` — ESLint (flat config, type-checked rules). Must be clean before commit.
 - `yarn preview` — serve the production build locally (test PWA/offline here).
-- `./deploy.sh` — build + rsync `dist/` to the web host. **Not committed** (gitignored).
+- `yarn deploy [--dry-run|--no-build]` — `yarn privacy` + build + rsync `dist/` to the
+  web host. Committed (`scripts/deploy.sh`); the host lives in `.env`, which is not.
 - `yarn assets` — icons, splashes and localised launcher labels from one SVG.
 - `yarn store-listing` / `yarn check-locales` — validate + export the Play listing.
 - `yarn screenshots` / `yarn feature-graphic` / `yarn privacy` — generate store art and the policy page.
@@ -78,7 +79,15 @@ fails when they drift.
   locale, not translated — the joke only lands if they are things that culture
   actually says on repeat.
 - `privacy/POLICY.json` — one source for the in-app `#/privacy` screen and the
-  static `/privacy/` page Play links to, so the two cannot drift.
+  static `/privacy/` page Play links to, so the two cannot drift. `yarn privacy`
+  writes `public/privacy/` (9 locales) which Vite then copies into `dist/`, so it
+  must run **before** the build — `yarn deploy` does that itself. Note 9 locales =
+  **8 subdirs + `index.html`**, because the entry locale (`en`) is the index rather
+  than its own directory; a check expecting 9 directories fails every time. Since
+  the deploy rsyncs with `--delete`, a `dist/` built without these silently strips
+  the live policy pages, so `scripts/deploy.sh` counts the locale dirs and refuses
+  to sync when they are missing (it happened; `index.html` alone survives and is
+  not a sufficient check).
 - All PNGs are written with `-strip -define png:exclude-chunk=time`; without it
   an unchanged master re-renders under a new sha256 and the publisher
   re-uploads everything.
@@ -93,6 +102,11 @@ fails when they drift.
   `build-android.sh` now regenerates them only when `magick -version` actually
   runs, and otherwise builds from the committed PNGs; only an
   `assets/icon/icon.svg` edit needs IM, on a machine that has it.
+  **The web deploy never needs ImageMagick at all** — the PWA icons in `public/`
+  are committed and `gen-privacy.mjs` is pure Node, so `yarn deploy` on a clean
+  clone needs only Node + Yarn + a `.env`. IM is confined to `gen-assets.mjs`,
+  `gen-feature-graphic.mjs` and `build-android.sh` (verified by building a fresh
+  clone with `magick` stubbed to exit 127).
 - **Screenshots stay ignored** (`assets/screenshots/`, 32M). `yarn screenshots`
   drives a real browser and the win shot is tapped live, so its confetti frame
   differs every run — 10 of 12 are pixel-stable, `02-bingo` is not. Run
@@ -141,9 +155,24 @@ fails when they drift.
   `App` also sets `document.title` from `app.title` (keyed on `i18n.language` so it updates
   after the language resolves); `index.html` holds the pre-JS fallback "Zitate-Bingo".
 - **Modal dismissal** (`src/lib/useModalDismiss.ts`): phone Back button + Escape close
-  modals via a pushed history entry. Note the module-level `suppressNextPop` guard — the
-  cleanup's async `history.back()` popstate must not be read as a user Back under
-  StrictMode. Used by `Settings`, `QrShow`, `QrScan`.
+  modals via a pushed history entry. Every modal also closes on a backdrop click, with
+  `stopPropagation` on the panel itself. Used by `Settings`, `QrShow`, `QrScan`,
+  `ShareApp`, `Confirm`. Two module-level guards, both about **nesting** — a confirm
+  dialog opens on top of `Settings`:
+  - `pendingSelfPops` is a **counter, not a boolean**. The cleanup's async
+    `history.back()` popstate must not be read as a user Back under StrictMode; with two
+    modals mounted, StrictMode runs two cleanups in one tick, and a single boolean
+    swallows only the first — the second closed the dialog in the same tick it opened.
+    That bug reproduced **only under `yarn dev`** (StrictMode double-invokes effects in
+    development), so `yarn preview` looked fine: test modal lifecycle on the dev server.
+  - `stack` + `isTop()`: Back and Escape are single events every mounted listener sees,
+    so without a top-of-stack guard one press closed the confirm *and* `Settings` under it.
+- **Confirmations** (`src/components/Confirm.tsx` + `confirm-context.ts`):
+  `ConfirmProvider` (mounted in `App`, above the screens) replaces `window.confirm`;
+  `useConfirm()` returns `(opts) => Promise<boolean>`, so a call site keeps its control
+  flow as `if (await confirm({ message, danger }))`. The native dialog is browser chrome
+  — OS-styled, origin-prefixed, ignoring the app theme, and blocking in the Android
+  WebView. Dismissing by backdrop/Escape/Back resolves `false`, like cancelling it did.
 - **Share** (`src/lib/share.ts`): `encodeList`/`decodeList` (gzip+base64url for QR),
   `exportToFile`/`importFromFile` (JSON). Payload is **v2** — `QuoteListExport` carries a
   stable **id per quote** (`{id,text}[]`); v1 (text-only `string[]`) payloads are still
@@ -203,7 +232,11 @@ fails when they drift.
   `playFanfare(mode, kind, big, times)` (`src/lib/fanfare.ts`, dependency-free Web Audio
   synth). Two orthogonal persisted settings: `soundMode` (`'on'|'vibrate'|'off'` — off is
   silent, vibrate is haptics-only, on plays audio + haptics; nav-bar icon cycles it, and
-  the web can't read the phone's silent switch so this is the manual opt-out) and
+  the web can't read the phone's silent switch so this is the manual opt-out; the button
+  lives in `SoundToggle.tsx`, which must sit under `ToastProvider` to reach the toast
+  context, and it reports the mode it switched *to* — the icon alone can't say whether it
+  shows the current state or the next one, so it reads the new value back from the store
+  rather than re-deriving the cycle order) and
   `soundKind` (`'tadaa'|'arpeggio'`, the fanfare used when on). `times` repeats the
   fanfare per completed line (double/triple bingo). `WinBanner` (full-screen flash) and a
   scoped cell pulse: `winningCellsThrough(size, checked, index)` in `card.ts` returns only
@@ -213,9 +246,13 @@ fails when they drift.
 - **Routing** (`src/router.ts`): hash-based. Default route `#/` = **Spielen** (game).
   `#/manage` = Verwalten, `#/person/:id` = quote editor. First start with no persons
   redirects to Verwalten (`src/App.tsx`).
+- **Toasts** (`src/components/Toast.tsx`): one at a time — a new message **replaces**
+  whatever is on screen rather than stacking under it. Stacked toasts read as a list of
+  equally-current states, which is wrong for a toggle: three taps of the sound button
+  would leave three states visible, only the last one true.
 - **Screens**: `Game`, `Manage`, `PersonEditor`. **Components**: `BingoBoard`, `Cell`,
-  `PersonSwitcher`, `QrShow`, `QrScan` (both lazy-loaded), `Toast`, `ThemeToggle`,
-  `LanguageToggle`, `WinBanner`, `Settings`.
+  `PersonSwitcher`, `QrShow`, `QrScan` (both lazy-loaded), `Toast`, `Confirm`,
+  `SoundToggle`, `ThemeToggle`, `LanguageToggle`, `WinBanner`, `Settings`.
 
 ## Card sizes
 
@@ -232,7 +269,8 @@ joker-off requirement.
 - `noUncheckedIndexedAccess` is on: array/record access is `T | undefined`. Handle it.
 - **All user-facing strings go through `t()`** (react-i18next). Add new keys to every
   locale in `src/i18n/*.json`; `de` is authored first. Use count/interpolation keys for
-  plurals and variables — no manual ternaries or template concatenation.
+  plurals and variables — no manual ternaries or template concatenation. A `common`
+  namespace holds strings reused across screens (`common.ok`, `common.cancel`).
 - Zustand persist is at **version 3**: `migrate` drops legacy cards lacking `size` (v0→v1),
   defaults `joker: true` on cards lacking the flag (v1→v2), and remints every quote id from
   the old UUID to a short base36 id, rewriting matching card `cells` through the same
