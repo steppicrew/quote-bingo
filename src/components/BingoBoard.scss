@@ -8,6 +8,18 @@
   touch-action: pan-y;
 }
 
+// While a cell is magnified the finger drags across the board to read
+// neighbours, which is a vertical gesture as often as a horizontal one.
+// `pan-y` on the wrapper hands vertical drags to the browser as a scroll and
+// the pointermove events stop arriving mid-read, so the open magnifier takes
+// the gesture back. The class is set on the board itself rather than via
+// `:has()` on the wrapper because a touch-action change only takes effect from
+// the NEXT gesture — the board also calls preventDefault on the move events of
+// the gesture that is already running, which is what actually holds this one.
+.board.magnifying {
+  touch-action: none;
+}
+
 .board {
   display: grid;
   gap: 6px;

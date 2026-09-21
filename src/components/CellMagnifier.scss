@@ -1,0 +1,81 @@
+@use '../styles/vars' as v;
+
+// The long-press read-out. Fixed to the viewport because it is portalled onto
+// body — the board clips its own overflow for the person-switch slide, so a
+// bubble in the grid would be cut off exactly at the edges where it has to
+// escape.
+.cell-magnifier {
+  position: fixed;
+  z-index: 9000;
+  // Purely informational, and the pointer is mid-gesture: never let it take a
+  // hit and break the drag that is driving it.
+  pointer-events: none;
+
+  max-width: min(78vw, 22rem);
+  padding: 12px 16px;
+  border-radius: v.$radius;
+  background: v.$surface-2;
+  border: 1px solid v.$primary;
+  box-shadow: v.$shadow;
+
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  // Big enough to read at arm's length, which is the whole point — a 7x7 cell
+  // renders its text near 9px. No auto-fit here: the bubble grows to its text
+  // instead of the text shrinking to the box.
+  font-size: 1.25rem;
+  font-weight: 600;
+  line-height: 1.35;
+  text-align: center;
+  // Long quotes wrap rather than forcing the bubble past max-width.
+  overflow-wrap: break-word;
+  hyphens: auto;
+
+  animation: cell-magnifier-in 0.12s ease-out;
+}
+
+.cell-magnifier-text {
+  min-width: 0;
+}
+
+// Mirrors the board's checked state so the bubble is not ambiguous about
+// which cells are already ticked.
+.cell-magnifier-check {
+  flex: 0 0 auto;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: v.$primary;
+  position: relative;
+
+  &::after {
+    content: '';
+    position: absolute;
+    left: 6px;
+    top: 2px;
+    width: 4px;
+    height: 9px;
+    border: solid #fff;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+  }
+}
+
+@keyframes cell-magnifier-in {
+  from {
+    opacity: 0;
+    transform: scale(0.94);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cell-magnifier {
+    animation: none;
+  }
+}

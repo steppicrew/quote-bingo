@@ -1,9 +1,11 @@
-import { useEffect, useMemo, useRef, type ReactNode } from 'react'
+import { useCallback, useEffect, useMemo, useRef, type ReactNode } from 'react'
 import clsx from 'clsx'
 import { useTranslation } from 'react-i18next'
 import { type Card, centerIndex } from '../types'
 import { winningCells } from '../lib/card'
+import { useCellMagnifier, type MagnifierTarget } from '../lib/useCellMagnifier'
 import { Cell } from './Cell'
+import { CellMagnifier } from './CellMagnifier'
 import './BingoBoard.scss'
 
 interface Props {
@@ -33,6 +35,16 @@ export function BingoBoard({
   const { t } = useTranslation()
   const winners = useMemo(() => winningCells(card.size, card.checked), [card.size, card.checked])
   const center = centerIndex(card.size, card.joker)
+
+  // Resolved once so the grid and the magnifier bubble cannot disagree about
+  // what a cell says.
+  const texts = useMemo(
+    () =>
+      card.cells.map((quoteId, i) =>
+        i === center ? t('board.free') : (quoteId && quoteText.get(quoteId)) || t('board.deletedQuote'),
+      ),
+    [card.cells, center, quoteText, t],
+  )
 
   // On each new win (shakeKey bump) replay the board shake and pulse the cells
   // of the line(s) the last tap completed (`.pulse`, set via pulseCells).
@@ -71,10 +83,42 @@ export function BingoBoard({
     return () => ro.disconnect()
   }, [])
 
+  // Viewport point -> cell, for the magnifier. Walks the real DOM rather than
+  // computing from the grid template: the board is the authority on where its
+  // cells ended up, and this stays correct through the slide animation, the
+  // safe-area insets and any future gap change.
+  const cellAt = useCallback((x: number, y: number): MagnifierTarget | null => {
+    const board = boardRef.current
+    if (!board) return null
+    const cells = board.children
+    for (let i = 0; i < cells.length; i++) {
+      const el = cells[i]
+      if (!el) continue
+      const rect = el.getBoundingClientRect()
+      if (x >= rect.left && x <= rect.right && y >= rect.top && y <= rect.bottom) {
+        return { index: i, rect }
+      }
+    }
+    return null
+  }, [])
+
+  const magnifier = useCellMagnifier(cellAt, boardRef)
+
+  const magnified = magnifier.target
+
   return (
     <div
       ref={boardRef}
-      className={clsx('board', slideFrom === 1 && 'slide-next', slideFrom === -1 && 'slide-prev')}
+      className={clsx(
+        'board',
+        slideFrom === 1 && 'slide-next',
+        slideFrom === -1 && 'slide-prev',
+        magnifier.open && 'magnifying',
+      )}
+      {...magnifier.handlers}
+      // Capture phase, like the swipe guard: swallow the click that ends a
+      // long-press before it reaches the cell and toggles it.
+      onClickCapture={magnifier.onClickCapture}
       style={{
         // minmax(0, 1fr) — not plain 1fr — so a cell with tall wrapped text
         // can't force its row's min track size to the content height. Plain
@@ -84,12 +128,10 @@ export function BingoBoard({
         gridTemplateRows: `repeat(${card.size}, minmax(0, 1fr))`,
       }}
     >
-      {card.cells.map((quoteId, i) => {
+      {card.cells.map((_quoteId, i) => {
         const isFree = i === center
         const checked = card.checked[i] ?? false
-        const text = isFree
-          ? t('board.free')
-          : (quoteId && quoteText.get(quoteId)) || t('board.deletedQuote')
+        const text = texts[i] ?? ''
         return (
           <Cell
             // Include the card's creation stamp so every reshuffle remounts the
@@ -105,6 +147,14 @@ export function BingoBoard({
           />
         )
       })}
+
+      {magnified && (
+        <CellMagnifier
+          text={texts[magnified.index] ?? ''}
+          rect={magnified.rect}
+          checked={card.checked[magnified.index] ?? false}
+        />
+      )}
     </div>
   )
 }
