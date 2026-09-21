@@ -6,8 +6,8 @@ dev-dist
 *.tsbuildinfo
 Screenshot.png
 
-# Local deploy script (host-specific, not part of the repo)
-deploy.sh
+# The deploy script is committed (scripts/deploy.sh); the host it talks to is
+# configured in .env, which is not.
 
 # Editor lock files (Emacs writes .#file as a dangling symlink)
 .#*
