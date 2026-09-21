@@ -48,15 +48,15 @@ export function useAutoFitText(
       // `max-height`/`overflow` so `scrollHeight` reports the true (possibly
       // overflowing) content height instead of being clamped to the cell.
       const s = el.style
-      const prev = {
-        maxHeight: s.maxHeight,
-        overflow: s.overflow,
-        hyphens: s.hyphens,
-        wordBreak: s.wordBreak,
-        overflowWrap: s.overflowWrap,
-      }
+      const prev = { maxHeight: s.maxHeight, overflow: s.overflow }
       s.maxHeight = 'none'
       s.overflow = 'visible'
+      // Clear any wrapping rules a previous fit left inline (pass 1 keeps its
+      // own for rendering), so each run starts from the stylesheet's values
+      // and `prev` can never capture a leftover as the baseline.
+      s.hyphens = ''
+      s.wordBreak = ''
+      s.overflowWrap = ''
 
       // A descender on the LAST line (the g of "gemacht") can paint below the
       // line box, and `.cell-text` clamps to the cell with its own
@@ -142,27 +142,43 @@ export function useAutoFitText(
       s.overflowWrap = 'normal'
       const whole = search()
 
-      if (whole === null || whole < WHOLE_WORD_FLOOR_PX) {
+      if (whole !== null && whole >= WHOLE_WORD_FLOOR_PX) {
+        // Pass 1 won, so KEEP its rules on for rendering. They are not just a
+        // measurement trick: with the stylesheet's `hyphens: auto` restored,
+        // the same text at the same size wraps differently and can overflow
+        // the cell it was just proved to fit.
+        //
+        //   "Fackelzug zum 40. Jahrestag", 12px in a 54px box
+        //     measured (hyphens none): Fackelzug / zum 40. / Jahrestag   45px
+        //     rendered (hyphens auto): Fackelz / ug zum / 40. / Jahrestag 60px
+        //
+        // More break opportunities means more, shorter lines — hyphenation
+        // makes a block taller, not shorter. Measuring one way and rendering
+        // the other clipped the last line on a narrow (phone) board.
+        s.fontSize = `${whole}px`
+        s.maxHeight = prev.maxHeight
+        s.overflow = prev.overflow
+        return true
+      }
+
+      {
         // Pass 2: too small (or impossible) to keep words intact, so allow
         // hyphenation and, failing that, breaking. Restore the stylesheet's
         // rules first so the measurement matches how it will actually render.
-        s.hyphens = prev.hyphens
-        s.wordBreak = prev.wordBreak
-        s.overflowWrap = prev.overflowWrap
+        s.hyphens = ''
+        s.wordBreak = ''
+        s.overflowWrap = ''
         const split = search()
         // Nothing fits even at MIN_PX (one unbreakable token wider than the
         // cell): keep MIN_PX and let the stylesheet's overflow-wrap chop it.
         s.fontSize = `${split ?? MIN_PX}px`
-      } else {
-        s.fontSize = `${whole}px`
       }
 
-      // Restore the constraints for normal rendering.
+      // Restore the constraints for normal rendering. The wrapping rules are
+      // already the stylesheet's own on this path — pass 1 returns early and
+      // deliberately keeps its stricter ones.
       s.maxHeight = prev.maxHeight
       s.overflow = prev.overflow
-      s.hyphens = prev.hyphens
-      s.wordBreak = prev.wordBreak
-      s.overflowWrap = prev.overflowWrap
       return true
     }
 
