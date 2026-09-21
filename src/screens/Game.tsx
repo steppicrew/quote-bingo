@@ -17,13 +17,18 @@ import { FitDebug } from '../components/FitDebug'
 const MIN_POOL = quotesNeeded(SIZES[0]!) // smallest card's requirement (3x3 -> 8)
 
 /**
- * Board size from which the magnifier hint is worth showing.
+ * Font size (px) at or below which the magnifier hint is worth showing.
  *
- * Measured on a 390px phone: a 5x5 fits its text at a median 14px, which reads
- * fine, but a 6x6 drops to 12px and a 7x7 to 9px with two thirds of the cells
- * under 10px. Below 6 the gesture exists but nobody needs telling about it.
+ * Keyed on what the auto-fit actually produced, not on the card size: a 5x5 on
+ * a 375px phone fits its longest quotes at 7.5-8.3px, which is past reading
+ * size even though the board is not large. Guessing from the size alone missed
+ * exactly that case.
+ *
+ * 11px is about where a cell stops being comfortably readable at arm's length;
+ * a board whose worst cell clears that does not need telling about the
+ * gesture.
  */
-const HINT_FROM_SIZE = 6
+const HINT_BELOW_PX = 11
 /** Times to show the hint before assuming it has been read. */
 const MAGNIFY_HINT_LIMIT = 3
 
@@ -95,11 +100,26 @@ export function Game(): ReactNode {
   const onMagnifyChange = useCallback((open: boolean) => {
     magnifyingRef.current = open
   }, [])
+  // Smallest font size the auto-fit produced on the current board, or null
+  // until it has reported. Drives the magnifier hint.
+  const [smallestPx, setSmallestPx] = useState<number | null>(null)
+  const onFitMeasured = useCallback((px: number) => setSmallestPx(px), [])
   const swipe = useSwipe(swipePerson, () => magnifyingRef.current)
 
   const poolCount = active ? quotes.filter((q) => q.personId === active.id).length : 0
   const ready = poolCount >= MIN_POOL
   const card = active ? cards[active.id] : undefined
+
+  // Drop the previous board's fit measurement as soon as the card changes, so
+  // the hint is never decided from the size the last person's cells came out
+  // at. Done during render rather than in an effect: the stale value must not
+  // survive even one paint of the new board.
+  const measuredCard = useRef<string | null>(null)
+  const cardKey = card ? `${card.personId}-${card.createdAt}-${card.size}` : null
+  if (measuredCard.current !== cardKey) {
+    measuredCard.current = cardKey
+    if (smallestPx !== null) setSmallestPx(null)
+  }
 
   // Selectable size+joker combinations the current pool can fill. Odd sizes
   // offer a "with joker" entry and, if the pool is big enough, a "no joker"
@@ -163,25 +183,33 @@ export function Game(): ReactNode {
     prevLines.current = { cardId: card.personId, lines }
   }, [card, t, soundMode, soundKind])
 
-  // The magnifier hint: only on a board dense enough to need it, only until it
-  // has been seen a few times, and not on a device driven by a mouse — the
-  // gesture works there but nobody goes looking for it, so it would be noise.
+  // The magnifier hint: only once the board has actually come out small, only
+  // until it has been seen a few times, and not on a device driven by a mouse
+  // — the gesture works there but nobody goes looking for it, so it would be
+  // noise.
+  //
+  // `smallestPx` (declared above, with the board callbacks) is null until the
+  // board reports its fit, so the hint appears a moment after the cells settle
+  // rather than flashing on a guess.
   const coarsePointer =
     typeof window !== 'undefined' && window.matchMedia('(hover: none)').matches
   const showMagnifyHint =
     coarsePointer &&
     !!card &&
-    card.size >= HINT_FROM_SIZE &&
+    smallestPx !== null &&
+    smallestPx <= HINT_BELOW_PX &&
     magnifyHintsSeen < MAGNIFY_HINT_LIMIT
 
   // Count one showing per board that displays it, not per render. Keyed on the
-  // card id so switching person or resizing counts again, while a win, a tap
-  // or a re-render of the same board does not.
+  // card's identity (person + when it was dealt) so switching person, resizing
+  // or reshuffling counts again, while a win, a tap or a re-render of the same
+  // board does not.
   const hintedCard = useRef<string | null>(null)
   useEffect(() => {
     if (!showMagnifyHint || !card) return
-    if (hintedCard.current === card.personId) return
-    hintedCard.current = card.personId
+    const key = `${card.personId}-${card.createdAt}`
+    if (hintedCard.current === key) return
+    hintedCard.current = key
     noteMagnifyHintSeen()
   }, [showMagnifyHint, card, noteMagnifyHintSeen])
 
@@ -250,6 +278,7 @@ export function Game(): ReactNode {
                 pulseCells={pulseCells}
                 slideFrom={slide?.dir ?? null}
                 onMagnifyChange={onMagnifyChange}
+                onFitMeasured={onFitMeasured}
               />
             </div>
             {showMagnifyHint && <p className="dim board-hint">{t('game.magnifyHint')}</p>}

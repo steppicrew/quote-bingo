@@ -29,6 +29,12 @@ interface Props {
    * the shape of a person swipe.
    */
   onMagnifyChange?: (open: boolean) => void
+  /**
+   * The smallest font size (px) the auto-fit settled on, once it has. Reported
+   * so the screen above can offer the magnifier hint when the board has
+   * actually come out small, rather than guessing from the card size.
+   */
+  onFitMeasured?: (smallestPx: number) => void
 }
 
 export function BingoBoard({
@@ -39,6 +45,7 @@ export function BingoBoard({
   pulseCells,
   slideFrom = null,
   onMagnifyChange,
+  onFitMeasured,
 }: Props): ReactNode {
   const { t } = useTranslation()
   const winners = useMemo(() => winningCells(card.size, card.checked), [card.size, card.checked])
@@ -119,6 +126,36 @@ export function BingoBoard({
     onMagnifyChange?.(magnifier.open)
   }, [magnifier.open, onMagnifyChange])
   useEffect(() => () => onMagnifyChange?.(false), [onMagnifyChange])
+
+  // Report how small the type actually came out.
+  //
+  // Read off the DOM rather than threaded up from each Cell: the fit applies
+  // its result as an inline font-size, so the rendered value is the honest
+  // one, and it already retries across frames on a cold start. Polling a few
+  // times and reporting the smallest is simpler than a callback per cell and
+  // cannot disagree with what is on screen.
+  useEffect(() => {
+    const el = boardRef.current
+    if (!el || !onFitMeasured) return
+    let tries = 0
+    let timer = 0
+    const sample = (): void => {
+      const texts = el.querySelectorAll<HTMLElement>('.cell-text')
+      // Every cell carries an inline size once the fit has run; until then
+      // there is nothing to report, so wait rather than measure the default.
+      const sizes = [...texts]
+        .filter((t) => t.style.fontSize)
+        .map((t) => parseFloat(t.style.fontSize))
+        .filter((n) => Number.isFinite(n))
+      if (sizes.length === texts.length && sizes.length > 0) {
+        onFitMeasured(Math.min(...sizes))
+        return
+      }
+      if (tries++ < 20) timer = window.setTimeout(sample, 100)
+    }
+    timer = window.setTimeout(sample, 100)
+    return () => window.clearTimeout(timer)
+  }, [card.personId, card.createdAt, card.size, onFitMeasured])
 
   const magnified = magnifier.target
 
