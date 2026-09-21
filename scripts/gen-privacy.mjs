@@ -95,12 +95,21 @@ const redirectScript = (codes) => `
  */
 const up = (isEntry) => (isEntry ? './' : '../');
 
-/** The other languages, linked from the bottom of each page. */
+/**
+ * The other languages, linked from the bottom of each page.
+ *
+ * Only the link back to the entry page carries `?lang=`, because only that
+ * page has the redirect script and would otherwise bounce a non-English
+ * browser straight back. The per-language pages have no script to suppress,
+ * and a query there is actively harmful: the service worker precaches these
+ * pages by exact URL, so `...?lang=1` misses the precache and falls through
+ * to the SPA navigation fallback, which answers with the app shell instead of
+ * the policy.
+ */
 const navFor = (current, isEntry) => {
   const base = up(isEntry);
   return LOCALES.map((l) => {
-    const href =
-      l.code === DEFAULT_LOCALE ? `${base}?lang=1` : `${base}${l.code}/?lang=1`;
+    const href = l.code === DEFAULT_LOCALE ? `${base}?lang=1` : `${base}${l.code}/`;
     return l.code === current.code
       ? `<b>${esc(l.label)}</b>`
       : `<a href="${href}" lang="${l.code}" hreflang="${l.code}">${esc(l.label)}</a>`;

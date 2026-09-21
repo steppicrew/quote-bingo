@@ -44,6 +44,11 @@ const pwa = VitePWA({
   },
   workbox: {
     globPatterns: ['**/*.{js,css,html,svg,png,ico,woff2}'],
+    // /privacy/ is static HTML, not part of the SPA. Without this the
+    // navigation fallback answers any request under it that misses the
+    // precache — a query string is enough to miss — with the app shell, so
+    // the policy URL Play points at would render the game instead.
+    navigateFallbackDenylist: [/^\/privacy\//],
   },
   devOptions: {
     // Serve a real manifest + SW in `yarn dev` so the browser stops
