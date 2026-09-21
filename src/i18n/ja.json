@@ -8,6 +8,9 @@
       "play": "プレイ",
       "sound": "勝利の合図：{{state}}（タップで切替）",
       "settings": "設定"
+    },
+    "toast": {
+      "sound": "勝利の合図：{{state}}"
     }
   },
   "game": {

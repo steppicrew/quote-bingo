@@ -8,6 +8,9 @@
       "play": "Play",
       "sound": "Win signal: {{state}} (tap to change)",
       "settings": "Settings"
+    },
+    "toast": {
+      "sound": "Win signal: {{state}}"
     }
   },
   "game": {

@@ -8,6 +8,9 @@
       "play": "Gioca",
       "sound": "Segnale di vittoria: {{state}} (tocca per cambiare)",
       "settings": "Impostazioni"
+    },
+    "toast": {
+      "sound": "Segnale di vittoria: {{state}}"
     }
   },
   "game": {

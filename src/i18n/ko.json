@@ -8,6 +8,9 @@
       "play": "플레이",
       "sound": "승리 신호: {{state}} (탭하여 변경)",
       "settings": "설정"
+    },
+    "toast": {
+      "sound": "승리 신호: {{state}}"
     }
   },
   "game": {

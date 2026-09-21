@@ -8,6 +8,9 @@
       "play": "开始游戏",
       "sound": "获胜提示：{{state}}（点按切换）",
       "settings": "设置"
+    },
+    "toast": {
+      "sound": "获胜提示：{{state}}"
     }
   },
   "game": {

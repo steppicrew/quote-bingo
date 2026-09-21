@@ -8,24 +8,11 @@ import { Privacy } from './screens/Privacy'
 import { PersonEditor } from './screens/PersonEditor'
 import { Game } from './screens/Game'
 import { ToastProvider } from './components/Toast'
+import { SoundToggle } from './components/SoundToggle'
 import { Settings } from './components/Settings'
 import { applySystemBars } from './lib/systemBars'
-import {
-  BackIcon,
-  CogIcon,
-  GameIcon,
-  SoundOffIcon,
-  SoundOnIcon,
-  SoundVibrateIcon,
-  UsersIcon,
-} from './components/icons'
+import { BackIcon, CogIcon, GameIcon, UsersIcon } from './components/icons'
 import './components/modal.scss'
-
-const soundModeLabelKey = {
-  on: 'settings.soundOn',
-  vibrate: 'settings.soundVibrate',
-  off: 'settings.soundOff',
-} as const
 
 export function App(): ReactNode {
   const route = useRoute()
@@ -34,8 +21,6 @@ export function App(): ReactNode {
   const hasPersons = useStore((s) => s.persons.length > 0)
   const theme = useStore((s) => s.theme)
   const locale = useStore((s) => s.locale)
-  const soundMode = useStore((s) => s.soundMode)
-  const cycleSoundMode = useStore((s) => s.cycleSoundMode)
   const [settingsOpen, setSettingsOpen] = useState(false)
 
   // Apply the selected theme to <html> (CSS custom properties switch on it),
@@ -116,22 +101,7 @@ export function App(): ReactNode {
               <GameIcon />
             </button>
           )}
-          {onGame && (
-            <button
-              className="icon-btn"
-              aria-label={t('app.nav.sound', { state: t(soundModeLabelKey[soundMode]) })}
-              title={t('app.nav.sound', { state: t(soundModeLabelKey[soundMode]) })}
-              onClick={cycleSoundMode}
-            >
-              {soundMode === 'on' ? (
-                <SoundOnIcon />
-              ) : soundMode === 'vibrate' ? (
-                <SoundVibrateIcon />
-              ) : (
-                <SoundOffIcon />
-              )}
-            </button>
-          )}
+          {onGame && <SoundToggle />}
           <button
             className="icon-btn"
             aria-label={t('app.nav.settings')}
