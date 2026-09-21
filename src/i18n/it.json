@@ -1,4 +1,8 @@
 {
+  "common": {
+    "ok": "OK",
+    "cancel": "Annulla"
+  },
   "app": {
     "title": "Tombola delle Citazioni",
     "loading": "Caricamento…",

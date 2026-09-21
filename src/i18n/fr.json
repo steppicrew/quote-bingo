@@ -1,4 +1,8 @@
 {
+  "common": {
+    "ok": "OK",
+    "cancel": "Annuler"
+  },
   "app": {
     "title": "Bingo des citations",
     "loading": "Chargement…",

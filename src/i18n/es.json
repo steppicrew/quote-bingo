@@ -1,4 +1,8 @@
 {
+  "common": {
+    "ok": "Aceptar",
+    "cancel": "Cancelar"
+  },
   "app": {
     "title": "Bingo de citas",
     "loading": "Cargando…",

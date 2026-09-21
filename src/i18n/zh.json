@@ -1,4 +1,8 @@
 {
+  "common": {
+    "ok": "确定",
+    "cancel": "取消"
+  },
   "app": {
     "title": "语录宾果",
     "loading": "加载中…",

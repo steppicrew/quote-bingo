@@ -7,6 +7,7 @@ import { SIZES, quotesNeeded } from '../types'
 import { ACCENT_NAMES, accentSwatch, normalizeAccent } from '../lib/accents'
 import { exportToFile } from '../lib/share'
 import { useToast } from '../components/toast-context'
+import { useConfirm } from '../components/confirm-context'
 
 const QrShow = lazy(() =>
   import('../components/QrShow').then((m) => ({ default: m.QrShow })),
@@ -23,6 +24,7 @@ export function PersonEditor({ id }: { id: string }): ReactNode {
   const setAccent = useStore((s) => s.setAccent)
   const deletePerson = useStore((s) => s.deletePerson)
   const toast = useToast()
+  const confirm = useConfirm()
 
   const [bulk, setBulk] = useState('')
   const [showQr, setShowQr] = useState(false)
@@ -53,8 +55,14 @@ export function PersonEditor({ id }: { id: string }): ReactNode {
     toast(t('editor.quotesAdded', { count: lines.length }))
   }
 
-  const remove = (): void => {
-    if (confirm(t('editor.deleteConfirm', { name: person.name }))) {
+  const remove = async (): Promise<void> => {
+    if (
+      await confirm({
+        message: t('editor.deleteConfirm', { name: person.name }),
+        confirmLabel: t('editor.delete'),
+        danger: true,
+      })
+    ) {
       deletePerson(id)
       // The person this entry points at is gone, so overwrite it rather than
       // stacking on top: Back must not return to an editor for a dead id.
@@ -69,7 +77,7 @@ export function PersonEditor({ id }: { id: string }): ReactNode {
           value={person.name}
           onChange={(e) => renamePerson(id, e.target.value)}
         />
-        <button className="danger" onClick={remove}>
+        <button className="danger" onClick={() => void remove()}>
           {t('editor.delete')}
         </button>
       </div>

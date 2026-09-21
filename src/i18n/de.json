@@ -1,4 +1,8 @@
 {
+  "common": {
+    "ok": "OK",
+    "cancel": "Abbrechen"
+  },
   "app": {
     "title": "Zitate-Bingo",
     "loading": "Wird geladen…",

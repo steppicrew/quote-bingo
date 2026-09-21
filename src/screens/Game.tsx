@@ -12,6 +12,7 @@ import { useSwipe } from '../lib/useSwipe'
 import { PersonSwitcher } from '../components/PersonSwitcher'
 import { BingoBoard } from '../components/BingoBoard'
 import { WinBanner } from '../components/WinBanner'
+import { useConfirm } from '../components/confirm-context'
 
 const MIN_POOL = quotesNeeded(SIZES[0]!) // smallest card's requirement (3x3 -> 8)
 
@@ -53,6 +54,7 @@ export function Game(): ReactNode {
   const soundKind = useStore((s) => s.soundKind)
   const magnifyHintsSeen = useStore((s) => s.magnifyHintsSeen)
   const noteMagnifyHintSeen = useStore((s) => s.noteMagnifyHintSeen)
+  const confirm = useConfirm()
 
   // Win presentation: banner text + a bump key that retriggers the board shake.
   const [winBanner, setWinBanner] = useState<{ text: string; big: boolean } | null>(null)
@@ -205,16 +207,17 @@ export function Game(): ReactNode {
     noteMagnifyHintSeen()
   }, [showMagnifyHint, card, noteMagnifyHintSeen])
 
-  const reshuffle = (): void => {
-    if (active && confirm(t('game.reshuffleConfirm'))) {
-      regenerateCard(active.id)
-      prevLines.current = { cardId: null, lines: 0 }
-    }
+  const reshuffle = async (): Promise<void> => {
+    if (!active) return
+    if (!(await confirm({ message: t('game.reshuffleConfirm'), danger: true }))) return
+    regenerateCard(active.id)
+    prevLines.current = { cardId: null, lines: 0 }
   }
 
-  const changeCard = (size: number, joker: boolean): void => {
+  const changeCard = async (size: number, joker: boolean): Promise<void> => {
     if (!active) return
-    if (card && !confirm(t('game.resizeConfirm', { size }))) return
+    if (card && !(await confirm({ message: t('game.resizeConfirm', { size }), danger: true })))
+      return
     regenerateCard(active.id, size, joker)
     prevLines.current = { cardId: null, lines: 0 }
   }
@@ -290,7 +293,7 @@ export function Game(): ReactNode {
                 value={`${card.size}:${card.joker ? 'j' : 'n'}`}
                 onChange={(e) => {
                   const [s, j] = e.target.value.split(':')
-                  changeCard(Number(s), j === 'j')
+                  void changeCard(Number(s), j === 'j')
                 }}
               >
                 {cardOptions.map(({ size, joker }) => (
@@ -304,7 +307,7 @@ export function Game(): ReactNode {
                 ))}
               </select>
               <div className="spacer" />
-              <button className="ghost" onClick={reshuffle}>
+              <button className="ghost" onClick={() => void reshuffle()}>
                 {t('game.reshuffle')}
               </button>
             </div>

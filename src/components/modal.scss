@@ -46,6 +46,31 @@
   }
 }
 
+// A confirm dialog is a question plus two answers, so it drops the h2 and its
+// buttons sit side by side rather than stacked full-width like the panels'.
+.modal.confirm {
+  gap: 16px;
+  max-width: 320px;
+
+  .confirm-message {
+    margin: 0;
+    align-self: flex-start;
+    // Questions name what is about to be lost; let them wrap rather than
+    // ellipsize.
+    line-height: 1.4;
+  }
+
+  .confirm-actions {
+    display: flex;
+    gap: 10px;
+    width: 100%;
+    button {
+      flex: 1 1 0;
+      width: auto;
+    }
+  }
+}
+
 .qr-canvas {
   border-radius: v.$radius-sm;
   background: #fff;

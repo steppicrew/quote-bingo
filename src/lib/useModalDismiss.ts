@@ -12,8 +12,8 @@ import { useEffect, useRef } from 'react'
  * `history.back()` is asynchronous: its `popstate` fires on a later tick, by
  * which point React 18 StrictMode may have re-run the effect and attached a
  * fresh listener that would otherwise treat the self-pop as a user Back and
- * close immediately. `suppressNextPop` (module-level, shared across mounts)
- * swallows exactly that one self-initiated popstate.
+ * close immediately. `pendingSelfPops` (module-level, shared across mounts)
+ * swallows those self-initiated popstates.
  *
  * A modal that hands over to a route (Settings → #/privacy) must not close
  * itself first: popping our entry and then pushing the route races the
@@ -21,7 +21,22 @@ import { useEffect, useRef } from 'react'
  * instead, overwriting its own entry with the route — no traversal, and the
  * cleanup below then sees no `modal` state and correctly pops nothing.
  */
-let suppressNextPop = false
+/**
+ * Self-initiated pops still in flight. `history.back()` is async, and with
+ * modals nested (a confirm over Settings) StrictMode can have two cleanups
+ * pop within the same tick — a single boolean would suppress only the first
+ * and let the second read as a user Back, closing a dialog the moment it
+ * opened. Counting them keeps every self-pop accounted for.
+ */
+let pendingSelfPops = 0
+
+/**
+ * Every mounted modal, in mount order. Modals nest — a confirm dialog opens on
+ * top of Settings — and both a Back press and Escape are single events seen by
+ * every listener, so without this the two would close together. Only the last
+ * entry, the one actually on top, acts on a dismissal.
+ */
+const stack: symbol[] = []
 
 export function useModalDismiss(onClose: () => void): void {
   // Keep the latest onClose without re-subscribing listeners each render.
@@ -32,16 +47,20 @@ export function useModalDismiss(onClose: () => void): void {
 
   useEffect(() => {
     history.pushState({ modal: true }, '')
+    const token = Symbol('modal')
+    stack.push(token)
+    const isTop = (): boolean => stack[stack.length - 1] === token
 
     const onPop = (): void => {
-      if (suppressNextPop) {
-        suppressNextPop = false
+      if (pendingSelfPops > 0) {
+        pendingSelfPops -= 1
         return
       }
+      if (!isTop()) return
       onCloseRef.current()
     }
     const onKey = (e: KeyboardEvent): void => {
-      if (e.key === 'Escape') onCloseRef.current()
+      if (e.key === 'Escape' && isTop()) onCloseRef.current()
     }
 
     window.addEventListener('popstate', onPop)
@@ -50,12 +69,14 @@ export function useModalDismiss(onClose: () => void): void {
     return () => {
       window.removeEventListener('popstate', onPop)
       window.removeEventListener('keydown', onKey)
+      const at = stack.lastIndexOf(token)
+      if (at !== -1) stack.splice(at, 1)
       // Pop the entry we pushed only if it is still the current one (UI-driven
       // close). Suppress the resulting popstate so a freshly-mounted instance
       // (StrictMode) doesn't mistake it for a user Back press.
       const state: unknown = history.state
       if (state !== null && typeof state === 'object' && 'modal' in state) {
-        suppressNextPop = true
+        pendingSelfPops += 1
         history.back()
       }
     }

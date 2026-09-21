@@ -8,6 +8,7 @@ import { Privacy } from './screens/Privacy'
 import { PersonEditor } from './screens/PersonEditor'
 import { Game } from './screens/Game'
 import { ToastProvider } from './components/Toast'
+import { ConfirmProvider } from './components/Confirm'
 import { SoundToggle } from './components/SoundToggle'
 import { Settings } from './components/Settings'
 import { applySystemBars } from './lib/systemBars'
@@ -68,66 +69,68 @@ export function App(): ReactNode {
 
   return (
     <ToastProvider>
-      <div className="app">
-        <header className="topbar">
-          <h1>{t('app.title')}</h1>
-          {route.name === 'person' ? (
+      <ConfirmProvider>
+        <div className="app">
+          <header className="topbar">
+            <h1>{t('app.title')}</h1>
+            {route.name === 'person' ? (
+              <button
+                className="icon-btn"
+                aria-label={t('app.nav.back')}
+                title={t('app.nav.back')}
+                // Going up a level, so replace: pushing would leave the person
+                // screen in front of Back, and Back would walk forward into it.
+                onClick={() => replaceRoute({ name: 'manage' })}
+              >
+                <BackIcon />
+              </button>
+            ) : onGame ? (
+              <button
+                className="icon-btn"
+                aria-label={t('app.nav.manage')}
+                title={t('app.nav.manage')}
+                onClick={() => navigate({ name: 'manage' })}
+              >
+                <UsersIcon />
+              </button>
+            ) : (
+              <button
+                className="icon-btn"
+                aria-label={t('app.nav.play')}
+                title={t('app.nav.play')}
+                onClick={() => navigate({ name: 'game' })}
+              >
+                <GameIcon />
+              </button>
+            )}
+            {onGame && <SoundToggle />}
             <button
               className="icon-btn"
-              aria-label={t('app.nav.back')}
-              title={t('app.nav.back')}
-              // Going up a level, so replace: pushing would leave the person
-              // screen in front of Back, and Back would walk forward into it.
-              onClick={() => replaceRoute({ name: 'manage' })}
+              aria-label={t('app.nav.settings')}
+              title={t('app.nav.settings')}
+              onClick={() => setSettingsOpen(true)}
             >
-              <BackIcon />
+              <CogIcon />
             </button>
-          ) : onGame ? (
-            <button
-              className="icon-btn"
-              aria-label={t('app.nav.manage')}
-              title={t('app.nav.manage')}
-              onClick={() => navigate({ name: 'manage' })}
-            >
-              <UsersIcon />
-            </button>
+          </header>
+
+          {!hydrated ? (
+            <div className="content">
+              <p className="dim">{t('app.loading')}</p>
+            </div>
+          ) : route.name === 'person' ? (
+            <PersonEditor id={route.id} />
+          ) : route.name === 'privacy' ? (
+            <Privacy />
+          ) : route.name === 'game' ? (
+            <Game />
           ) : (
-            <button
-              className="icon-btn"
-              aria-label={t('app.nav.play')}
-              title={t('app.nav.play')}
-              onClick={() => navigate({ name: 'game' })}
-            >
-              <GameIcon />
-            </button>
+            <Manage />
           )}
-          {onGame && <SoundToggle />}
-          <button
-            className="icon-btn"
-            aria-label={t('app.nav.settings')}
-            title={t('app.nav.settings')}
-            onClick={() => setSettingsOpen(true)}
-          >
-            <CogIcon />
-          </button>
-        </header>
 
-        {!hydrated ? (
-          <div className="content">
-            <p className="dim">{t('app.loading')}</p>
-          </div>
-        ) : route.name === 'person' ? (
-          <PersonEditor id={route.id} />
-        ) : route.name === 'privacy' ? (
-          <Privacy />
-        ) : route.name === 'game' ? (
-          <Game />
-        ) : (
-          <Manage />
-        )}
-
-        {settingsOpen && <Settings onClose={() => setSettingsOpen(false)} />}
-      </div>
+          {settingsOpen && <Settings onClose={() => setSettingsOpen(false)} />}
+        </div>
+      </ConfirmProvider>
     </ToastProvider>
   )
 }

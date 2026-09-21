@@ -11,6 +11,7 @@ import { useTranslation } from 'react-i18next'
 import { ThemeToggle } from './ThemeToggle'
 import { LanguageToggle } from './LanguageToggle'
 import { useToast } from './toast-context'
+import { useConfirm } from './confirm-context'
 import './Settings.scss'
 
 // html5-qrcode is large; only pull it in when the scanner is opened.
@@ -32,6 +33,7 @@ export function Settings({ onClose }: Props): ReactNode {
   const setSoundKind = useStore((s) => s.setSoundKind)
   const { canInstall, promptInstall } = useInstall()
   const toast = useToast()
+  const confirm = useConfirm()
 
   const [scanning, setScanning] = useState(false)
   const [sharing, setSharing] = useState(false)
@@ -43,7 +45,7 @@ export function Settings({ onClose }: Props): ReactNode {
     if (!file) return
     try {
       const data = await importBackupFile(file)
-      if (!confirm(t('settings.restoreConfirm'))) return
+      if (!(await confirm({ message: t('settings.restoreConfirm'), danger: true }))) return
       restoreBackup(data)
       toast(t('settings.restoreDone'))
     } catch (e) {
@@ -72,7 +74,8 @@ export function Settings({ onClose }: Props): ReactNode {
       // reads as "it just worked" instead of "Import failed".
       const parsed = await importAnyFile(file)
       if (parsed.kind === 'backup') {
-        if (!confirm(t('settings.restoreConfirm'))) return
+        if (!(await confirm({ message: t('settings.restoreConfirm'), danger: true })))
+          return
         restoreBackup(parsed.data)
         toast(t('settings.restoreDone'))
         return

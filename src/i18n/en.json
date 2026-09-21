@@ -1,4 +1,8 @@
 {
+  "common": {
+    "ok": "OK",
+    "cancel": "Cancel"
+  },
   "app": {
     "title": "Quote Bingo",
     "loading": "Loading…",
