@@ -12,6 +12,7 @@ import { useSwipe } from '../lib/useSwipe'
 import { PersonSwitcher } from '../components/PersonSwitcher'
 import { BingoBoard } from '../components/BingoBoard'
 import { WinBanner } from '../components/WinBanner'
+import { FitDebug } from '../components/FitDebug'
 
 const MIN_POOL = quotesNeeded(SIZES[0]!) // smallest card's requirement (3x3 -> 8)
 
@@ -25,6 +26,16 @@ const MIN_POOL = quotesNeeded(SIZES[0]!) // smallest card's requirement (3x3 -> 
 const HINT_FROM_SIZE = 6
 /** Times to show the hint before assuming it has been read. */
 const MAGNIFY_HINT_LIMIT = 3
+
+/**
+ * `?debug=fit` shows the text-fit read-out under the board.
+ *
+ * Read from the query string, not the hash route, so it survives navigation
+ * within the app and can be opened directly as a URL on a phone.
+ */
+const DEBUG_FIT =
+  typeof window !== 'undefined' &&
+  new URLSearchParams(window.location.search).get('debug') === 'fit'
 
 /** Banner text for a win of `combo` lines completed by one tap. */
 function winLabel(t: TFunction, combo: number): string {
@@ -242,6 +253,7 @@ export function Game(): ReactNode {
               />
             </div>
             {showMagnifyHint && <p className="dim board-hint">{t('game.magnifyHint')}</p>}
+            {DEBUG_FIT && <FitDebug />}
             <div className="row">
               <label className="dim" htmlFor="size">
                 {t('game.size')}

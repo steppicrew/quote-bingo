@@ -70,16 +70,44 @@ export function useAutoFitText(
       const probe = document.createElement('canvas').getContext('2d')
       const lineRatio = parseFloat(csText.lineHeight) / parseFloat(csText.fontSize) || 1.25
 
+      /**
+       * Descender room to reserve below the last line, in px.
+       *
+       * Canvas text metrics are a fingerprinting surface: Brave (and Safari in
+       * Lockdown Mode) perturb or withhold them, so `measureText` can return
+       * values that are noisy, zero, or absent entirely. Trusting them blindly
+       * makes the fit either clip the ink or shrink for no reason, on exactly
+       * the browsers that hide them.
+       *
+       * So the canvas answer is only used when it looks sane — positive
+       * ascent/descent, and an overhang inside the range a real font can
+       * produce. Otherwise fall back to a proportion of the size, which is
+       * never exact but is always in the right ballpark.
+       */
       const inkOverhang = (px: number): number => {
-        if (!probe) return 1
-        probe.font = `${csText.fontWeight} ${px}px ${csText.fontFamily}`
-        const m = probe.measureText(text)
-        const lineBox = px * lineRatio
-        const halfLeading = (lineBox - (m.fontBoundingBoxAscent + m.fontBoundingBoxDescent)) / 2
-        const overhang =
-          halfLeading + m.fontBoundingBoxAscent + m.actualBoundingBoxDescent - lineBox
-        // Never negative, and always leave a hairline so rounding cannot bite.
-        return Math.max(0, overhang) + 1
+        // ~12% of the font size covers a Latin descender under a 1.25 line
+        // box with room to spare; used when canvas metrics are untrustworthy.
+        const fallback = px * 0.12 + 1
+        if (!probe) return fallback
+        try {
+          probe.font = `${csText.fontWeight} ${px}px ${csText.fontFamily}`
+          const m = probe.measureText(text)
+          const ascent = m.fontBoundingBoxAscent
+          const descent = m.fontBoundingBoxDescent
+          const inkDescent = m.actualBoundingBoxDescent
+          // Absent (undefined) or nonsensical (<= 0) metrics: use the estimate.
+          if (!(ascent > 0) || !(descent > 0) || !(inkDescent >= 0)) return fallback
+          const lineBox = px * lineRatio
+          const halfLeading = (lineBox - (ascent + descent)) / 2
+          const overhang = halfLeading + ascent + inkDescent - lineBox
+          // A descender beyond half the font size is not a real font metric,
+          // it is noise — fall back rather than shrink the text to nothing.
+          if (!Number.isFinite(overhang) || overhang > px * 0.5) return fallback
+          // Never negative, and always leave a hairline so rounding cannot bite.
+          return Math.max(0, overhang) + 1
+        } catch {
+          return fallback
+        }
       }
 
       /**
