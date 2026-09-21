@@ -193,12 +193,15 @@ export function Game(): ReactNode {
   // card's identity (person + when it was dealt) so switching person, resizing
   // or reshuffling counts again, while a win, a tap or a re-render of the same
   // board does not.
-  const hintedCard = useRef<string | null>(null)
+  // A set, not the last key: remembering only the most recent card made
+  // switching back and forth between two people count each of them again, so
+  // three switches between the same two boards retired the hint.
+  const hintedCards = useRef<Set<string>>(new Set())
   useEffect(() => {
     if (!showMagnifyHint || !card) return
     const key = `${card.personId}-${card.createdAt}`
-    if (hintedCard.current === key) return
-    hintedCard.current = key
+    if (hintedCards.current.has(key)) return
+    hintedCards.current.add(key)
     noteMagnifyHintSeen()
   }, [showMagnifyHint, card, noteMagnifyHintSeen])
 
