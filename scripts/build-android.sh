@@ -88,6 +88,17 @@ yarn cap sync android
 
 # Launcher icons are derived from the SVG master, and `cap sync` does not
 # touch them — regenerate so an icon change always reaches the APK.
+#
+# This step is not optional: the web icons under public/ are committed, but
+# the native launcher icons and drawable/splash are not, and resource linking
+# fails without them. So a missing ImageMagick has to stop the build here,
+# with the reason, rather than 60s later inside aapt.
+if ! command -v magick >/dev/null 2>&1; then
+  echo "ImageMagick 7 (magick) is required to generate the launcher icons" >&2
+  echo "and drawable/splash, which are not committed." >&2
+  echo "IM 6's 'convert' is not a drop-in replacement." >&2
+  exit 1
+fi
 yarn node scripts/gen-assets.mjs >/dev/null
 
 # --- native build ----------------------------------------------------------
