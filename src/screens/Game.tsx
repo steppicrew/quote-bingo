@@ -158,74 +158,84 @@ export function Game(): ReactNode {
   }
 
   return (
-    <div className="content" style={accentStyle(active?.accent)}>
+    <div className="content">
+      {/* Outside the accent scope on purpose: the switcher shows every person,
+          so each chip must paint its OWN colour. `default` resolves to
+          `var(--primary)` at paint time, which inside the scope would be the
+          SELECTED person's override — a default person's chip then took on
+          whoever was active. */}
       <PersonSwitcher persons={persons} activeId={active?.id ?? null} onSelect={setActivePerson} />
 
-      {active && !ready && (
-        <p className="dim">
-          {t('game.poolTooSmall', { name: active.name, count: poolCount, min: MIN_POOL })}{' '}
-          <a href={`#/person/${active.id}`}>{t('game.addQuotes')}</a>
-        </p>
-      )}
+      <div className="board-accent" style={accentStyle(active?.accent)}>
+        {active && !ready && (
+          <p className="dim">
+            {t('game.poolTooSmall', { name: active.name, count: poolCount, min: MIN_POOL })}{' '}
+            <a href={`#/person/${active.id}`}>{t('game.addQuotes')}</a>
+          </p>
+        )}
 
-      {active && ready && card && (
-        <>
-          <div
-            className="board-swipe"
-            onTouchStart={swipe.onTouchStart}
-            onTouchMove={swipe.onTouchMove}
-            onTouchEnd={swipe.onTouchEnd}
-            onClickCapture={swipe.onClickCapture}
-          >
-            <BingoBoard
-              // Remount per person so the slide-in animation replays and the
-              // cells re-measure their auto-fit text on fresh nodes.
-              key={`${active.id}-${slide?.key ?? 0}`}
-              card={card}
-              quoteText={quoteText}
-              onToggle={(i) => {
-                lastToggledRef.current = i
-                toggleCell(active.id, i)
-              }}
-              shakeKey={shakeKey}
-              pulseCells={pulseCells}
-              slideFrom={slide?.dir ?? null}
-            />
-          </div>
-          <div className="row">
-            <label className="dim" htmlFor="size">
-              {t('game.size')}
-            </label>
-            <select
-              id="size"
-              value={`${card.size}:${card.joker ? 'j' : 'n'}`}
-              onChange={(e) => {
-                const [s, j] = e.target.value.split(':')
-                changeCard(Number(s), j === 'j')
-              }}
+        {active && ready && card && (
+          <>
+            <div
+              className="board-swipe"
+              onTouchStart={swipe.onTouchStart}
+              onTouchMove={swipe.onTouchMove}
+              onTouchEnd={swipe.onTouchEnd}
+              onClickCapture={swipe.onClickCapture}
             >
-              {cardOptions.map(({ size, joker }) => (
-                <option key={`${size}:${joker ? 'j' : 'n'}`} value={`${size}:${joker ? 'j' : 'n'}`}>
-                  {size}×{size}
-                  {joker ? ` (${t('game.jokerLabel')})` : ''}
-                </option>
-              ))}
-            </select>
-            <div className="spacer" />
-            <button className="ghost" onClick={reshuffle}>
-              {t('game.reshuffle')}
-            </button>
-          </div>
-        </>
-      )}
+              <BingoBoard
+                // Remount per person so the slide-in animation replays and the
+                // cells re-measure their auto-fit text on fresh nodes.
+                key={`${active.id}-${slide?.key ?? 0}`}
+                card={card}
+                quoteText={quoteText}
+                onToggle={(i) => {
+                  lastToggledRef.current = i
+                  toggleCell(active.id, i)
+                }}
+                shakeKey={shakeKey}
+                pulseCells={pulseCells}
+                slideFrom={slide?.dir ?? null}
+              />
+            </div>
+            <div className="row">
+              <label className="dim" htmlFor="size">
+                {t('game.size')}
+              </label>
+              <select
+                id="size"
+                value={`${card.size}:${card.joker ? 'j' : 'n'}`}
+                onChange={(e) => {
+                  const [s, j] = e.target.value.split(':')
+                  changeCard(Number(s), j === 'j')
+                }}
+              >
+                {cardOptions.map(({ size, joker }) => (
+                  <option
+                    key={`${size}:${joker ? 'j' : 'n'}`}
+                    value={`${size}:${joker ? 'j' : 'n'}`}
+                  >
+                    {size}×{size}
+                    {joker ? ` (${t('game.jokerLabel')})` : ''}
+                  </option>
+                ))}
+              </select>
+              <div className="spacer" />
+              <button className="ghost" onClick={reshuffle}>
+                {t('game.reshuffle')}
+              </button>
+            </div>
+          </>
+        )}
 
-      {winBanner && (
-        <WinBanner
-          text={winBanner.text}
-          big={winBanner.big}
-          onDone={() => setWinBanner(null)}
-        />
-      )}
+        {winBanner && (
+          <WinBanner
+            text={winBanner.text}
+            big={winBanner.big}
+            onDone={() => setWinBanner(null)}
+          />
+        )}
+      </div>
     </div>
   )
 }

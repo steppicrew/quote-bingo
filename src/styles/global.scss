@@ -178,6 +178,19 @@ a {
   gap: v.$gap;
 }
 
+// Holds the active person's accent overrides (set inline from their card), so
+// the board, the size picker and the primary buttons recolour with them. The
+// person switcher deliberately sits OUTSIDE this, since each chip paints its
+// own colour and `default` resolves `var(--primary)` from whatever scope it
+// lands in. Carries .content's column layout so the move changes no spacing.
+.board-accent {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: v.$gap;
+  min-height: 0;
+}
+
 .card-tile {
   background: v.$surface;
   border: 1px solid v.$border;
