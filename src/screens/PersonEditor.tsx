@@ -2,7 +2,7 @@ import { lazy, Suspense, useMemo, useState, type ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import clsx from 'clsx'
 import { useStore } from '../store'
-import { navigate } from '../router'
+import { replaceRoute } from '../router'
 import { SIZES, quotesNeeded } from '../types'
 import { ACCENT_NAMES, accentSwatch } from '../lib/accents'
 import { exportToFile } from '../lib/share'
@@ -36,7 +36,7 @@ export function PersonEditor({ id }: { id: string }): ReactNode {
     return (
       <div className="content">
         <p className="dim">{t('editor.notFound')}</p>
-        <button onClick={() => navigate({ name: 'manage' })}>{t('editor.back')}</button>
+        <button onClick={() => replaceRoute({ name: 'manage' })}>{t('editor.back')}</button>
       </div>
     )
   }
@@ -56,7 +56,9 @@ export function PersonEditor({ id }: { id: string }): ReactNode {
   const remove = (): void => {
     if (confirm(t('editor.deleteConfirm', { name: person.name }))) {
       deletePerson(id)
-      navigate({ name: 'manage' })
+      // The person this entry points at is gone, so overwrite it rather than
+      // stacking on top: Back must not return to an editor for a dead id.
+      replaceRoute({ name: 'manage' })
     }
   }
 

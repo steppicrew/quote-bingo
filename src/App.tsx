@@ -1,6 +1,6 @@
 import { useEffect, useState, type ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useRoute, navigate } from './router'
+import { useRoute, navigate, replaceRoute } from './router'
 import { useStore } from './store'
 import { SUPPORTED_LNGS } from './i18n'
 import { Manage } from './screens/Manage'
@@ -71,9 +71,11 @@ export function App(): ReactNode {
   }, [t, i18n.language])
 
   // First start (no data yet): send the user to Verwalten to set things up.
+  // A replace, not a push: the user did not ask to go anywhere, so leaving #/
+  // behind the Back button would only bounce them straight back here.
   useEffect(() => {
     if (hydrated && !hasPersons && route.name === 'game') {
-      navigate({ name: 'manage' })
+      replaceRoute({ name: 'manage' })
     }
   }, [hydrated, hasPersons, route.name])
 
@@ -89,7 +91,9 @@ export function App(): ReactNode {
               className="icon-btn"
               aria-label={t('app.nav.back')}
               title={t('app.nav.back')}
-              onClick={() => navigate({ name: 'manage' })}
+              // Going up a level, so replace: pushing would leave the person
+              // screen in front of Back, and Back would walk forward into it.
+              onClick={() => replaceRoute({ name: 'manage' })}
             >
               <BackIcon />
             </button>

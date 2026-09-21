@@ -1,6 +1,6 @@
 import { lazy, Suspense, useRef, useState, type ReactNode } from 'react'
 import { useStore } from '../store'
-import { navigate } from '../router'
+import { replaceRoute } from '../router'
 import { type QuoteListExport } from '../types'
 import { importAnyFile, exportBackup, importBackupFile } from '../lib/share'
 import { useInstall } from '../lib/install'
@@ -189,17 +189,19 @@ export function Settings({ onClose }: Props): ReactNode {
         <div className="about dim">
           <div>{t('app.title')} v{__APP_VERSION__}</div>
           {/*
-            Not a bare href: useModalDismiss pushes a history entry on open and
-            pops it with history.back() on close, which would undo the hash
-            change and leave you exactly where you started. Close first, then
-            navigate on the next tick, once that pop has happened.
+            Not a bare href: this modal hands over to a route rather than
+            closing on top of one. replaceRoute overwrites the entry
+            useModalDismiss pushed on open, so Privacy takes Settings' place in
+            history and Back from there lands on whatever Settings was opened
+            over. Order matters — onClose() last, so the hook's cleanup sees
+            the replaced (non-modal) state and pops nothing.
           */}
           <a
             href="#/privacy"
             onClick={(e) => {
               e.preventDefault()
+              replaceRoute({ name: 'privacy' })
               onClose()
-              setTimeout(() => navigate({ name: 'privacy' }), 0)
             }}
           >
             {t('settings.privacy')}

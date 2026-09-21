@@ -14,6 +14,12 @@ import { useEffect, useRef } from 'react'
  * fresh listener that would otherwise treat the self-pop as a user Back and
  * close immediately. `suppressNextPop` (module-level, shared across mounts)
  * swallows exactly that one self-initiated popstate.
+ *
+ * A modal that hands over to a route (Settings → #/privacy) must not close
+ * itself first: popping our entry and then pushing the route races the
+ * traversal, which lands last and wins. Such a modal calls `replaceRoute`
+ * instead, overwriting its own entry with the route — no traversal, and the
+ * cleanup below then sees no `modal` state and correctly pops nothing.
  */
 let suppressNextPop = false
 
