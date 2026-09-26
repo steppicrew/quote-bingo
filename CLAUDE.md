@@ -145,6 +145,54 @@ fails when they drift.
   ink descent, so changing it in the stylesheet cannot desynchronise the
   measurement. Tuning the search instead of the box is the wrong fix (tried
   twice).
+- **Cell magnifier** (`src/lib/useCellMagnifier.ts` + `CellMagnifier.tsx`): a 7×7 board on
+  a phone fits text at ~9px, past reading size, and the auto-fit cannot do better in the
+  space available. Long-pressing a cell (450ms) opens a bubble with the same text large,
+  and the bubble **follows the pointer**, so one hold reads a whole row without lifting
+  off. Pointer Events, not touch, so a mouse behaves the same; the pointer is captured on
+  the board because the finger leaves the starting cell by design. `cellAt(x,y)` is
+  supplied by `BingoBoard` (it owns the grid geometry) and walks the real DOM. Four
+  platform details, each one a separate bug:
+  - **`touch-action` is read when the gesture begins**, so flipping it at 450ms is too
+    late — the browser already decided this touch scrolls. The only way to take it back
+    mid-gesture is `preventDefault` on `touchmove`, and React's `onTouchMove` is passive
+    (where `preventDefault` is ignored). Hence a native `{ passive: false }` listener,
+    attached only while the bubble is open.
+  - **Android Chrome's own ~500ms long-press** selects the text and raises the
+    copy/select-all bar, which covers the bubble *and* cancels the pointer stream driving
+    it — the magnifier flashed up and died. `user-select: none` stops the selection but not
+    the `contextmenu` event, so that is cancelled, bound for the board's whole life rather
+    than armed at 450ms: the two timers are near-identical and arming late is a race
+    against an event that may already have fired.
+  - **The release generates a click** on whatever cell the finger ended over, which must
+    not toggle it — swallowed in the capture phase, then disarmed on a 50ms timer (not
+    `requestAnimationFrame`: a throttled tab may paint no frame for a long time and the
+    guard has to disarm on wall-clock time, or it eats the next genuine tap). A touch
+    ending outside its starting cell produces no click at all, hence the timer.
+  - **Swipe interaction**: 10px of travel cancels the pending press (a swipe needs 60px,
+    so it never opens the magnifier on its way past), and while the bubble is open
+    `onMagnifyChange` tells `Game` to hold the swipe — otherwise sliding to read switched
+    person.
+- **Magnifier hint** (`Game.tsx`, `store.magnifyHintsSeen`): shown only when the board
+  actually came out small — `BingoBoard` reports the fitted size via `onFitMeasured` and
+  the hint needs `≤ HINT_BELOW_PX` (11px), because the *board* size is not the trigger;
+  a 7×7 of short quotes reads fine. Coarse pointer only (the gesture works with a mouse
+  but nobody goes looking for it), and retired after `MAGNIFY_HINT_LIMIT` (3) showings.
+  Counted **per card identity** (`personId-createdAt`) in a `Set`, not per render and not
+  as "the last card seen": remembering only the most recent card made switching back and
+  forth between two people count each time, so three switches retired the hint. The
+  counter persists (so the hint retires across sessions) but is **excluded from backup** —
+  restoring onto a new device should not suppress a hint that device never showed.
+- **Break opportunities** (`src/lib/breakOpportunities.ts`): Chrome offers no line break
+  after a slash in a tight compound ("Wo/Wer", "Tach/Morgen" needs 84px on one line, 34px
+  broken), and `hyphens: auto` can't help because the dictionary sees one token. A ZWSP is
+  inserted *after* the slash — keeps the slash on the first line as German typography
+  wants, adds no glyph and no width. **Render-time only**: the store, exports, the QR
+  payload and `mergeQuotes`' text matching all keep the original string, since a baked-in
+  ZWSP would make two visually identical quotes compare unequal.
+- **Platform detection** (`src/lib/platform.ts`): Capacitor serves from `https://localhost/`,
+  indistinguishable from a dev server by URL, so `isNativeApp()` reads the bridge object the
+  WebView injects instead of sniffing `location`. Gates the Play-Store link in `ShareApp`.
 - **i18n** (`src/i18n/index.ts` + `{de,en,fr,es,it,pt,zh,ja,ko}.json`): `de` is the source
   of truth. Store `locale` ('system'|de|en|fr|es|it|pt|zh|ja|ko) drives
   `i18n.changeLanguage` from `App`; 'system' follows `navigator.language`, **falling back to
