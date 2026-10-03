@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Preview (debug) build: amber instead of the release navy, so the two
+         installs are told apart at a glance on the home screen. -->
+    <color name="ic_launcher_background">#B45309</color>
+</resources>

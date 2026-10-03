@@ -46,6 +46,12 @@ android {
     }
 
     buildTypes {
+        // Own id, so a debug build installs NEXT TO the Play version: the
+        // signatures differ, and replacing it would mean uninstalling — which
+        // wipes the board data on the test phone.
+        debug {
+            applicationIdSuffix ".debug"
+        }
         release {
             minifyEnabled true
             shrinkResources true
@@ -70,6 +76,29 @@ android {
         }
     }
 }
+
+// The debug build installs next to the Play version (applicationIdSuffix), so
+// the launcher must tell them apart: "[P] " before the name in every locale.
+// Derived from main's strings.xml, which gen-assets.mjs writes per locale,
+// rather than a hand-kept copy that would drift from it.
+def previewRes = layout.buildDirectory.dir('generated/preview-res').get().asFile
+def mainRes = file('src/main/res')
+mainRes.eachDirMatch(~/values(-.+)?/) { dir ->
+    def strings = new File(dir, 'strings.xml')
+    if (!strings.exists()) return
+    def labels = new groovy.xml.XmlSlurper().parse(strings).string.findAll {
+        it.@name == 'app_name' || it.@name == 'title_activity_main'
+    }
+    if (labels.isEmpty()) return
+    def out = new File(previewRes, "${dir.name}/strings.xml")
+    out.parentFile.mkdirs()
+    out.text = "<?xml version='1.0' encoding='utf-8'?>\n<resources>\n" +
+        labels.collect {
+            "    <string name=\"${it.@name}\">[P] ${groovy.xml.XmlUtil.escapeXml(it.text())}</string>\n"
+        }.join('') +
+        "</resources>\n"
+}
+android.sourceSets.debug.res.srcDirs += previewRes
 
 repositories {
     flatDir{
