@@ -73,8 +73,8 @@ website uses, so there is no second codebase.
   so a local build cannot update it, and uninstalling loses the owner's data.
   `adb install` is refused (`INSTALL_FAILED_USER_RESTRICTED`); install from
   device storage, and never leave the APK in `/sdcard/Download`:
-  `adb push <apk> /data/local/tmp/preview.apk && adb shell pm install -r
-  /data/local/tmp/preview.apk; adb shell rm /data/local/tmp/preview.apk`.
+  `adb push <apk> /data/local/tmp/quote-bingo-preview.apk && adb shell pm install -r
+  /data/local/tmp/quote-bingo-preview.apk; adb shell rm /data/local/tmp/quote-bingo-preview.apk`. Its own file name: beercounter uses `preview.apk`, and a parallel session may be installing with it.
   The **first** install of the package is blocked that way too and needs the
   owner to install it once by hand; updates then go through silently.
 - **Publishing.** One edit, committed at the end, abandoned on failure. Unchanged
