@@ -151,8 +151,13 @@ export function Settings({ onClose }: Props): ReactNode {
           <div className="row">
             <button
               onClick={() => {
-                exportBackup(backupData())
-                toast(t('settings.exportedAll'))
+                // Toast only once a file exists: in the app the user can
+                // cancel the save dialog, and an earlier version toasted
+                // success while nothing at all was written.
+                exportBackup(backupData()).then(
+                  (saved) => saved && toast(t('settings.exportedAll')),
+                  () => toast(t('common.exportFailed')),
+                )
               }}
             >
               {t('settings.exportAll')}

@@ -1,7 +1,8 @@
 {
   "common": {
     "ok": "OK",
-    "cancel": "Annulla"
+    "cancel": "Annulla",
+    "exportFailed": "Esportazione non riuscita: il file non è stato salvato."
   },
   "app": {
     "title": "Tombola delle Citazioni",

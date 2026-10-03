@@ -1,7 +1,8 @@
 {
   "common": {
     "ok": "确定",
-    "cancel": "取消"
+    "cancel": "取消",
+    "exportFailed": "导出失败——文件未保存。"
   },
   "app": {
     "title": "语录宾果",

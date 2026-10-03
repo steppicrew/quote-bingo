@@ -1,7 +1,8 @@
 {
   "common": {
     "ok": "OK",
-    "cancel": "Annuler"
+    "cancel": "Annuler",
+    "exportFailed": "Échec de l'export – le fichier n'a pas été enregistré."
   },
   "app": {
     "title": "Bingo des citations",

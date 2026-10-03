@@ -113,8 +113,11 @@ export function PersonEditor({ id }: { id: string }): ReactNode {
         <div className="spacer" />
         <button
           onClick={() => {
-            exportToFile(person.name, mine)
-            toast(t('editor.exportedFile'))
+            // Toast only once a file exists (see Settings' "Export all").
+            exportToFile(person.name, mine).then(
+              (saved) => saved && toast(t('editor.exportedFile')),
+              () => toast(t('common.exportFailed')),
+            )
           }}
         >
           {t('editor.exportFile')}

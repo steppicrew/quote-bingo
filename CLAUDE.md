@@ -293,7 +293,14 @@ fails when they drift.
   typed with literals, no circular import); `store.ts` and `fanfare.ts` re-export them.
   Both export buttons ("Export file" in `PersonEditor`, "Export all" in `Settings`) fire a
   confirmation toast — the browser's own download notification is too subtle and users
-  double-tapped.
+  double-tapped. **In the Android app a download goes nowhere**: Capacitor's WebView has
+  no download handler, so the `<a download>` click was dropped while the toast still
+  claimed success (shipped that way in 1.1.88). `saveJson` therefore routes native
+  exports through `FileExportPlugin.java` — the system "Save as" picker
+  (`ACTION_CREATE_DOCUMENT`, no storage permission, user picks Download or a cloud
+  drive) — and resolves whether a file was written; the toast fires only then, a cancel
+  is silent, a failure toasts `common.exportFailed`. Import needed nothing: `<input
+  type=file>` works in the WebView.
 - **Swipe to switch person** (`src/lib/useSwipe.ts`, used by `Game`): a horizontal
   swipe on the board steps through `persons` (wrapping both ends); the incoming
   `BingoBoard` slides in from the side it came from (`slideFrom` prop → `.slide-next`/

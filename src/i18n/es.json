@@ -1,7 +1,8 @@
 {
   "common": {
     "ok": "Aceptar",
-    "cancel": "Cancelar"
+    "cancel": "Cancelar",
+    "exportFailed": "Error al exportar: el archivo no se ha guardado."
   },
   "app": {
     "title": "Bingo de citas",

@@ -1,7 +1,8 @@
 {
   "common": {
     "ok": "OK",
-    "cancel": "Cancel"
+    "cancel": "Cancel",
+    "exportFailed": "Export failed – the file was not saved."
   },
   "app": {
     "title": "Quote Bingo",

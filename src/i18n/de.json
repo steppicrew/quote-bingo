@@ -1,7 +1,8 @@
 {
   "common": {
     "ok": "OK",
-    "cancel": "Abbrechen"
+    "cancel": "Abbrechen",
+    "exportFailed": "Export fehlgeschlagen – die Datei wurde nicht gespeichert."
   },
   "app": {
     "title": "Zitate-Bingo",

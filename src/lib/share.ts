@@ -9,6 +9,7 @@ import {
   type QuoteListExport,
 } from '../types'
 import { uid } from './id'
+import { isNativeApp } from './platform'
 
 /**
  * Practical char budget for a QR payload that mid-tier phones can still scan.
@@ -229,7 +230,33 @@ export function joinChunks(bodies: ReadonlyMap<number, string>, total: number): 
 
 // ---- plain JSON file IO --------------------------------------------------
 
-function downloadJson(json: string, filename: string): void {
+interface FileExportPlugin {
+  save(options: { filename: string; content: string; mimeType: string }): Promise<{ saved: boolean }>
+}
+
+/** Registered once, on first native export. */
+let fileExport: FileExportPlugin | null = null
+
+/**
+ * Save `json` as a file. Resolves true once a file exists, false when the user
+ * cancelled the native "Save as" dialog; rejects if writing failed.
+ *
+ * The browser gets a plain download. The Android app cannot: its WebView has
+ * no download handler, so the same <a download> click went nowhere while the
+ * caller still toasted success. There the native FileExport plugin opens the
+ * system document picker and writes the file where the user chose.
+ */
+async function saveJson(json: string, filename: string): Promise<boolean> {
+  if (isNativeApp()) {
+    if (!fileExport) {
+      const { registerPlugin } = await import('@capacitor/core')
+      // Assigned, never returned from an async function: the plugin proxy is
+      // a thenable, and resolving a promise with it calls `then()` natively.
+      fileExport ??= registerPlugin<FileExportPlugin>('FileExport')
+    }
+    const { saved } = await fileExport.save({ filename, content: json, mimeType: 'application/json' })
+    return saved
+  }
   const blob = new Blob([json], { type: 'application/json' })
   const url = URL.createObjectURL(blob)
   const a = document.createElement('a')
@@ -237,11 +264,13 @@ function downloadJson(json: string, filename: string): void {
   a.download = filename
   a.click()
   URL.revokeObjectURL(url)
+  return true
 }
 
-export function exportToFile(name: string, quotes: readonly ExportQuote[]): void {
+/** Save one person's list. See `saveJson` for what the result means. */
+export function exportToFile(name: string, quotes: readonly ExportQuote[]): Promise<boolean> {
   const json = JSON.stringify(toExport(name, quotes), null, 2)
-  downloadJson(json, `bingo-${name.replace(/[^\w-]+/g, '_')}.json`)
+  return saveJson(json, `bingo-${name.replace(/[^\w-]+/g, '_')}.json`)
 }
 
 export async function importFromFile(file: File): Promise<QuoteListExport> {
@@ -250,11 +279,11 @@ export async function importFromFile(file: File): Promise<QuoteListExport> {
 
 // ---- full backup (export/import all data) --------------------------------
 
-/** Download the complete app state as a backup file. */
-export function exportBackup(state: BackupData): void {
+/** Save the complete app state as a backup file. See `saveJson`. */
+export function exportBackup(state: BackupData): Promise<boolean> {
   const file: BackupFile = { app: 'quote-bingo-backup', version: 1, state }
   const date = new Date().toISOString().slice(0, 10)
-  downloadJson(JSON.stringify(file, null, 2), `bingo-backup-${date}.json`)
+  return saveJson(JSON.stringify(file, null, 2), `bingo-backup-${date}.json`)
 }
 
 function isRecord(v: unknown): v is Record<string, unknown> {

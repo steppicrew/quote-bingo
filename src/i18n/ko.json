@@ -1,7 +1,8 @@
 {
   "common": {
     "ok": "확인",
-    "cancel": "취소"
+    "cancel": "취소",
+    "exportFailed": "내보내기에 실패했습니다. 파일이 저장되지 않았습니다."
   },
   "app": {
     "title": "명언 빙고",
