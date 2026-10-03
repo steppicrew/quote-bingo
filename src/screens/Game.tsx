@@ -29,8 +29,6 @@ const MIN_POOL = quotesNeeded(SIZES[0]!) // smallest card's requirement (3x3 -> 
  * gesture.
  */
 const HINT_BELOW_PX = 11
-/** Times to show the hint before assuming it has been read. */
-const MAGNIFY_HINT_LIMIT = 3
 
 /** Banner text for a win of `combo` lines completed by one tap. */
 function winLabel(t: TFunction, combo: number): string {
@@ -52,8 +50,6 @@ export function Game(): ReactNode {
   const toggleCell = useStore((s) => s.toggleCell)
   const soundMode = useStore((s) => s.soundMode)
   const soundKind = useStore((s) => s.soundKind)
-  const magnifyHintsSeen = useStore((s) => s.magnifyHintsSeen)
-  const noteMagnifyHintSeen = useStore((s) => s.noteMagnifyHintSeen)
   const confirm = useConfirm()
 
   // Win presentation: banner text + a bump key that retriggers the board shake.
@@ -174,10 +170,11 @@ export function Game(): ReactNode {
     prevLines.current = { cardId: card.personId, lines }
   }, [card, t, soundMode, soundKind])
 
-  // The magnifier hint: only once the board has actually come out small, only
-  // until it has been seen a few times, and not on a device driven by a mouse
-  // — the gesture works there but nobody goes looking for it, so it would be
-  // noise.
+  // The magnifier hint: whenever the board has actually come out small, and
+  // not on a device driven by a mouse — the gesture works there but nobody
+  // goes looking for it, so it would be noise. It is not retired after a few
+  // showings: a board that small stays hard to read however often the hint
+  // has been seen, so the reminder stays useful for as long as that is true.
   //
   // `smallestPx` (declared above, with the board callbacks) is null until the
   // board reports its fit, so the hint appears a moment after the cells settle
@@ -185,27 +182,7 @@ export function Game(): ReactNode {
   const coarsePointer =
     typeof window !== 'undefined' && window.matchMedia('(hover: none)').matches
   const showMagnifyHint =
-    coarsePointer &&
-    !!card &&
-    smallestPx !== null &&
-    smallestPx <= HINT_BELOW_PX &&
-    magnifyHintsSeen < MAGNIFY_HINT_LIMIT
-
-  // Count one showing per board that displays it, not per render. Keyed on the
-  // card's identity (person + when it was dealt) so switching person, resizing
-  // or reshuffling counts again, while a win, a tap or a re-render of the same
-  // board does not.
-  // A set, not the last key: remembering only the most recent card made
-  // switching back and forth between two people count each of them again, so
-  // three switches between the same two boards retired the hint.
-  const hintedCards = useRef<Set<string>>(new Set())
-  useEffect(() => {
-    if (!showMagnifyHint || !card) return
-    const key = `${card.personId}-${card.createdAt}`
-    if (hintedCards.current.has(key)) return
-    hintedCards.current.add(key)
-    noteMagnifyHintSeen()
-  }, [showMagnifyHint, card, noteMagnifyHintSeen])
+    coarsePointer && !!card && smallestPx !== null && smallestPx <= HINT_BELOW_PX
 
   const reshuffle = async (): Promise<void> => {
     if (!active) return

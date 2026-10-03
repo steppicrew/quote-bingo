@@ -65,6 +65,18 @@ website uses, so there is no second codebase.
   pre-commit hook bumps the *semver* on every commit; `androidVersionCode` only
   moves via `yarn version:bump`, and Play rejects anything not strictly greater.
   Build last — committing after a build leaves the `.aab` filename stale.
+- **Preview app on the phone.** `yarn android:build debug` builds
+  `de.steppicrew.quotebingo.debug`: its own storage, a rust-orange icon
+  (`gen-assets.mjs` recolours the master's plate into `src/debug/res/`) and
+  "[P] " before the name in every locale (derived in `app/build.gradle` from
+  main's `strings.xml`). **Never replace the Play install** — Play re-signs it,
+  so a local build cannot update it, and uninstalling loses the owner's data.
+  `adb install` is refused (`INSTALL_FAILED_USER_RESTRICTED`); install from
+  device storage, and never leave the APK in `/sdcard/Download`:
+  `adb push <apk> /data/local/tmp/preview.apk && adb shell pm install -r
+  /data/local/tmp/preview.apk; adb shell rm /data/local/tmp/preview.apk`.
+  The **first** install of the package is blocked that way too and needs the
+  owner to install it once by hand; updates then go through silently.
 - **Publishing.** One edit, committed at the end, abandoned on failure. Unchanged
   images (sha256) and listings are skipped. A **first** release must be
   `--draft`; Play refuses a `completed` release on a never-published app. Do not
@@ -177,16 +189,13 @@ fails when they drift.
     so it never opens the magnifier on its way past), and while the bubble is open
     `onMagnifyChange` tells `Game` to hold the swipe — otherwise sliding to read switched
     person.
-- **Magnifier hint** (`Game.tsx`, `store.magnifyHintsSeen`): shown only when the board
-  actually came out small — `BingoBoard` reports the fitted size via `onFitMeasured` and
-  the hint needs `≤ HINT_BELOW_PX` (11px), because the *board* size is not the trigger;
-  a 7×7 of short quotes reads fine. Coarse pointer only (the gesture works with a mouse
-  but nobody goes looking for it), and retired after `MAGNIFY_HINT_LIMIT` (3) showings.
-  Counted **per card identity** (`personId-createdAt`) in a `Set`, not per render and not
-  as "the last card seen": remembering only the most recent card made switching back and
-  forth between two people count each time, so three switches retired the hint. The
-  counter persists (so the hint retires across sessions) but is **excluded from backup** —
-  restoring onto a new device should not suppress a hint that device never showed.
+- **Magnifier hint** (`Game.tsx`): shown whenever the board actually came out small —
+  `BingoBoard` reports the fitted size via `onFitMeasured` and the hint needs
+  `≤ HINT_BELOW_PX` (11px), because the *board* size is not the trigger; a 7×7 of short
+  quotes reads fine. Coarse pointer only (the gesture works with a mouse but nobody goes
+  looking for it). It is **not** retired after a few showings (it used to be, via a
+  persisted counter): a board that small stays hard to read however often the hint was
+  seen.
 - **Break opportunities** (`src/lib/breakOpportunities.ts`): Chrome offers no line break
   after a slash in a tight compound ("Wo/Wer", "Tach/Morgen" needs 84px on one line, 34px
   broken), and `hyphens: auto` can't help because the dictionary sees one token. A ZWSP is
