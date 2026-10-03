@@ -55,8 +55,12 @@ website uses, so there is no second codebase.
   Android 15 edge-to-edge is mandatory and `navigationBarColor` is ignored, so
   bar-icon contrast must be set at runtime from the in-app theme — no resource
   qualifier can see a theme chosen inside the app. `@capacitor/status-bar` has
-  no navigation-bar API, hence the local plugin. The layout consumes
-  `env(safe-area-inset-*)`; without it the WebView draws under the status bar.
+  no navigation-bar API, hence the local plugin. `MainActivity` calls
+  `EdgeToEdge.enable()` so **every** version is edge-to-edge (Play flags apps
+  that only are on 15+), with no deprecated bar-colour calls. The layout pads
+  by `v.$inset-*` (`vars.scss`) = `max(env(safe-area-inset-*),
+  var(--native-inset-*))`: an older WebView reports 0 through `env()`, so the
+  plugin measures the insets natively and writes the CSS variables itself.
 - **Versioning.** `package.json` owns both numbers and Gradle reads them. The
   pre-commit hook bumps the *semver* on every commit; `androidVersionCode` only
   moves via `yarn version:bump`, and Play rejects anything not strictly greater.

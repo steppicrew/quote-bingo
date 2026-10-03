@@ -28,7 +28,7 @@
   // panel once the extra controls appear — and without these it simply ran off
   // the bottom with the Close button out of reach. Cap it to the viewport
   // (minus the backdrop's padding and the system bars) and scroll inside.
-  max-height: calc(100dvh - 32px - env(safe-area-inset-top) - env(safe-area-inset-bottom));
+  max-height: calc(100dvh - 32px - v.$inset-top - v.$inset-bottom);
   overflow-y: auto;
   // Keep momentum scrolling from dragging the page behind the modal.
   overscroll-behavior: contain;

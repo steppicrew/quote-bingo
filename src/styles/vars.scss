@@ -26,3 +26,13 @@ $radius-sm: 8px;
 $gap: 12px;
 
 $shadow: 0 6px 20px var(--shadow-color);
+
+// System-bar insets. The Android app draws edge-to-edge on every version, but a
+// WebView older than the platform's own edge-to-edge does not report the bars
+// through env() — SystemBarsPlugin.java measures them natively and writes the
+// --native-inset-* properties instead. max() takes whichever source knows; in
+// a browser both are 0.
+$inset-top: max(env(safe-area-inset-top), var(--native-inset-top, 0px));
+$inset-right: max(env(safe-area-inset-right), var(--native-inset-right, 0px));
+$inset-bottom: max(env(safe-area-inset-bottom), var(--native-inset-bottom, 0px));
+$inset-left: max(env(safe-area-inset-left), var(--native-inset-left, 0px));
