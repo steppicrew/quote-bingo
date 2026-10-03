@@ -1,7 +1,7 @@
 {
   "name": "quote-bingo",
   "private": true,
-  "version": "1.1.107",
+  "version": "1.1.108",
   "androidVersionCode": 8,
   "type": "module",
   "packageManager": "yarn@4.13.0",
@@ -19,7 +19,8 @@
     "android:build": "./scripts/build-android.sh",
     "privacy": "yarn node scripts/gen-privacy.mjs",
     "deploy": "./scripts/deploy.sh",
-    "play:publish": "yarn node scripts/play-publish.mjs"
+    "play:publish": "yarn node scripts/play-publish.mjs",
+    "play:status": "yarn node scripts/play-status.mjs"
   },
   "dependencies": {
     "@capacitor/core": "^7",
