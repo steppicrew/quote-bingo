@@ -3,6 +3,7 @@ import clsx from 'clsx'
 import { useTranslation } from 'react-i18next'
 import { type Card, centerIndex } from '../types'
 import { winningCells } from '../lib/card'
+import { displayText } from '../lib/breakOpportunities'
 import { useCellMagnifier, type MagnifierTarget } from '../lib/useCellMagnifier'
 import { Cell } from './Cell'
 import { CellMagnifier } from './CellMagnifier'
@@ -203,7 +204,7 @@ export function BingoBoard({
 
       {magnified && (
         <CellMagnifier
-          text={texts[magnified.index] ?? ''}
+          text={displayText(texts[magnified.index] ?? '')}
           rect={magnified.rect}
           checked={card.checked[magnified.index] ?? false}
         />
