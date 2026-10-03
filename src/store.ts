@@ -48,6 +48,12 @@ interface State {
   quotes: Quote[]
   cards: Record<Id, Card>
   activePersonId: Id | null
+  /**
+   * When each person's board was last shown (epoch ms), for the Android app
+   * shortcuts, which list the most recently viewed people first. Persisted but
+   * not part of the backup: it describes this device's use, not the data.
+   */
+  personViewedAt: Record<Id, number>
   theme: Theme
   locale: Locale
   soundMode: SoundMode
@@ -103,6 +109,7 @@ export const useStore = create<State & Actions>()(
       quotes: [],
       cards: {},
       activePersonId: null,
+      personViewedAt: {},
       theme: 'system',
       locale: 'system',
       soundMode: 'on',
@@ -139,10 +146,17 @@ export const useStore = create<State & Actions>()(
             quotes: s.quotes.filter((q) => q.personId !== id),
             cards,
             activePersonId: s.activePersonId === id ? null : s.activePersonId,
+            personViewedAt: Object.fromEntries(
+              Object.entries(s.personViewedAt).filter(([pid]) => pid !== id),
+            ),
           }
         }),
 
-      setActivePerson: (id) => set({ activePersonId: id }),
+      setActivePerson: (id) =>
+        set((s) => ({
+          activePersonId: id,
+          personViewedAt: id === null ? s.personViewedAt : { ...s.personViewedAt, [id]: Date.now() },
+        })),
 
       addQuote: (personId, text) => get().addQuotes(personId, [text]),
 
@@ -300,6 +314,7 @@ export const useStore = create<State & Actions>()(
         quotes: s.quotes,
         cards: s.cards,
         activePersonId: s.activePersonId,
+        personViewedAt: s.personViewedAt,
         theme: s.theme,
         locale: s.locale,
         soundMode: s.soundMode,

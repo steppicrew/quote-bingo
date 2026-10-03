@@ -10,8 +10,9 @@ import com.getcapacitor.BridgeActivity;
 public class MainActivity extends BridgeActivity {
     @Override
     public void onCreate(android.os.Bundle savedInstanceState) {
-        // Registered before super.onCreate so the bridge picks it up.
+        // Registered before super.onCreate so the bridge picks them up.
         registerPlugin(SystemBarsPlugin.class);
+        registerPlugin(ShortcutsPlugin.class);
         super.onCreate(savedInstanceState);
         // The WebView renders nothing below 8px by default, but the cell auto-fit
         // goes down to 6px when a long quote needs it. Clamped, the text came

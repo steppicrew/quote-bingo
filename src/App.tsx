@@ -12,6 +12,7 @@ import { ConfirmProvider } from './components/Confirm'
 import { SoundToggle } from './components/SoundToggle'
 import { Settings } from './components/Settings'
 import { applySystemBars } from './lib/systemBars'
+import { onShortcutOpen, syncShortcuts } from './lib/shortcuts'
 import { BackIcon, CogIcon, GameIcon, UsersIcon } from './components/icons'
 import './components/modal.scss'
 
@@ -22,6 +23,9 @@ export function App(): ReactNode {
   const hasPersons = useStore((s) => s.persons.length > 0)
   const theme = useStore((s) => s.theme)
   const locale = useStore((s) => s.locale)
+  const persons = useStore((s) => s.persons)
+  const personViewedAt = useStore((s) => s.personViewedAt)
+  const setActivePerson = useStore((s) => s.setActivePerson)
   const [settingsOpen, setSettingsOpen] = useState(false)
 
   // Apply the selected theme to <html> (CSS custom properties switch on it),
@@ -64,6 +68,25 @@ export function App(): ReactNode {
       replaceRoute({ name: 'manage' })
     }
   }, [hydrated, hasPersons, route.name])
+
+  // Android launcher shortcuts: the most recently viewed people, refreshed as
+  // people are viewed, renamed, recoloured or deleted. Only once hydrated —
+  // before that the store is empty and would wipe the shortcuts.
+  useEffect(() => {
+    if (hydrated) void syncShortcuts(persons, personViewedAt)
+  }, [hydrated, persons, personViewedAt])
+
+  // A tapped shortcut opens that person's board. Also hydration-gated: the tap
+  // that cold-starts the app is held natively until this listener attaches,
+  // and must find the person in the store when it lands.
+  useEffect(() => {
+    if (!hydrated) return
+    return onShortcutOpen((personId) => {
+      if (!useStore.getState().persons.some((p) => p.id === personId)) return
+      setActivePerson(personId)
+      navigate({ name: 'game' })
+    })
+  }, [hydrated, setActivePerson])
 
   const onGame = route.name === 'game'
 

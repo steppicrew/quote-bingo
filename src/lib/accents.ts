@@ -66,6 +66,18 @@ export function accentSwatch(accent: AccentName): string {
 }
 
 /**
+ * The accent as a concrete colour, for places outside the page's CSS — the
+ * Android launcher shortcuts draw their icons natively and cannot resolve
+ * `var(--primary)`. `default` uses the dark theme's primary, the app's own
+ * purple and the colour of its launcher icon.
+ */
+export function accentHex(accent: AccentName | undefined): string {
+  const name = normalizeAccent(accent)
+  if (name === 'default') return '#7c6cff'
+  return ACCENTS[name]['--primary']
+}
+
+/**
  * The real (non-default) presets, in the order they are handed out.
  * Derived from ACCENTS rather than filtered from ACCENT_NAMES so the type
  * stays non-optional under `noUncheckedIndexedAccess`.

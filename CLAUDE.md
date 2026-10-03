@@ -210,6 +210,20 @@ fails when they drift.
   magnifier alike. Chrome will not hyphenate a word with "..." glued to its front, so
   "...vollkommen" was chopped by `break-word` as "...vollko|mmen" with no hyphen; in
   front of "…" it hyphenates. Display only, like the ZWSP.
+- **Launcher shortcuts** (`src/lib/shortcuts.ts` + `ShortcutsPlugin.java`, Android
+  only): long-press the app icon for up to four people, most recently viewed first, each
+  icon their initial on their accent colour (`accentHex`, since native code cannot
+  resolve `var(--primary)`). `store.personViewedAt` is stamped by `setActivePerson`;
+  persisted, **not** in the backup (it describes this device's use). `App` syncs the full
+  list in recency order — only once hydrated, or the empty pre-hydration store wipes the
+  shortcuts — and skips the bridge call when nothing changed (Android rate-limits
+  updates). A tap arrives as an `open` event, retained natively until the listener
+  attaches, so a cold start works; the listener is hydration-gated for the same reason.
+  Pinned shortcuts are updated on rename and disabled on delete. A web app's shortcuts
+  are static manifest entries, so the PWA has none.
+  **Never resolve a promise with a bare Capacitor plugin proxy**: it answers every
+  property, `then` included, so `await` calls `Plugin.then()` natively and fails. Wrap
+  it (`{ native }`) and register once.
 - **Platform detection** (`src/lib/platform.ts`): Capacitor serves from `https://localhost/`,
   indistinguishable from a dev server by URL, so `isNativeApp()` reads the bridge object the
   WebView injects instead of sniffing `location`. Gates the Play-Store link in `ShareApp`.
