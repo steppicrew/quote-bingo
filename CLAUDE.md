@@ -161,6 +161,9 @@ fails when they drift.
   ink descent, so changing it in the stylesheet cannot desynchronise the
   measurement. Tuning the search instead of the box is the wrong fix (tried
   twice).
+  **The Android WebView will not render below 8px** (`WebSettings` minimum
+  font size), while the fit goes to 6px; the clamped text overflowed and lost
+  its last line. `MainActivity` sets the minimum to 1.
 - **Cell magnifier** (`src/lib/useCellMagnifier.ts` + `CellMagnifier.tsx`): a 7×7 board on
   a phone fits text at ~9px, past reading size, and the auto-fit cannot do better in the
   space available. Long-pressing a cell (450ms) opens a bubble with the same text large,
@@ -203,6 +206,9 @@ fails when they drift.
   wants, adds no glyph and no width. **Render-time only**: the store, exports, the QR
   payload and `mergeQuotes`' text matching all keep the original string, since a baked-in
   ZWSP would make two visually identical quotes compare unequal.
+  The same ZWSP goes after an ellipsis typed as periods and glued to a word
+  ("...vollkommen"): Chrome will not hyphenate that token, so `break-word` chopped it
+  as "...vollko|mmen" with no hyphen. "…", quotes and brackets are fine.
 - **Platform detection** (`src/lib/platform.ts`): Capacitor serves from `https://localhost/`,
   indistinguishable from a dev server by URL, so `isNativeApp()` reads the bridge object the
   WebView injects instead of sniffing `location`. Gates the Play-Store link in `ShareApp`.
